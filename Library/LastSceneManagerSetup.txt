@@ -2,3 +2,8 @@ sceneSetups:
 - path: Assets/Scenes/simon.unity
   isLoaded: 1
   isActive: 1
+sceneSetups:
+- path: Assets/Scenes/Main.unity
+  isLoaded: 1
+  isActive: 1
+sceneSetups: []
