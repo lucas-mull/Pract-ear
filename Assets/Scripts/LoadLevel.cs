@@ -28,5 +28,4 @@ public class LoadLevel : MonoBehaviour {
         SceneManager.LoadScene(gameId);
     }
 
-
 }
