@@ -22,17 +22,10 @@ public class LoadLevel : MonoBehaviour {
         MenuCanvas.SetActive(false);
         //SceneManager.LoadScene(gameId);
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> 9f6f8856f8b5cd8a27935a5c1c2f4d5475bbb3d2
     public void LoadGame(int gameId)
     {
         SceneManager.LoadScene(gameId);
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 9f6f8856f8b5cd8a27935a5c1c2f4d5475bbb3d2
 }
