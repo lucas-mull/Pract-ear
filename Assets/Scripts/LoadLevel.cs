@@ -4,6 +4,7 @@ using System.Collections;
 
 public class LoadLevel : MonoBehaviour {
 
+<<<<<<< HEAD
     public GameObject MenuCanvas;
 
     // Use this for initialization
@@ -21,4 +22,11 @@ public class LoadLevel : MonoBehaviour {
         MenuCanvas.SetActive(false);
         //SceneManager.LoadScene(gameId);
     }
+=======
+    public void LoadGame(int gameId)
+    {
+        SceneManager.LoadScene(gameId);
+    }
+
+>>>>>>> ffac12d5edc30d382f9ce1b9c1b6df68f6a5fc80
 }
