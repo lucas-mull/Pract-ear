@@ -15,8 +15,6 @@ public class OrchestraLoad : MonoBehaviour {
     public Instrument instrument_3;
     public Instrument instrument_4;
 
-    public Text question;
-
     public AudioSource audioSource;
 
     public Camera mainCamera;
@@ -38,7 +36,6 @@ public class OrchestraLoad : MonoBehaviour {
 
         audioSource = GetComponent<AudioSource>();
 
-        question.text = "Cliquer sur les instruments présent dans l'extrait";
     }
 
     // Update is called once per frame
