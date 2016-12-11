@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 98014e4c02e601440b53b604f2431774
-timeCreated: 1481123717
+guid: f255c9dbef539cc42bbb4d676d7a5d48
+timeCreated: 1481470844
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -55,16 +55,16 @@ ModelImporter:
     3300014: corps
     3300016: Object002
     3300018: Object003
-    4300000: cordes
-    4300002: corps
-    4300004: Box006
-    4300006: Box007
-    4300008: Box008
-    4300010: Box009
-    4300012: corde
-    4300014: Object002
-    4300016: Object003
-    4300018: baseArchet
+    4300000: corde
+    4300002: Object002
+    4300004: Object003
+    4300006: baseArchet
+    4300008: cordes
+    4300010: corps
+    4300012: Box006
+    4300014: Box007
+    4300016: Box008
+    4300018: Box009
     7400000: Take 001
     9500000: //RootNode
   materials:

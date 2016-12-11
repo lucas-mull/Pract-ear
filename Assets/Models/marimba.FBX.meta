@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: f69e461f6a59854489e9a5b7b8fd6c2b
-timeCreated: 1481123728
+guid: 3eb5f40954a172e4d94a0b964efe6f34
+timeCreated: 1481470860
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -8,7 +8,7 @@ ModelImporter:
     100000: baguette002
     100002: baguette003
     100004: baguetteMarimba
-    100006: baguetteMarimba001
+    100006: baguetteMarimba 1
     100008: baguettes
     100010: barres
     100012: Box011
@@ -78,8 +78,8 @@ ModelImporter:
     100140: Cylinder024
     100142: Cylinder025
     100144: Cylinder026
-    100146: marimba
-    100148: //RootNode
+    100146: //RootNode
+    100148: marimba 1
     100150: Sphere001
     100152: Sphere002
     100154: table
@@ -87,7 +87,7 @@ ModelImporter:
     400000: baguette002
     400002: baguette003
     400004: baguetteMarimba
-    400006: baguetteMarimba001
+    400006: baguetteMarimba 1
     400008: baguettes
     400010: barres
     400012: Box011
@@ -158,7 +158,7 @@ ModelImporter:
     400142: Cylinder025
     400144: Cylinder026
     400146: //RootNode
-    400148: marimba
+    400148: marimba 1
     400150: Sphere001
     400152: Sphere002
     400154: table
@@ -307,78 +307,78 @@ ModelImporter:
     3300138: Sphere001
     3300140: Sphere002
     3300142: table
-    4300000: baguette002
-    4300002: Sphere001
-    4300004: Sphere002
-    4300006: baguette003
-    4300008: table
-    4300010: Cylinder026
-    4300012: Cylinder025
-    4300014: Cylinder024
-    4300016: Cylinder023
-    4300018: Cylinder022
-    4300020: Cylinder021
-    4300022: Cylinder020
-    4300024: Cylinder018
-    4300026: Cylinder017
-    4300028: Cylinder016
-    4300030: Cylinder015
-    4300032: Cylinder014
-    4300034: Cylinder013
-    4300036: Cylinder012
-    4300038: Cylinder011
-    4300040: Cylinder010
-    4300042: Cylinder009
-    4300044: Cylinder008
-    4300046: Cylinder007
-    4300048: Cylinder006
-    4300050: Cylinder005
-    4300052: Cylinder004
-    4300054: Cylinder003
-    4300056: Box054
-    4300058: Box053
-    4300060: Box052
-    4300062: Box051
-    4300064: Box050
-    4300066: Box049
-    4300068: Box048
-    4300070: Box047
-    4300072: Box046
-    4300074: Box045
-    4300076: Box044
-    4300078: Box043
-    4300080: Box042
-    4300082: Box041
-    4300084: Box040
-    4300086: Box039
-    4300088: Box038
-    4300090: Box037
-    4300092: Box036
-    4300094: Box035
-    4300096: Box034
-    4300098: Box033
-    4300100: Box032
-    4300102: Box031
-    4300104: Box030
-    4300106: Box029
-    4300108: Box028
-    4300110: Box027
-    4300112: Box026
-    4300114: Box025
-    4300116: Box024
-    4300118: Box023
-    4300120: Box022
-    4300122: Box021
-    4300124: Box020
-    4300126: Box019
-    4300128: Box018
-    4300130: Box017
-    4300132: Box016
-    4300134: Box015
-    4300136: Box014
-    4300138: Box013
-    4300140: Box012
-    4300142: Box011
+    4300000: Cylinder026
+    4300002: Cylinder025
+    4300004: Cylinder024
+    4300006: Cylinder023
+    4300008: Cylinder022
+    4300010: Cylinder021
+    4300012: Cylinder020
+    4300014: Cylinder018
+    4300016: Cylinder017
+    4300018: Cylinder016
+    4300020: Cylinder015
+    4300022: Cylinder014
+    4300024: Cylinder013
+    4300026: Cylinder012
+    4300028: Cylinder011
+    4300030: Cylinder010
+    4300032: Cylinder009
+    4300034: Cylinder008
+    4300036: Cylinder007
+    4300038: Cylinder006
+    4300040: Cylinder005
+    4300042: Cylinder004
+    4300044: Cylinder003
+    4300046: table
+    4300048: Box054
+    4300050: Box053
+    4300052: Box052
+    4300054: Box051
+    4300056: Box050
+    4300058: Box049
+    4300060: Box048
+    4300062: Box047
+    4300064: Box046
+    4300066: Box045
+    4300068: Box044
+    4300070: Box043
+    4300072: Box042
+    4300074: Box041
+    4300076: Box040
+    4300078: Box039
+    4300080: Box038
+    4300082: Box037
+    4300084: Box036
+    4300086: Box035
+    4300088: Box034
+    4300090: Box033
+    4300092: Box032
+    4300094: Box031
+    4300096: Box030
+    4300098: Box029
+    4300100: Box028
+    4300102: Box027
+    4300104: Box026
+    4300106: Box025
+    4300108: Box024
+    4300110: Box023
+    4300112: Box022
+    4300114: Box021
+    4300116: Box020
+    4300118: Box019
+    4300120: Box018
+    4300122: Box017
+    4300124: Box016
+    4300126: Box015
+    4300128: Box014
+    4300130: Box013
+    4300132: Box012
+    4300134: Box011
+    4300136: baguette002
+    4300138: Sphere001
+    4300140: baguette003
+    4300142: Sphere002
     7400000: Take 001
     9500000: //RootNode
   materials:
