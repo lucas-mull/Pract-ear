@@ -73,7 +73,12 @@ public class ValidButton : MonoBehaviour
             }
             if (score==4)
             {
-                audioSource.clip = Resources.Load<AudioClip>("/jazzcomedy_extrait1");
+                audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_applause");
+                audioSource.Play();
+            }
+            else
+            {
+                audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_boo");
                 audioSource.Play();
             }
         }
