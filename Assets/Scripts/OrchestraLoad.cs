@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class OrchestraLoad : MonoBehaviour {
@@ -13,6 +14,8 @@ public class OrchestraLoad : MonoBehaviour {
     public Instrument instrument_2;
     public Instrument instrument_3;
     public Instrument instrument_4;
+
+    public Text question;
 
     public AudioSource audioSource;
 
@@ -34,6 +37,8 @@ public class OrchestraLoad : MonoBehaviour {
         placeInstrumentFarRight(instrument_1);
 
         audioSource = GetComponent<AudioSource>();
+
+        question.text = "Cliquer sur les instruments présent dans l'extrait";
     }
 
     // Update is called once per frame
