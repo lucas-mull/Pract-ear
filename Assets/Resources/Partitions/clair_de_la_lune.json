@@ -1,0 +1,50 @@
+{
+  "title": "Au clair de la lune",
+  "notesCount": 11,
+  "notes": [
+    {
+      "note": "Do",
+      "longueur": "noire"
+    },
+    {
+      "note": "Do",
+      "longueur": "noire"
+    },
+    {
+      "note": "Do",
+      "longueur": "noire"
+    },
+    {
+      "note": "Re",
+      "longueur": "noire"
+    },
+    {
+      "note": "Mi",
+      "longueur": "blanche"
+    },
+    {
+      "note": "Re",
+      "longueur": "blanche"
+    },
+    {
+      "note": "Do",
+      "longueur": "noire"
+    },
+    {
+      "note": "Mi",
+      "longueur": "noire"
+    },
+    {
+      "note": "Re",
+      "longueur": "noire"
+    },
+    {
+      "note": "Re",
+      "longueur": "noire"
+    },
+    {
+      "note": "Do",
+      "longueur": "blanche"
+    }
+  ]
+}

@@ -7,10 +7,10 @@ public abstract class Instrument {
     const string PATH_TO_PREFABS = "Prefabs/";
 
     // Noms des prefabs des instruments dans Assets/Resources/Prefabs
-    public static string PIANO = "Piano";
-    public static string TROMPETTE = "Trompette";
-    public static string VIOLON = "Violon";
-    public static string MARIMBA = "Marimba";
+    public static string PIANO = "piano";
+    public static string TROMPETTE = "trompette";
+    public static string VIOLON = "violon";
+    public static string MARIMBA = "marimba";
 
     public string Name
     {
