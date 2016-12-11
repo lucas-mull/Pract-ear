@@ -24,8 +24,9 @@ public class SimonLoad : MonoBehaviour {
 
     public Camera mainCamera;
 
-    bool playerTurn;
-    bool sequenceIsPlaying;
+    bool playerTurn, sequenceIsPlaying, success = true;
+
+    int currentIndexInSequence;
 
     // Use this for initialization
     void Start () {
@@ -110,7 +111,14 @@ public class SimonLoad : MonoBehaviour {
     public Instrument PickRandomInstrument()
     {
         int index = Random.Range(0, 4);
-        return instruments[index];
+        Instrument picked = instruments[index];
+        while (picked == chosenInstrument)
+        {
+            index = Random.Range(0, 4);
+            picked = instruments[index];
+        }
+
+        return picked;
     }
 
     public void GenerateInstrumentSequence()
@@ -120,8 +128,13 @@ public class SimonLoad : MonoBehaviour {
 
     IEnumerator PlayCurrentSequence()
     {
-        chosenInstrument = PickRandomInstrument();
-        sequence.Add(chosenInstrument);
+        if (success)
+        {
+            chosenInstrument = PickRandomInstrument();
+            sequence.Add(chosenInstrument);
+        }
+        
+        chosenInstrument = sequence[0];
 
         if (audioSource.isPlaying)
             audioSource.Stop();
@@ -134,8 +147,10 @@ public class SimonLoad : MonoBehaviour {
             yield return new WaitForSeconds(note.GetLengthInSeconds());
         }
 
+        currentIndexInSequence = 0;
         playerTurn = true;
-        sequenceIsPlaying = false;    
+        sequenceIsPlaying = false;
+        success = false;
     }
 
     IEnumerator PlayerCoRoutine()
@@ -160,11 +175,35 @@ public class SimonLoad : MonoBehaviour {
 
                 if (selected == chosenInstrument)
                 {
-                    Note toPlay = partition.ReadNextNote();
+                    Note toPlay = partition.GetNoteAt(currentIndexInSequence);
                     audioSource.clip = Resources.Load<AudioClip>(toPlay.GetFileNameFor(selected));
                     audioSource.Play();
+
+                    selected.Animation.Play("Play");
+
                     yield return new WaitForSeconds(toPlay.GetLengthInSeconds());
-                    playerTurn = false;                    
+                    //playingAnimation.Stop("Play");
+                    if (currentIndexInSequence == sequence.Count - 1)
+                    {
+                        success = true;
+                        audioSource.Stop();
+                        audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_applause");
+                        audioSource.Play();
+                        yield return new WaitForSeconds(3);
+                        playerTurn = false;
+                    }
+                    else
+                    {
+                        currentIndexInSequence++;
+                        chosenInstrument = sequence[currentIndexInSequence];
+                    }                    
+                }
+                else
+                {
+                    audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_boo");
+                    audioSource.Play();
+                    yield return new WaitForSeconds(audioSource.clip.length);
+                    playerTurn = false;
                 }
             }
         }

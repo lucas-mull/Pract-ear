@@ -18,6 +18,11 @@ public abstract class Instrument {
         set { this.Model.name = value; }
     }
 
+    public Animator Animation
+    {
+        get { return this.Model.GetComponent<Animator>(); }
+    }
+
     private GameObject model;
 
     public GameObject Model {
