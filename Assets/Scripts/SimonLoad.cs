@@ -59,12 +59,12 @@ public class SimonLoad : MonoBehaviour {
 
                 if (hit.transform.name == instrument_3.Name + "(Clone)")
                 {
-                    audioSource.clip = Resources.Load<AudioClip>("Soundtracks/buddy_extrait1");
+                    audioSource.clip = Resources.Load<AudioClip>("Soundtracks/vivaldi_ete_extrait1");
                 }
 
                 if (hit.transform.name == instrument_4.Name + "(Clone)")
                 {
-                    audioSource.clip = Resources.Load<AudioClip>("Soundtracks/jazzcomedy_extrait1");
+                    audioSource.clip = Resources.Load<AudioClip>("Soundtracks/Extrait1 - Lundi - Violon-piano");
                 }
 
                 audioSource.Play();
