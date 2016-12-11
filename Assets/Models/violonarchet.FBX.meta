@@ -65,8 +65,9 @@ ModelImporter:
     4300014: Box007
     4300016: Box008
     4300018: Box009
-    7400000: Take 001
+    7400000: Play
     9500000: //RootNode
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -81,13 +82,71 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
-    animationWrapMode: 0
+    animationWrapMode: 2
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 22
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: archet
+        weight: 1
+      - path: archet/baseArchet
+        weight: 1
+      - path: archet/bouts
+        weight: 1
+      - path: archet/bouts/Object002
+        weight: 1
+      - path: archet/bouts/Object003
+        weight: 1
+      - path: archet/corde
+        weight: 1
+      - path: violon
+        weight: 1
+      - path: violon/cordes
+        weight: 1
+      - path: violon/corps
+        weight: 1
+      - path: violon/detailsNoirs
+        weight: 1
+      - path: violon/detailsNoirs/Box006
+        weight: 1
+      - path: violon/detailsNoirs/Box007
+        weight: 1
+      - path: violon/detailsNoirs/Box008
+        weight: 1
+      - path: violon/detailsNoirs/Box009
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

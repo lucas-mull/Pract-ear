@@ -8,21 +8,21 @@ public class Marimba : Instrument
 
     public override Vector3 getFarLeftVector()
     {
-        return new Vector3(4, 42, 58);
+        return new Vector3(3, 47, 59);
     }
 
     public override Vector3 getFarRightVector()
     {
-        return new Vector3(115, 42, 58);
+        return new Vector3(110, 47, 59);
     }
 
     public override Vector3 getMiddleLeftVector()
     {
-        return new Vector3(20, 42, 140);
+        return new Vector3(30, 47, 150);
     }
 
     public override Vector3 getMiddleRightVector()
     {
-        return new Vector3(100, 42, 140);
+        return new Vector3(90, 47, 150);
     }
 }

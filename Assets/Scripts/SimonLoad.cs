@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
+using System.Collections.Generic;
+using SimpleJSON;
 
 public class SimonLoad : MonoBehaviour {
 
@@ -9,70 +12,61 @@ public class SimonLoad : MonoBehaviour {
 
     private string difficulty_level;
 
-    public Instrument instrument_1;
-    public Instrument instrument_2;
-    public Instrument instrument_3;
-    public Instrument instrument_4;
+    public Instrument[] instruments = new Instrument[4];
+
+    public List<Instrument> sequence = new List<Instrument>();
+
+    Instrument chosenInstrument;
+
+    public Partition partition;
 
     public AudioSource audioSource;
 
     public Camera mainCamera;
 
+    bool playerTurn, sequenceIsPlaying, success = true;
+
+    int currentIndexInSequence;
+
     // Use this for initialization
     void Start () {
-        setDifficulty(DIFFICULTY_EASY);
+        SetDifficulty(DIFFICULTY_EASY);
 
-        instrument_1 = new Marimba();
-        instrument_2 = new Trompette();
-        instrument_3 = new Violon();
-        instrument_4 = new Piano();
+        instruments[0] = new Marimba();
+        instruments[1] = new Trompette();
+        instruments[2] = new Violon();
+        instruments[3] = new Piano();
 
-        placeInstrumentFarLeft(instrument_4);
-        placeInstrumentMiddleLeft(instrument_2);
-        placeInstrumentMiddleRight(instrument_3);
-        placeInstrumentFarRight(instrument_1);
+        partition = LoadPartitionFromJson("Partitions/clair_de_la_lune");
+        partition.StartReading();
+
+        PlaceInstrumentFarLeft(instruments[0]);
+        PlaceInstrumentMiddleLeft(instruments[1]);
+        PlaceInstrumentMiddleRight(instruments[2]);
+        PlaceInstrumentFarRight(instruments[3]);
 
         audioSource = GetComponent<AudioSource>();
+
+        playerTurn = false;
+        sequenceIsPlaying = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        { // if left button pressed...
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (audioSource.isPlaying)
-                    audioSource.Stop();
-
-                if (hit.transform.name == instrument_1.Name+"(Clone)")
-                {        
-                    audioSource.clip = Resources.Load<AudioClip>("Soundtracks/bach_air_on_the_G_String_extrait1");
-                }
-
-                if (hit.transform.name == instrument_2.Name + "(Clone)")
-                {
-                    audioSource.clip = Resources.Load<AudioClip>("Soundtracks/beethoven_piano_concerto_no5_extrai1");
-                }
-
-                if (hit.transform.name == instrument_3.Name + "(Clone)")
-                {
-                    audioSource.clip = Resources.Load<AudioClip>("Soundtracks/vivaldi_ete_extrait1");
-                }
-
-                if (hit.transform.name == instrument_4.Name + "(Clone)")
-                {
-                    audioSource.clip = Resources.Load<AudioClip>("Soundtracks/Extrait1 - Lundi - Violon-piano");
-                }
-
-                audioSource.Play();
-            }
+        if (!playerTurn && !sequenceIsPlaying)
+        {
+            StartCoroutine(PlayCurrentSequence());
+            sequenceIsPlaying = true;
         }
+        else
+        {
+            StartCoroutine(PlayerCoRoutine());
+        }
+        
     }
 
-    void setDifficulty(string difficulty)
+    void SetDifficulty(string difficulty)
     {
         switch(difficulty)
         {
@@ -87,23 +81,131 @@ public class SimonLoad : MonoBehaviour {
         }
     }
 
-    void placeInstrumentFarLeft(Instrument instrument)
+    void PlaceInstrumentFarLeft(Instrument instrument)
     {
         Instantiate(instrument.Model, instrument.getFarLeftVector(), instrument.Model.transform.rotation);
     }
 
-    void placeInstrumentFarRight(Instrument instrument)
+    void PlaceInstrumentFarRight(Instrument instrument)
     {
         Instantiate(instrument.Model, instrument.getFarRightVector(), instrument.Model.transform.rotation);
     }
 
-    void placeInstrumentMiddleLeft(Instrument instrument)
+    void PlaceInstrumentMiddleLeft(Instrument instrument)
     {
         Instantiate(instrument.Model, instrument.getMiddleLeftVector(), instrument.Model.transform.rotation);
     }
 
-    void placeInstrumentMiddleRight(Instrument instrument)
+    void PlaceInstrumentMiddleRight(Instrument instrument)
     {
         Instantiate(instrument.Model, instrument.getMiddleRightVector(), instrument.Model.transform.rotation);
+    }
+
+    public Partition LoadPartitionFromJson(string fileName)
+    {
+        TextAsset file = Resources.Load<TextAsset>(fileName);
+        JSONNode node = JSONNode.Parse(file.text);
+        return new Partition(node);
+    }
+
+    public Instrument PickRandomInstrument()
+    {
+        int index = Random.Range(0, 4);
+        Instrument picked = instruments[index];
+        while (picked == chosenInstrument)
+        {
+            index = Random.Range(0, 4);
+            picked = instruments[index];
+        }
+
+        return picked;
+    }
+
+    public void GenerateInstrumentSequence()
+    {
+
+    }
+
+    IEnumerator PlayCurrentSequence()
+    {
+        if (success)
+        {
+            chosenInstrument = PickRandomInstrument();
+            sequence.Add(chosenInstrument);
+        }
+        
+        chosenInstrument = sequence[0];
+
+        if (audioSource.isPlaying)
+            audioSource.Stop();
+
+        for (int i = 0; i < sequence.Count; i++)
+        {
+            Note note = partition.GetNoteAt(i);
+            audioSource.clip = Resources.Load<AudioClip>(note.GetFileNameFor(sequence[i]));
+            audioSource.Play();
+            yield return new WaitForSeconds(note.GetLengthInSeconds());
+        }
+
+        currentIndexInSequence = 0;
+        playerTurn = true;
+        sequenceIsPlaying = false;
+        success = false;
+    }
+
+    IEnumerator PlayerCoRoutine()
+    {
+        if (Input.GetMouseButtonDown(0))
+        { // if left button pressed...
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Instrument selected;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (audioSource.isPlaying)
+                    audioSource.Stop();
+
+                selected = instruments[0];
+                for (int i = 0; i < instruments.Length; i++)
+                {
+                    if (hit.transform.name == instruments[i].Name + "(Clone)")
+                        selected = instruments[i];
+                }
+
+                if (selected == chosenInstrument)
+                {
+                    Note toPlay = partition.GetNoteAt(currentIndexInSequence);
+                    audioSource.clip = Resources.Load<AudioClip>(toPlay.GetFileNameFor(selected));
+                    audioSource.Play();
+
+                    selected.Animation.Play("Play");
+
+                    yield return new WaitForSeconds(toPlay.GetLengthInSeconds());
+                    //playingAnimation.Stop("Play");
+                    if (currentIndexInSequence == sequence.Count - 1)
+                    {
+                        success = true;
+                        audioSource.Stop();
+                        audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_applause");
+                        audioSource.Play();
+                        yield return new WaitForSeconds(3);
+                        playerTurn = false;
+                    }
+                    else
+                    {
+                        currentIndexInSequence++;
+                        chosenInstrument = sequence[currentIndexInSequence];
+                    }                    
+                }
+                else
+                {
+                    audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_boo");
+                    audioSource.Play();
+                    yield return new WaitForSeconds(audioSource.clip.length);
+                    playerTurn = false;
+                }
+            }
+        }
     }
 }

@@ -379,8 +379,9 @@ ModelImporter:
     4300138: Sphere001
     4300140: baguette003
     4300142: Sphere002
-    7400000: Take 001
+    7400000: Play
     9500000: //RootNode
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -395,13 +396,199 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
-    animationWrapMode: 0
+    animationWrapMode: 2
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 20
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: baguettes
+        weight: 1
+      - path: baguettes/baguetteMarimba
+        weight: 1
+      - path: baguettes/baguetteMarimba/baguette003
+        weight: 1
+      - path: baguettes/baguetteMarimba/Sphere002
+        weight: 1
+      - path: baguettes/baguetteMarimba 1
+        weight: 1
+      - path: baguettes/baguetteMarimba 1/baguette002
+        weight: 1
+      - path: baguettes/baguetteMarimba 1/Sphere001
+        weight: 1
+      - path: marimba 1
+        weight: 1
+      - path: marimba 1/barres
+        weight: 1
+      - path: marimba 1/barres/Box011
+        weight: 1
+      - path: marimba 1/barres/Box012
+        weight: 1
+      - path: marimba 1/barres/Box013
+        weight: 1
+      - path: marimba 1/barres/Box014
+        weight: 1
+      - path: marimba 1/barres/Box015
+        weight: 1
+      - path: marimba 1/barres/Box016
+        weight: 1
+      - path: marimba 1/barres/Box017
+        weight: 1
+      - path: marimba 1/barres/Box018
+        weight: 1
+      - path: marimba 1/barres/Box019
+        weight: 1
+      - path: marimba 1/barres/Box020
+        weight: 1
+      - path: marimba 1/barres/Box021
+        weight: 1
+      - path: marimba 1/barres/Box022
+        weight: 1
+      - path: marimba 1/barres/Box023
+        weight: 1
+      - path: marimba 1/barres/Box024
+        weight: 1
+      - path: marimba 1/barres/Box025
+        weight: 1
+      - path: marimba 1/barres/Box026
+        weight: 1
+      - path: marimba 1/barres/Box027
+        weight: 1
+      - path: marimba 1/barres/Box028
+        weight: 1
+      - path: marimba 1/barres/Box029
+        weight: 1
+      - path: marimba 1/barres/Box030
+        weight: 1
+      - path: marimba 1/barres/Box031
+        weight: 1
+      - path: marimba 1/barres/Box032
+        weight: 1
+      - path: marimba 1/barres/Box033
+        weight: 1
+      - path: marimba 1/barres/Box034
+        weight: 1
+      - path: marimba 1/barres/Box035
+        weight: 1
+      - path: marimba 1/barres/Box036
+        weight: 1
+      - path: marimba 1/barres/Box037
+        weight: 1
+      - path: marimba 1/barres/Box038
+        weight: 1
+      - path: marimba 1/barres/Box039
+        weight: 1
+      - path: marimba 1/barres/Box040
+        weight: 1
+      - path: marimba 1/barres/Box041
+        weight: 1
+      - path: marimba 1/barres/Box042
+        weight: 1
+      - path: marimba 1/barres/Box043
+        weight: 1
+      - path: marimba 1/barres/Box044
+        weight: 1
+      - path: marimba 1/barres/Box045
+        weight: 1
+      - path: marimba 1/barres/Box046
+        weight: 1
+      - path: marimba 1/barres/Box047
+        weight: 1
+      - path: marimba 1/barres/Box048
+        weight: 1
+      - path: marimba 1/barres/Box049
+        weight: 1
+      - path: marimba 1/barres/Box050
+        weight: 1
+      - path: marimba 1/barres/Box051
+        weight: 1
+      - path: marimba 1/barres/Box052
+        weight: 1
+      - path: marimba 1/barres/Box053
+        weight: 1
+      - path: marimba 1/barres/Box054
+        weight: 1
+      - path: marimba 1/table
+        weight: 1
+      - path: marimba 1/tuyaux
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder003
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder004
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder005
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder006
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder007
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder008
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder009
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder010
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder011
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder012
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder013
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder014
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder015
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder016
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder017
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder018
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder020
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder021
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder022
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder023
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder024
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder025
+        weight: 1
+      - path: marimba 1/tuyaux/Cylinder026
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

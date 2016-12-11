@@ -69,13 +69,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Pract-ear.CSharp.Plugins.csproj">
+      <Project>{BDEABC01-4047-958D-43F5-63CF80697C40}</Project>
+      <Name>Pract-ear.CSharp.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Scripts\InstrumentLighting.cs" />
     <Compile Include="Assets\Scripts\Instruments\Instrument.cs" />
     <Compile Include="Assets\Scripts\Instruments\Marimba.cs" />
     <Compile Include="Assets\Scripts\Instruments\Piano.cs" />
     <Compile Include="Assets\Scripts\Instruments\Trompette.cs" />
     <Compile Include="Assets\Scripts\Instruments\Violon.cs" />
     <Compile Include="Assets\Scripts\LoadLevel.cs" />
+    <Compile Include="Assets\Scripts\Note.cs" />
     <Compile Include="Assets\Scripts\OrchestraLoad.cs" />
+    <Compile Include="Assets\Scripts\Partition.cs" />
     <Compile Include="Assets\Scripts\SceneStart.cs" />
     <Compile Include="Assets\Scripts\SimonLoad.cs" />
   </ItemGroup>
