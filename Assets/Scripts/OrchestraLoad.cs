@@ -2,12 +2,15 @@
 using System.Collections;
 
 public class OrchestraLoad : MonoBehaviour {
+
     const string DIFFICULTY_EASY = "easy";
     const string DIFFICULTY_MEDIUM = "medium";
     const string DIFFICULTY_HARD = "hard";
 
     private string difficulty_level;
+
     public GameObject _PlayButton;
+
 
     public Instrument instrument_1;
     public Instrument instrument_2;
@@ -18,8 +21,14 @@ public class OrchestraLoad : MonoBehaviour {
     public bool essai;
     public Camera mainCamera;
     // Use this for initialization
-    void Start () {
-        essai = false;
+
+
+
+
+    // Use this for initialization
+    void Start()
+    {
+
         setDifficulty(DIFFICULTY_EASY);
 
         instrument_1 = new Marimba();
@@ -37,12 +46,17 @@ public class OrchestraLoad : MonoBehaviour {
     }
 
     // Update is called once per frame
+
     void Update()
     {
 
       
         
     }
+
+
+
+
     void setDifficulty(string difficulty)
     {
         switch (difficulty)
@@ -67,6 +81,7 @@ public class OrchestraLoad : MonoBehaviour {
         _PlayButton.SetActive(false);
         essai = true;
     }
+
     void placeInstrumentFarLeft(Instrument instrument)
     {
         Instantiate(instrument.Model, instrument.getFarLeftVector(), instrument.Model.transform.rotation);
