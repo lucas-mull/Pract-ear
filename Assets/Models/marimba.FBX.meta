@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: bbe2b139de2a3eb4d836c0b9fb764c85
-timeCreated: 1481469335
+guid: 3eb5f40954a172e4d94a0b964efe6f34
+timeCreated: 1481470860
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -379,6 +379,7 @@ ModelImporter:
     4300138: Sphere001
     4300140: baguette003
     4300142: Sphere002
+    7400000: Take 001
     9500000: //RootNode
   materials:
     importMaterials: 1
