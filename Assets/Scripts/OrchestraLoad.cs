@@ -57,50 +57,50 @@ public class OrchestraLoad : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        { // if left button pressed...
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.transform.name == "violonarchet")
-                {
-                    activateObject(violonLight);
+        //if (Input.GetMouseButtonDown(0))
+        //{ // if left button pressed...
+        //    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        //    RaycastHit hit;
+        //    if (Physics.Raycast(ray, out hit))
+        //    {
+        //        if (hit.transform.name == "violonarchet")
+        //        {
+        //            activateObject(violonLight);
 
-                    marimbaLight.SetActive(false);
-                    trompetteLight.SetActive(false);
-                    pianoLight.SetActive(false);
-                    //violonLight.SetActive(true);
+        //            marimbaLight.SetActive(false);
+        //            trompetteLight.SetActive(false);
+        //            pianoLight.SetActive(false);
+        //            //violonLight.SetActive(true);
 
-                }
-                if (hit.transform.name == "marimba")
-                {
-                    activateObject(marimbaLight);
-                    violonLight.SetActive(false);
-                    trompetteLight.SetActive(false);
-                    pianoLight.SetActive(false);
-                    // myLights[1].enabled = true; //!myLights[1].enabled;
-                }
-                if (hit.transform.name == "trompette")
-                {
-                    activateObject(trompetteLight);
-                    marimbaLight.SetActive(false);
-                    pianoLight.SetActive(false);
-                    violonLight.SetActive(false);
+        //        }
+        //        if (hit.transform.name == "marimba")
+        //        {
+        //            activateObject(marimbaLight);
+        //            violonLight.SetActive(false);
+        //            trompetteLight.SetActive(false);
+        //            pianoLight.SetActive(false);
+        //            // myLights[1].enabled = true; //!myLights[1].enabled;
+        //        }
+        //        if (hit.transform.name == "trompette")
+        //        {
+        //            activateObject(trompetteLight);
+        //            marimbaLight.SetActive(false);
+        //            pianoLight.SetActive(false);
+        //            violonLight.SetActive(false);
 
-                    // myLights[2].enabled = !myLights[2].enabled;                    
-                }
-                if (hit.transform.name == "piano")
-                {
-                    activateObject(pianoLight);
-                    marimbaLight.SetActive(false);
-                    trompetteLight.SetActive(false);
-                    violonLight.SetActive(false);
+        //            // myLights[2].enabled = !myLights[2].enabled;                    
+        //        }
+        //        if (hit.transform.name == "piano")
+        //        {
+        //            activateObject(pianoLight);
+        //            marimbaLight.SetActive(false);
+        //            trompetteLight.SetActive(false);
+        //            violonLight.SetActive(false);
 
-                    // myLights[3].enabled = !myLights[3].enabled;
-                }
-            }
-        }
+        //            // myLights[3].enabled = !myLights[3].enabled;
+        //        }
+        //    }
+        //}
     }
 
 
