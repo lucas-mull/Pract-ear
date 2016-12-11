@@ -12,6 +12,7 @@ public class OrchestraLoad : MonoBehaviour {
     private string difficulty_level;
 
     public GameObject _PlayButton;
+   // public GameObject _SubmitButton;
 
 
     public Instrument instrument_1;
@@ -124,10 +125,11 @@ public class OrchestraLoad : MonoBehaviour {
     public void OnplayClicked()
     {
 
-        audioSource.clip = Resources.Load<AudioClip>("Soundtracks/jazzcomedy_extrait1");
+        audioSource.clip = Resources.Load<AudioClip>("Soundtracks/Extrait1 - Lundi - Violon-piano");
 
         audioSource.Play();
         _PlayButton.SetActive(false);
+       // _SubmitButton.SetActive(true);
     }
 
     void placeInstrumentFarLeft(Instrument instrument)
