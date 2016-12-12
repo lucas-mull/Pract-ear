@@ -12,15 +12,23 @@ public abstract class Instrument {
     public static string VIOLON = "violon";
     public static string MARIMBA = "marimba";
 
+    private GameObject instance;
+
+    public GameObject Instance
+    {
+        set { this.instance = value; }
+        get { return this.instance; }
+    }
+
     public string Name
     {
         get { return this.Model.name; }
         set { this.Model.name = value; }
     }
 
-    public Animator Animation
+    public Animator Animator
     {
-        get { return this.Model.GetComponent<Animator>(); }
+        get { return this.Instance.GetComponent<Animator>(); }
     }
 
     private GameObject model;

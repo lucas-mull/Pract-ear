@@ -40,10 +40,10 @@ public class SimonLoad : MonoBehaviour {
         partition = LoadPartitionFromJson("Partitions/clair_de_la_lune");
         partition.StartReading();
 
-        PlaceInstrumentFarLeft(instruments[0]);
-        PlaceInstrumentMiddleLeft(instruments[1]);
-        PlaceInstrumentMiddleRight(instruments[2]);
-        PlaceInstrumentFarRight(instruments[3]);
+        instruments[0].Instance = PlaceInstrumentFarLeft(instruments[0]);
+        instruments[1].Instance = PlaceInstrumentMiddleLeft(instruments[1]);
+        instruments[2].Instance = PlaceInstrumentMiddleRight(instruments[2]);
+        instruments[3].Instance = PlaceInstrumentFarRight(instruments[3]);
 
         audioSource = GetComponent<AudioSource>();
 
@@ -81,24 +81,24 @@ public class SimonLoad : MonoBehaviour {
         }
     }
 
-    void PlaceInstrumentFarLeft(Instrument instrument)
+    GameObject PlaceInstrumentFarLeft(Instrument instrument)
     {
-        Instantiate(instrument.Model, instrument.getFarLeftVector(), instrument.Model.transform.rotation);
+        return (GameObject)Instantiate(instrument.Model, instrument.getFarLeftVector(), instrument.Model.transform.rotation);
     }
 
-    void PlaceInstrumentFarRight(Instrument instrument)
+    GameObject PlaceInstrumentFarRight(Instrument instrument)
     {
-        Instantiate(instrument.Model, instrument.getFarRightVector(), instrument.Model.transform.rotation);
+        return (GameObject)Instantiate(instrument.Model, instrument.getFarRightVector(), instrument.Model.transform.rotation);
     }
 
-    void PlaceInstrumentMiddleLeft(Instrument instrument)
+    GameObject PlaceInstrumentMiddleLeft(Instrument instrument)
     {
-        Instantiate(instrument.Model, instrument.getMiddleLeftVector(), instrument.Model.transform.rotation);
+        return (GameObject)Instantiate(instrument.Model, instrument.getMiddleLeftVector(), instrument.Model.transform.rotation);
     }
 
-    void PlaceInstrumentMiddleRight(Instrument instrument)
+    GameObject PlaceInstrumentMiddleRight(Instrument instrument)
     {
-        Instantiate(instrument.Model, instrument.getMiddleRightVector(), instrument.Model.transform.rotation);
+        return (GameObject)Instantiate(instrument.Model, instrument.getMiddleRightVector(), instrument.Model.transform.rotation);
     }
 
     public Partition LoadPartitionFromJson(string fileName)
@@ -128,6 +128,9 @@ public class SimonLoad : MonoBehaviour {
 
     IEnumerator PlayCurrentSequence()
     {
+        for (int i = 0; i < instruments.Length; i++)
+            instruments[i].Animator.enabled = true;
+
         if (success)
         {
             chosenInstrument = PickRandomInstrument();
@@ -151,6 +154,9 @@ public class SimonLoad : MonoBehaviour {
         playerTurn = true;
         sequenceIsPlaying = false;
         success = false;
+
+        for (int i = 0; i < instruments.Length; i++)
+            instruments[i].Animator.enabled = false;
     }
 
     IEnumerator PlayerCoRoutine()
@@ -179,10 +185,9 @@ public class SimonLoad : MonoBehaviour {
                     audioSource.clip = Resources.Load<AudioClip>(toPlay.GetFileNameFor(selected));
                     audioSource.Play();
 
-                    selected.Animation.Play("Play");
+                    selected.Animator.enabled = true;
 
                     yield return new WaitForSeconds(toPlay.GetLengthInSeconds());
-                    //playingAnimation.Stop("Play");
                     if (currentIndexInSequence == sequence.Count - 1)
                     {
                         success = true;
@@ -196,7 +201,9 @@ public class SimonLoad : MonoBehaviour {
                     {
                         currentIndexInSequence++;
                         chosenInstrument = sequence[currentIndexInSequence];
-                    }                    
+                    }
+
+                    selected.Animator.enabled = false;
                 }
                 else
                 {
