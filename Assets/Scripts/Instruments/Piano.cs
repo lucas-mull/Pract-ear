@@ -18,11 +18,11 @@ public class Piano : Instrument {
 
     public override Vector3 getMiddleLeftVector()
     {
-        return new Vector3(30, 64, 150);
+        return new Vector3(30, 64, 135);
     }
 
     public override Vector3 getMiddleRightVector()
     {
-        return new Vector3(80, 64, 150);
+        return new Vector3(75, 64, 135);
     }
 }

@@ -1,69 +1,148 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
-using System.IO;
 using System.Collections.Generic;
-using SimpleJSON;
 
 public class SimonLoad : MonoBehaviour {
 
     const string DIFFICULTY_EASY = "easy";
     const string DIFFICULTY_MEDIUM = "medium";
     const string DIFFICULTY_HARD = "hard";
+    const int MAX_ERRORS_ALLOWED = 3;
 
-    private string difficulty_level;
-
-    public Instrument[] instruments = new Instrument[4];
-
-    public List<Instrument> sequence = new List<Instrument>();
-
-    Instrument chosenInstrument;
-
-    public Partition partition;
-
-    public AudioSource audioSource;
+    #region Objets assignés à travers l'Inspector
 
     public Camera mainCamera;
 
-    bool playerTurn, sequenceIsPlaying, success = true;
+    public Canvas igMenu;
+    public Canvas igInterface;
+    public Canvas igGameOver;
+    public Canvas igSuccess;
 
-    int currentIndexInSequence;
+    public Text farLeftText;
+    public Text middleLeftText;
+    public Text middleRightText;
+    public Text farRightText;
+    public Text countdownText;
+    public Text sequenceCountText;
+
+    public Image error1;
+    public Image error2;
+    public Image error3;
+
+    public AudioSource audioSource;
+
+    #endregion
+
+    #region Variables privées
+
+    private string difficulty_level;
+
+    private Instrument[] instruments = new Instrument[4];           // Instruments présents sur la scène
+    private List<Instrument> sequence;                              // Séquence actuelle des instruments
+
+    private Instrument chosenInstrument;                            // Instrument choisi pour la prochaine note
+
+    private Partition partition;                                    // Partition jouée
+
+    // Différents booléens qui servent à réguler le jeu
+    bool playerTurn, sequenceIsPlaying, hasStarted, success, gameOver, showBubbles;
+
+    int currentIndexInSequence;                                     // Index actuelle dans la liste d'instruments
+    int errorCount;                                                 // Nombre d'erreurs effectuées par l'utilisateur
+    int sequenceCount;                                              // Nombre de notes enchaînées correctement par le joueur
+
+    #endregion
 
     // Use this for initialization
     void Start () {
-        SetDifficulty(DIFFICULTY_EASY);
+        SetDifficulty(DIFFICULTY_EASY);       
+
+        Init();
 
         instruments[0] = new Marimba();
         instruments[1] = new Trompette();
         instruments[2] = new Violon();
         instruments[3] = new Piano();
 
-        partition = LoadPartitionFromJson("Partitions/clair_de_la_lune");
-        partition.StartReading();
+        partition = Partition.LoadPartitionFromJson("Partitions/clair_de_la_lune");
 
-        instruments[0].Instance = PlaceInstrumentFarLeft(instruments[0]);
-        instruments[1].Instance = PlaceInstrumentMiddleLeft(instruments[1]);
-        instruments[2].Instance = PlaceInstrumentMiddleRight(instruments[2]);
-        instruments[3].Instance = PlaceInstrumentFarRight(instruments[3]);
+        instruments[0].PutFarLeft(farLeftText);
+        instruments[1].PutFarRight(farRightText);
+        instruments[2].PutMiddleLeft(middleLeftText);
+        instruments[3].PutMiddleRight(middleRightText);
 
         audioSource = GetComponent<AudioSource>();
+    }
+
+    /// <summary>
+    /// Initialisation de tous les booléens et de la liste d'instruments
+    /// </summary>
+    void Init()
+    {
+        currentIndexInSequence = 0;
+
+        igGameOver.enabled = false;
+        igSuccess.enabled = false;
 
         playerTurn = false;
+        sequenceIsPlaying = true;
+        hasStarted = false;
+        success = true;
+        gameOver = false;
+        showBubbles = true;
+
+        errorCount = 0;
+        sequenceCount = 0;
+
+        sequence = new List<Instrument>();
+    }
+
+    /// <summary>
+    /// Reset les booléens et la liste pour pouvoir recommencer le jeu depuis le début
+    /// </summary>
+    public void Restart()
+    {
+        Init();
         sequenceIsPlaying = false;
+        hasStarted = true;
+    }
+
+    public void TriggerBubbles()
+    {
+        showBubbles = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!playerTurn && !sequenceIsPlaying)
+        if (showBubbles)
+        {
+            StartCoroutine(CoRoutineBubbles());
+        }
+
+        if (gameOver)
+        {
+            // do nothing
+        }
+        else if (!hasStarted)
+        {
+            StartCoroutine(StartingRoutine());
+            for (int i = 0; i < instruments.Length; i++)
+            {
+                instruments[i].Tooltip.transform.parent.localScale = new Vector3(0, 0, 0);
+            }            
+            hasStarted = true;
+        }
+        else if (!playerTurn && !sequenceIsPlaying)
         {
             StartCoroutine(PlayCurrentSequence());
             sequenceIsPlaying = true;
         }
-        else
+        else if (playerTurn)
         {
             StartCoroutine(PlayerCoRoutine());
         }
-        
     }
 
     void SetDifficulty(string difficulty)
@@ -81,34 +160,12 @@ public class SimonLoad : MonoBehaviour {
         }
     }
 
-    GameObject PlaceInstrumentFarLeft(Instrument instrument)
-    {
-        return (GameObject)Instantiate(instrument.Model, instrument.getFarLeftVector(), instrument.Model.transform.rotation);
-    }
-
-    GameObject PlaceInstrumentFarRight(Instrument instrument)
-    {
-        return (GameObject)Instantiate(instrument.Model, instrument.getFarRightVector(), instrument.Model.transform.rotation);
-    }
-
-    GameObject PlaceInstrumentMiddleLeft(Instrument instrument)
-    {
-        return (GameObject)Instantiate(instrument.Model, instrument.getMiddleLeftVector(), instrument.Model.transform.rotation);
-    }
-
-    GameObject PlaceInstrumentMiddleRight(Instrument instrument)
-    {
-        return (GameObject)Instantiate(instrument.Model, instrument.getMiddleRightVector(), instrument.Model.transform.rotation);
-    }
-
-    public Partition LoadPartitionFromJson(string fileName)
-    {
-        TextAsset file = Resources.Load<TextAsset>(fileName);
-        JSONNode node = JSONNode.Parse(file.text);
-        return new Partition(node);
-    }
-
-    public Instrument PickRandomInstrument()
+    /// <summary>
+    /// Choisi un instrument au hasard parmi les 4 présents.
+    /// Ne tombe jamais deux fois de suite sur le même pour éviter la répétition.
+    /// </summary>
+    /// <returns>L'instrument choisi au hasard</returns>
+    Instrument PickRandomInstrument()
     {
         int index = Random.Range(0, 4);
         Instrument picked = instruments[index];
@@ -121,27 +178,77 @@ public class SimonLoad : MonoBehaviour {
         return picked;
     }
 
-    public void GenerateInstrumentSequence()
+    void GenerateInstrumentSequence()
     {
 
     }
 
+    /// <summary>
+    /// Co-routine pour jouer la séquence de démonstration qui rajoute une note supplémentaire à chaque fois
+    /// </summary>
+    /// <returns>L'enum de cette co-routine</returns>
     IEnumerator PlayCurrentSequence()
     {
-        for (int i = 0; i < instruments.Length; i++)
-            instruments[i].Animator.enabled = true;
-
+        // Si success on incrémente la séquence d'une note
         if (success)
         {
+            if (sequence.Count == partition.NotesCount)
+            {
+                igInterface.enabled = false;
+                igSuccess.enabled = true;
+                yield break;
+            }
             chosenInstrument = PickRandomInstrument();
             sequence.Add(chosenInstrument);
         }
-        
+        // Sinon on agit en fonction du nombre d'erreurs du joueur
+        else
+        {
+            // Erreurs autorisées
+            if (errorCount < MAX_ERRORS_ALLOWED + 1)
+            {
+                Sprite errorSprite = Resources.Load<Sprite>("Sprites/error");
+                Image target;
+                switch (errorCount)
+                {
+                    case 1:
+                        target = error1;
+                        break;
+                    case 2:
+                        target = error2;
+                        break;
+                    default:
+                        target = error3;
+                        break;
+                }
+
+                target.sprite = errorSprite;
+            }
+            // Nombre d'erreurs autorisées dépassé --> GAME OVER
+            else
+            {
+                // On cache l'interface et on affiche le game over
+                gameOver = true;
+                igInterface.enabled = false;
+                igGameOver.enabled = true;
+
+                // On interrompt la co-routine à cet endroit - plus besoin de jouer de séquence.
+                yield break;
+            }            
+        }
+
+        // On anime tous les instruments pendant la séquence de démonstration
+        for (int i = 0; i < instruments.Length; i++)
+            instruments[i].Animator.enabled = true;
+
+        // On assigne le dernier instrument ajouté à la séquence
         chosenInstrument = sequence[0];
 
+        // On arrête d'éventuels applaudissements / booos
         if (audioSource.isPlaying)
             audioSource.Stop();
 
+        // On rejoue la séquence
         for (int i = 0; i < sequence.Count; i++)
         {
             Note note = partition.GetNoteAt(i);
@@ -150,15 +257,22 @@ public class SimonLoad : MonoBehaviour {
             yield return new WaitForSeconds(note.GetLengthInSeconds());
         }
 
+        // On signale que c'est au joueur de répéter la séquenc et on réinitialise les booléens.
         currentIndexInSequence = 0;
         playerTurn = true;
         sequenceIsPlaying = false;
         success = false;
 
+        // On arrête l'animation des instruments
         for (int i = 0; i < instruments.Length; i++)
             instruments[i].Animator.enabled = false;
     }
 
+    /// <summary>
+    /// Co-routine utilisée quand c'est au joueur de jouer.
+    /// Sauvegarde les input de l'utilisateur pour garder la séquence en mémoire.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator PlayerCoRoutine()
     {
         if (Input.GetMouseButtonDown(0))
@@ -181,26 +295,38 @@ public class SimonLoad : MonoBehaviour {
 
                 if (selected == chosenInstrument)
                 {
+                    bool finished = false;
                     Note toPlay = partition.GetNoteAt(currentIndexInSequence);
                     audioSource.clip = Resources.Load<AudioClip>(toPlay.GetFileNameFor(selected));
                     audioSource.Play();
 
                     selected.Animator.enabled = true;
 
+                    if (currentIndexInSequence != sequence.Count - 1)
+                    {
+                        currentIndexInSequence++;
+                        chosenInstrument = sequence[currentIndexInSequence];
+                    }
+                    else
+                    {
+                        finished = true;
+                    }
+
                     yield return new WaitForSeconds(toPlay.GetLengthInSeconds());
-                    if (currentIndexInSequence == sequence.Count - 1)
+
+                    if (finished)
                     {
                         success = true;
+
+                        // MAJ de la séquence max du joueur
+                        sequenceCount++;
+                        sequenceCountText.text = sequenceCount.ToString();
+
                         audioSource.Stop();
                         audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_applause");
                         audioSource.Play();
                         yield return new WaitForSeconds(3);
                         playerTurn = false;
-                    }
-                    else
-                    {
-                        currentIndexInSequence++;
-                        chosenInstrument = sequence[currentIndexInSequence];
                     }
 
                     selected.Animator.enabled = false;
@@ -208,11 +334,56 @@ public class SimonLoad : MonoBehaviour {
                 else
                 {
                     audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_boo");
-                    audioSource.Play();
+                    audioSource.Play();                    
                     yield return new WaitForSeconds(audioSource.clip.length);
+                    errorCount++;                    
                     playerTurn = false;
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Co-routine lancée au démarrage - Countdown / bulles avec les noms des instruments
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator StartingRoutine()
+    {
+        countdownText.text = "";
+        for (int i = 0; i < 5; i++)
+        {
+            countdownText.text = (5 - i).ToString();
+            yield return new WaitForSeconds(1);
+        }
+        this.igMenu.enabled = false;
+        sequenceIsPlaying = false;
+    }
+
+    IEnumerator CoRoutineBubbles()
+    {
+        bool atMax = false;
+        for (int i = 0; i < instruments.Length; i++)
+        {
+            if (instruments[i].Tooltip.transform.parent.localScale != new Vector3(1.5f, 0.5f, 1.5f))
+            {
+                instruments[i].Tooltip.transform.parent.localScale += new Vector3(0.3f / 6.0f, 0.1f / 6.0f, 0.3f / 6.0f);
+            }
+            else
+            {
+                atMax = true;                
+            }
+        }
+
+        if (atMax)
+        {
+            yield return new WaitForSeconds(5);
+
+            for (int i = 0; i < instruments.Length; i++)
+            {                
+                instruments[i].Tooltip.transform.parent.localScale = new Vector3(0, 0, 0);
+            }
+
+            showBubbles = false;
+        }        
     }
 }

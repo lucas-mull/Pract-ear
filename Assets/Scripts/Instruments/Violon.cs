@@ -8,21 +8,21 @@ public class Violon : Instrument
 
     public override Vector3 getFarLeftVector()
     {
-        return new Vector3(20, 82, 10);
+        return new Vector3(7.5f, 60, 55);
     }
 
     public override Vector3 getFarRightVector()
     {
-        return new Vector3(100, 82, 10);
+        return new Vector3(120, 60, 55);
     }
 
     public override Vector3 getMiddleLeftVector()
     {
-        return new Vector3(45, 82, 60);
+        return new Vector3(30, 60, 110);
     }
 
     public override Vector3 getMiddleRightVector()
     {
-        return new Vector3(80, 82, 60);
+        return new Vector3(80, 60, 110);
     }
 }
