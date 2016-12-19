@@ -46,7 +46,9 @@ public class SimonLoad : MonoBehaviour {
     private Partition partition;                                    // Partition jouée
 
     // Différents booléens qui servent à réguler le jeu
-    bool playerTurn, sequenceIsPlaying, hasStarted, success, gameOver, showBubbles;
+    bool playerTurn, sequenceIsPlaying, hasStarted, success, gameOver;
+
+    Sprite errorSprite = Resources.Load<Sprite>("Sprites/error");
 
     int currentIndexInSequence;                                     // Index actuelle dans la liste d'instruments
     int errorCount;                                                 // Nombre d'erreurs effectuées par l'utilisateur
@@ -65,7 +67,7 @@ public class SimonLoad : MonoBehaviour {
         instruments[2] = new Violon();
         instruments[3] = new Piano();
 
-        partition = Partition.LoadPartitionFromJson("Partitions/clair_de_la_lune");
+        partition = Partition.LoadPartitionFromJson("clair_de_la_lune");
 
         instruments[0].PutFarLeft(farLeftText);
         instruments[1].PutFarRight(farRightText);
@@ -90,7 +92,6 @@ public class SimonLoad : MonoBehaviour {
         hasStarted = false;
         success = true;
         gameOver = false;
-        showBubbles = true;
 
         errorCount = 0;
         sequenceCount = 0;
@@ -106,21 +107,13 @@ public class SimonLoad : MonoBehaviour {
         Init();
         sequenceIsPlaying = false;
         hasStarted = true;
-    }
 
-    public void TriggerBubbles()
-    {
-        showBubbles = true;
-    }
+        igInterface.enabled = true;
+    }    
 
     // Update is called once per frame
     void Update()
     {
-        if (showBubbles)
-        {
-            StartCoroutine(CoRoutineBubbles());
-        }
-
         if (gameOver)
         {
             // do nothing
@@ -206,8 +199,7 @@ public class SimonLoad : MonoBehaviour {
         {
             // Erreurs autorisées
             if (errorCount < MAX_ERRORS_ALLOWED + 1)
-            {
-                Sprite errorSprite = Resources.Load<Sprite>("Sprites/error");
+            {                
                 Image target;
                 switch (errorCount)
                 {
@@ -275,9 +267,23 @@ public class SimonLoad : MonoBehaviour {
     /// <returns></returns>
     IEnumerator PlayerCoRoutine()
     {
-        if (Input.GetMouseButtonDown(0))
-        { // if left button pressed...
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        bool clicked;
+        Vector3 clickedPosition = new Vector3();
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            clicked = Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
+            if (clicked)
+                clickedPosition = Input.GetTouch(0).position;
+        }
+        else
+        {
+            clicked = Input.GetMouseButtonDown(0);
+            if (clicked)
+                clickedPosition = Input.mousePosition;
+        }
+        if (clicked)
+        {
+            Ray ray = mainCamera.ScreenPointToRay(clickedPosition);
             RaycastHit hit;
             Instrument selected;
 
@@ -289,7 +295,7 @@ public class SimonLoad : MonoBehaviour {
                 selected = instruments[0];
                 for (int i = 0; i < instruments.Length; i++)
                 {
-                    if (hit.transform.name == instruments[i].Name + "(Clone)")
+                    if (hit.transform.name == instruments[i].Name)
                         selected = instruments[i];
                 }
 
@@ -357,33 +363,5 @@ public class SimonLoad : MonoBehaviour {
         }
         this.igMenu.enabled = false;
         sequenceIsPlaying = false;
-    }
-
-    IEnumerator CoRoutineBubbles()
-    {
-        bool atMax = false;
-        for (int i = 0; i < instruments.Length; i++)
-        {
-            if (instruments[i].Tooltip.transform.parent.localScale != new Vector3(1.5f, 0.5f, 1.5f))
-            {
-                instruments[i].Tooltip.transform.parent.localScale += new Vector3(0.3f / 6.0f, 0.1f / 6.0f, 0.3f / 6.0f);
-            }
-            else
-            {
-                atMax = true;                
-            }
-        }
-
-        if (atMax)
-        {
-            yield return new WaitForSeconds(5);
-
-            for (int i = 0; i < instruments.Length; i++)
-            {                
-                instruments[i].Tooltip.transform.parent.localScale = new Vector3(0, 0, 0);
-            }
-
-            showBubbles = false;
-        }        
-    }
+    }   
 }

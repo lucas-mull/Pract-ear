@@ -4,6 +4,8 @@ using SimpleJSON;
 
 public class Partition
 {
+    const string PATH_TO_PARTITIONS = "Partitions/";
+
     #region Attributs
 
     private string title;       // Titre de la partition
@@ -116,7 +118,7 @@ public class Partition
     /// <returns></returns>
     public static Partition LoadPartitionFromJson(string fileName)
     {
-        TextAsset file = Resources.Load<TextAsset>(fileName);
+        TextAsset file = Resources.Load<TextAsset>(PATH_TO_PARTITIONS + fileName);
         JSONNode node = JSONNode.Parse(file.text);
         return new Partition(node);
     }

@@ -4,12 +4,19 @@ using UnityEngine.UI;
 public abstract class Instrument {
 
     const string PATH_TO_PREFABS = "Prefabs/";
+    const int INSTRUMENTS_COUNT = 5;
 
     // Noms des prefabs des instruments dans Assets/Resources/Prefabs
-    public static string PIANO = "piano";
-    public static string TROMPETTE = "trompette";
-    public static string VIOLON = "violon";
-    public static string MARIMBA = "marimba";
+    public const string PIANO = "piano";
+    public const string TROMPETTE = "trompette";
+    public const string VIOLON = "violon";
+    public const string MARIMBA = "marimba";
+    public const string TAMTAM = "tamtam";
+
+    public static string[] ALL_INSTRUMENTS = new string[INSTRUMENTS_COUNT]
+    {
+        PIANO, TROMPETTE, VIOLON, MARIMBA, TAMTAM
+    };
 
     #region Attributs
 
@@ -56,7 +63,8 @@ public abstract class Instrument {
         set
         {
             this.toolTip = value;
-            this.toolTip.text = this.Name;
+            if (toolTip != null)
+                this.toolTip.text = this.Name;
         }
     }
 
@@ -65,8 +73,20 @@ public abstract class Instrument {
     /// </summary>
     public string Name
     {
-        get { return this.Model.name; }
-        set { this.Model.name = value; }
+        get
+        {
+            if (this.isInstantiated)
+                return this.Instance.name;
+
+            return this.Model.name;
+        }
+        set
+        {
+            if (this.isInstantiated)
+                this.Instance.name = value;
+
+            this.Model.name = value;
+        }
     }
 
     /// <summary>
@@ -143,11 +163,14 @@ public abstract class Instrument {
         if (!isInstantiated)
         {
             this.Instance = (GameObject)Object.Instantiate(this.Model, position, this.Model.transform.rotation);
+            isInstantiated = true;
+
+            // Change le nom de l'instance créée (pour enlever le "(Clone)")
+            this.Name = this.Model.name;            
         }
         else
         {
             this.Instance.transform.position = getFarLeftVector();
-            isInstantiated = true;
         }
 
         return this.Instance;
@@ -207,6 +230,35 @@ public abstract class Instrument {
     public void Destroy()
     {
         Resources.UnloadUnusedAssets();
+    }
+
+    #endregion
+
+    #region Méthodes statiques
+
+    public static Instrument GetInstanceFor(string instrumentName)
+    {
+        switch(instrumentName)
+        {
+            case PIANO:
+                return new Piano();
+            case TROMPETTE:
+                return new Trompette();
+            case VIOLON:
+                return new Violon();
+            case MARIMBA:
+                return new Marimba();
+            case TAMTAM:
+                return new Tamtam();
+            default:
+                return null;              
+        }
+    }
+
+    public static string GenerateRandomInstrumentName()
+    {
+        int index = Random.Range(0, INSTRUMENTS_COUNT);
+        return ALL_INSTRUMENTS[index];
     }
 
     #endregion

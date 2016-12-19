@@ -20,7 +20,7 @@ public class LoadLevel : MonoBehaviour {
     public void LoadLevelOnClick(int gameId)
     {
         MenuCanvas.SetActive(false);
-        //SceneManager.LoadScene(gameId);
+        SceneManager.LoadScene(gameId);
     }
 
     public void LoadGame(int gameId)
