@@ -330,7 +330,14 @@ public class OrchestraLoad : MonoBehaviour {
     {
         for (int i = 0; i < _instruments.Count; i++)
         {
-            _instruments[i].Instrument.Animator.enabled = animate;
+            if (animate)
+            {
+                _instruments[i].Instrument.StartAnimation(true);
+            }
+            else
+            {
+                _instruments[i].Instrument.StopAnimation();
+            }
         }
     }
 

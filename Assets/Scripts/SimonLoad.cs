@@ -48,7 +48,7 @@ public class SimonLoad : MonoBehaviour {
     // Différents booléens qui servent à réguler le jeu
     bool playerTurn, sequenceIsPlaying, hasStarted, success, gameOver;
 
-    Sprite errorSprite = Resources.Load<Sprite>("Sprites/error");
+    Sprite errorSprite;
 
     int currentIndexInSequence;                                     // Index actuelle dans la liste d'instruments
     int errorCount;                                                 // Nombre d'erreurs effectuées par l'utilisateur
@@ -58,7 +58,9 @@ public class SimonLoad : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        SetDifficulty(DIFFICULTY_EASY);       
+        SetDifficulty(DIFFICULTY_EASY);
+
+        errorSprite = Resources.Load<Sprite>("Sprites/error");
 
         Init();
 
@@ -231,7 +233,7 @@ public class SimonLoad : MonoBehaviour {
 
         // On anime tous les instruments pendant la séquence de démonstration
         for (int i = 0; i < instruments.Length; i++)
-            instruments[i].Animator.enabled = true;
+            instruments[i].StartAnimation(true);
 
         // On assigne le dernier instrument ajouté à la séquence
         chosenInstrument = sequence[0];
@@ -257,7 +259,7 @@ public class SimonLoad : MonoBehaviour {
 
         // On arrête l'animation des instruments
         for (int i = 0; i < instruments.Length; i++)
-            instruments[i].Animator.enabled = false;
+            instruments[i].StopAnimation();
     }
 
     /// <summary>
@@ -306,7 +308,7 @@ public class SimonLoad : MonoBehaviour {
                     audioSource.clip = Resources.Load<AudioClip>(toPlay.GetFileNameFor(selected));
                     audioSource.Play();
 
-                    selected.Animator.enabled = true;
+                    selected.StartAnimation(true);
 
                     if (currentIndexInSequence != sequence.Count - 1)
                     {
@@ -335,7 +337,7 @@ public class SimonLoad : MonoBehaviour {
                         playerTurn = false;
                     }
 
-                    selected.Animator.enabled = false;
+                    selected.StopAnimation();
                 }
                 else
                 {

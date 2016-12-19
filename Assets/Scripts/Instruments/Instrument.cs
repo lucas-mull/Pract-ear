@@ -225,6 +225,54 @@ public abstract class Instrument {
     }
 
     /// <summary>
+    /// Lance l'animation de l'instrument
+    /// </summary>
+    /// <param name="emitParticles">true pour emettre les particules de notes de musiques avec l'animation.</param>
+    public void StartAnimation(bool emitParticles)
+    {
+        if (this.Animator != null)
+        {
+            if (!this.Animator.enabled)
+            {
+                this.Animator.enabled = true;
+            }
+            
+            if (emitParticles)
+            {
+                ParticleSystem particleSystem = this.Instance.GetComponent<ParticleSystem>();
+                if (particleSystem != null && !particleSystem.isPlaying)
+                {
+                    ParticleSystem.EmissionModule em = particleSystem.emission;
+                    em.enabled = true;
+                    particleSystem.Play();
+                }
+            }            
+        }
+    }
+
+    /// <summary>
+    /// Arrête l'animation et l'émission des particules pour cet instrument.
+    /// </summary>
+    public void StopAnimation()
+    {
+        if (this.Animator != null)
+        {
+            if (this.Animator.enabled)
+            {
+                this.Animator.enabled = false;
+            }
+
+            ParticleSystem particleSystem = this.Instance.GetComponent<ParticleSystem>();
+            if (particleSystem != null && particleSystem.isPlaying)
+            {
+                particleSystem.Stop();
+                ParticleSystem.EmissionModule em = particleSystem.emission;
+                em.enabled = false;
+            }
+        }
+    }
+
+    /// <summary>
     /// GarbageCollect cet objet
     /// </summary>
     public void Destroy()
@@ -236,6 +284,11 @@ public abstract class Instrument {
 
     #region Méthodes statiques
 
+    /// <summary>
+    /// Retourne une instance de l'instrument correspondant au nom donné en paramètre
+    /// </summary>
+    /// <param name="instrumentName">Nom de l'instrument à créer</param>
+    /// <returns>L'instance nouvellement créée de cet instrument</returns>
     public static Instrument GetInstanceFor(string instrumentName)
     {
         switch(instrumentName)
@@ -255,6 +308,10 @@ public abstract class Instrument {
         }
     }
 
+    /// <summary>
+    /// Génére un nom d'instrument au hasard
+    /// </summary>
+    /// <returns>Un nom d'instrument aléatoire</returns>
     public static string GenerateRandomInstrumentName()
     {
         int index = Random.Range(0, INSTRUMENTS_COUNT);
