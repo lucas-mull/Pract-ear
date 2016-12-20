@@ -36,25 +36,26 @@ public class SimonLoad : MonoBehaviour {
 
     #region Variables privées
 
-    private string difficulty_level;
+    string difficulty_level;                                // Niveau de difficulté (pas encore implémenté)
 
-    private Instrument[] instruments = new Instrument[4];           // Instruments présents sur la scène
-    private List<Instrument> sequence;                              // Séquence actuelle des instruments
-
-    private Instrument chosenInstrument;                            // Instrument choisi pour la prochaine note
-
-    private Partition partition;                                    // Partition jouée
+    Instrument[] instruments = new Instrument[4];           // Instruments présents sur la scène
+    List<Instrument> sequence;                              // Séquence actuelle des instruments
+    Instrument chosenInstrument;                            // Instrument choisi pour la prochaine note
+    Partition partition;                                    // Partition jouée
 
     // Différents booléens qui servent à réguler le jeu
-    bool playerTurn, sequenceIsPlaying, hasStarted, success, gameOver;
+    bool playerTurn, sequenceIsPlaying, 
+        hasStarted, success, gameOver;
 
     Sprite errorSprite;
 
-    int currentIndexInSequence;                                     // Index actuelle dans la liste d'instruments
-    int errorCount;                                                 // Nombre d'erreurs effectuées par l'utilisateur
-    int sequenceCount;                                              // Nombre de notes enchaînées correctement par le joueur
+    int currentIndexInSequence;                             // Index actuelle dans la liste d'instruments
+    int errorCount;                                         // Nombre d'erreurs effectuées par l'utilisateur
+    int sequenceCount;                                      // Nombre de notes enchaînées correctement par le joueur
 
     #endregion
+
+    #region Callbacks automatiques
 
     // Use this for initialization
     void Start () {
@@ -76,8 +77,41 @@ public class SimonLoad : MonoBehaviour {
         instruments[2].PutMiddleLeft(middleLeftText);
         instruments[3].PutMiddleRight(middleRightText);
 
+        EnableInstrumentsColliders(false);
+
         audioSource = GetComponent<AudioSource>();
     }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (gameOver)
+        {
+            // do nothing
+        }
+        else if (!hasStarted)
+        {
+            StartCoroutine(StartingRoutine());
+            for (int i = 0; i < instruments.Length; i++)
+            {
+                instruments[i].Tooltip.transform.parent.localScale = new Vector3(0, 0, 0);
+            }
+            hasStarted = true;
+        }
+        else if (!playerTurn && !sequenceIsPlaying)
+        {
+            StartCoroutine(PlayCurrentSequence());
+            sequenceIsPlaying = true;
+        }
+        else if (playerTurn)
+        {
+            StartCoroutine(PlayerCoRoutine());
+        }
+    }
+
+    #endregion
+
+    #region Fonctions d'aide
 
     /// <summary>
     /// Initialisation de tous les booléens et de la liste d'instruments
@@ -113,33 +147,6 @@ public class SimonLoad : MonoBehaviour {
         igInterface.enabled = true;
     }    
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (gameOver)
-        {
-            // do nothing
-        }
-        else if (!hasStarted)
-        {
-            StartCoroutine(StartingRoutine());
-            for (int i = 0; i < instruments.Length; i++)
-            {
-                instruments[i].Tooltip.transform.parent.localScale = new Vector3(0, 0, 0);
-            }            
-            hasStarted = true;
-        }
-        else if (!playerTurn && !sequenceIsPlaying)
-        {
-            StartCoroutine(PlayCurrentSequence());
-            sequenceIsPlaying = true;
-        }
-        else if (playerTurn)
-        {
-            StartCoroutine(PlayerCoRoutine());
-        }
-    }
-
     void SetDifficulty(string difficulty)
     {
         switch(difficulty)
@@ -173,10 +180,26 @@ public class SimonLoad : MonoBehaviour {
         return picked;
     }
 
+    /// <summary>
+    /// Active ou désactive les colliders des instruments dans le but d'empêcher le joueur de cliquer quand il ne doit pas
+    /// </summary>
+    /// <param name="enabled">true pour activer, false pour désactiver</param>
+    void EnableInstrumentsColliders(bool enabled)
+    {
+        foreach (Instrument instrument in instruments)
+        {
+            instrument.Collider.enabled = enabled;
+        }
+    }
+
     void GenerateInstrumentSequence()
     {
 
     }
+
+    #endregion
+
+    #region Coroutines
 
     /// <summary>
     /// Co-routine pour jouer la séquence de démonstration qui rajoute une note supplémentaire à chaque fois
@@ -260,6 +283,8 @@ public class SimonLoad : MonoBehaviour {
         // On arrête l'animation des instruments
         for (int i = 0; i < instruments.Length; i++)
             instruments[i].StopAnimation();
+
+        EnableInstrumentsColliders(true);
     }
 
     /// <summary>
@@ -301,6 +326,8 @@ public class SimonLoad : MonoBehaviour {
                         selected = instruments[i];
                 }
 
+                EnableInstrumentsColliders(false);
+
                 if (selected == chosenInstrument)
                 {
                     bool finished = false;
@@ -336,6 +363,10 @@ public class SimonLoad : MonoBehaviour {
                         yield return new WaitForSeconds(3);
                         playerTurn = false;
                     }
+                    else
+                    {
+                        EnableInstrumentsColliders(true);
+                    }
 
                     selected.StopAnimation();
                 }
@@ -365,5 +396,7 @@ public class SimonLoad : MonoBehaviour {
         }
         this.igMenu.enabled = false;
         sequenceIsPlaying = false;
-    }   
+    }
+
+    #endregion
 }

@@ -54,6 +54,11 @@ public abstract class Instrument {
         get { return this.instance; }
     }
 
+    public Collider Collider
+    {
+        get { return this.Instance.GetComponent<Collider>(); }
+    }
+
     /// <summary>
     /// Propriété pour l'attribut privé 'toolTip'
     /// </summary>
@@ -240,7 +245,7 @@ public abstract class Instrument {
             if (emitParticles)
             {
                 ParticleSystem particleSystem = this.Instance.GetComponent<ParticleSystem>();
-                if (particleSystem != null && !particleSystem.isPlaying)
+                if (particleSystem != null && !particleSystem.emission.enabled)
                 {
                     ParticleSystem.EmissionModule em = particleSystem.emission;
                     em.enabled = true;
@@ -263,7 +268,7 @@ public abstract class Instrument {
             }
 
             ParticleSystem particleSystem = this.Instance.GetComponent<ParticleSystem>();
-            if (particleSystem != null && particleSystem.isPlaying)
+            if (particleSystem != null && particleSystem.emission.enabled)
             {
                 particleSystem.Stop();
                 ParticleSystem.EmissionModule em = particleSystem.emission;
