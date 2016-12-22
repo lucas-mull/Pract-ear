@@ -12,46 +12,49 @@ public class SimonLoad : MonoBehaviour {
 
     #region Objets assignés à travers l'Inspector
 
-    public Camera mainCamera;
+    public Camera _mainCamera;                              // Camera principale de la scène
 
-    public Canvas igMenu;
-    public Canvas igInterface;
-    public Canvas igGameOver;
-    public Canvas igSuccess;
+    public Canvas _igMenu;                                  // Canvas contenant l'UI du menu
+    public Canvas _igInterface;                             // Canvas contenant l'interface in game
+    public Canvas _igGameOver;                              // Canvas du Game Over
+    public Canvas _igSuccess;                               // Canvas du Success (quand on réussit un niveau)
+    public GameObject _actionsPanel;                        // Panel des actions dans le menu (reprendre / retour au menu)
+    public Image _menuBackground;                           // Image background du menu pause
 
-    public Text farLeftText;
-    public Text middleLeftText;
-    public Text middleRightText;
-    public Text farRightText;
-    public Text countdownText;
-    public Text sequenceCountText;
+    public Text _farLeftText;                               // Texte pour le nom d'instrument en bas à gauche
+    public Text _middleLeftText;                            // Texte pour le nom d'instrument en haut à gauche
+    public Text _middleRightText;                           // Texte pour le nom d'instrument en bas à droite
+    public Text _farRightText;                              // Texte pour le nom d'instrument en bas à droite
+    public Text _countdownText;                             // Texte contenant le compte à rebours de départ
+    public Text _sequenceCountText;                         // Texte contenant le score actuel (longueur de la séquence)
 
-    public Image error1;
-    public Image error2;
-    public Image error3;
+    public Image _error1;                                   // Sprite pour la première erreur
+    public Image _error2;                                   // Sprite pour la deuxième erreur
+    public Image _error3;                                   // Sprite pour la troisième et dernière erreur
 
-    public AudioSource audioSource;
+    public AudioSource _audioSource;                        // AudioSource principale de notre scène
 
     #endregion
 
     #region Variables privées
 
-    string difficulty_level;                                // Niveau de difficulté (pas encore implémenté)
+    string _difficulty_level;                               // Niveau de difficulté (pas encore implémenté)
 
-    Instrument[] instruments = new Instrument[4];           // Instruments présents sur la scène
-    List<Instrument> sequence;                              // Séquence actuelle des instruments
-    Instrument chosenInstrument;                            // Instrument choisi pour la prochaine note
-    Partition partition;                                    // Partition jouée
+    Instrument[] _instruments = new Instrument[4];          // Instruments présents sur la scène
+    List<Instrument> _sequence;                             // Séquence actuelle des instruments
+    Instrument _chosenInstrument;                           // Instrument choisi pour la prochaine note
+    Partition _partition;                                   // Partition jouée
 
     // Différents booléens qui servent à réguler le jeu
-    bool playerTurn, sequenceIsPlaying, 
-        hasStarted, success, gameOver;
+    bool _playerTurn, _sequenceIsPlaying, 
+        _hasStarted, _success, _gameOver, _isGamePaused;
 
-    Sprite errorSprite;
+    Sprite _errorSprite;
+    Sprite _noErrorSprite;
 
-    int currentIndexInSequence;                             // Index actuelle dans la liste d'instruments
-    int errorCount;                                         // Nombre d'erreurs effectuées par l'utilisateur
-    int sequenceCount;                                      // Nombre de notes enchaînées correctement par le joueur
+    int _currentIndexInSequence;                            // Index actuelle dans la liste d'instruments
+    int _errorCount;                                        // Nombre d'erreurs effectuées par l'utilisateur
+    int _sequenceCount;                                     // Nombre de notes enchaînées correctement par le joueur
 
     #endregion
 
@@ -61,49 +64,50 @@ public class SimonLoad : MonoBehaviour {
     void Start () {
         SetDifficulty(DIFFICULTY_EASY);
 
-        errorSprite = Resources.Load<Sprite>("Sprites/error");
+        _errorSprite = Resources.Load<Sprite>("Sprites/error");
+        _noErrorSprite = Resources.Load<Sprite>("Sprites/error_outline");
 
         Init();
 
-        instruments[0] = new Marimba();
-        instruments[1] = new Trompette();
-        instruments[2] = new Violon();
-        instruments[3] = new Piano();
+        _instruments[0] = new Marimba();
+        _instruments[1] = new Trompette();
+        _instruments[2] = new Violon();
+        _instruments[3] = new Piano();
 
-        partition = Partition.LoadPartitionFromJson("clair_de_la_lune");
+        _partition = Partition.LoadPartitionFromJson("clair_de_la_lune");
 
-        instruments[0].PutFarLeft(farLeftText);
-        instruments[1].PutFarRight(farRightText);
-        instruments[2].PutMiddleLeft(middleLeftText);
-        instruments[3].PutMiddleRight(middleRightText);
+        _instruments[0].PutFarLeft(_farLeftText);
+        _instruments[1].PutFarRight(_farRightText);
+        _instruments[2].PutMiddleLeft(_middleLeftText);
+        _instruments[3].PutMiddleRight(_middleRightText);
 
         EnableInstrumentsColliders(false);
 
-        audioSource = GetComponent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (gameOver)
+        if (_gameOver)
         {
             // do nothing
         }
-        else if (!hasStarted)
+        else if (!_hasStarted)
         {
             StartCoroutine(StartingRoutine());
-            for (int i = 0; i < instruments.Length; i++)
+            for (int i = 0; i < _instruments.Length; i++)
             {
-                instruments[i].Tooltip.transform.parent.localScale = new Vector3(0, 0, 0);
+                _instruments[i].Tooltip.transform.parent.localScale = new Vector3(0, 0, 0);
             }
-            hasStarted = true;
+            _hasStarted = true;
         }
-        else if (!playerTurn && !sequenceIsPlaying)
+        else if (!_playerTurn && !_sequenceIsPlaying)
         {
             StartCoroutine(PlayCurrentSequence());
-            sequenceIsPlaying = true;
+            _sequenceIsPlaying = true;
         }
-        else if (playerTurn)
+        else if (_playerTurn)
         {
             StartCoroutine(PlayerCoRoutine());
         }
@@ -118,21 +122,22 @@ public class SimonLoad : MonoBehaviour {
     /// </summary>
     void Init()
     {
-        currentIndexInSequence = 0;
+        _currentIndexInSequence = 0;
 
-        igGameOver.enabled = false;
-        igSuccess.enabled = false;
+        _igGameOver.enabled = false;
+        _igSuccess.enabled = false;        
 
-        playerTurn = false;
-        sequenceIsPlaying = true;
-        hasStarted = false;
-        success = true;
-        gameOver = false;
+        _playerTurn = false;
+        _sequenceIsPlaying = true;
+        _hasStarted = false;
+        _success = true;
+        _gameOver = false;
+        _isGamePaused = false;
 
-        errorCount = 0;
-        sequenceCount = 0;
+        _errorCount = 0;
+        _sequenceCount = 0;
 
-        sequence = new List<Instrument>();
+        _sequence = new List<Instrument>();
     }
 
     /// <summary>
@@ -141,10 +146,46 @@ public class SimonLoad : MonoBehaviour {
     public void Restart()
     {
         Init();
-        sequenceIsPlaying = false;
-        hasStarted = true;
+        _sequenceIsPlaying = false;
+        _hasStarted = true;
 
-        igInterface.enabled = true;
+        _igInterface.enabled = true;
+        _error1.sprite = _noErrorSprite;
+        _error2.sprite = _noErrorSprite;
+        _error3.sprite = _noErrorSprite;
+    }
+    
+    /// <summary>
+    /// Met en pause ou reprend le jeu
+    /// Utilisation du hack du timeScale à 0 pour "stopper" l'exécution du jeu.
+    /// Note : les sons qui ont commencé se terminent
+    /// </summary>
+    public void PauseOrResume()
+    {
+        if (!_isGamePaused)
+        {
+            EnableInstrumentsColliders(false);
+            Time.timeScale = 0;
+            _isGamePaused = true;
+            _countdownText.text = string.Empty;
+            _igMenu.enabled = true;
+        }
+        else
+        {
+            _isGamePaused = false;
+            _igMenu.enabled = false;
+            Time.timeScale = 1;
+            EnableInstrumentsColliders(true);
+        }
+    }
+
+    /// <summary>
+    /// Retour au menu principal
+    /// </summary>
+    public void Back()
+    {
+        Time.timeScale = 1;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");       
     }    
 
     void SetDifficulty(string difficulty)
@@ -154,7 +195,7 @@ public class SimonLoad : MonoBehaviour {
             case DIFFICULTY_EASY:
             case DIFFICULTY_MEDIUM:
             case DIFFICULTY_HARD:
-                this.difficulty_level = difficulty;
+                this._difficulty_level = difficulty;
                 break;
             default:
                 System.Console.WriteLine(difficulty + " is not a valid difficulty input");
@@ -170,11 +211,11 @@ public class SimonLoad : MonoBehaviour {
     Instrument PickRandomInstrument()
     {
         int index = Random.Range(0, 4);
-        Instrument picked = instruments[index];
-        while (picked == chosenInstrument)
+        Instrument picked = _instruments[index];
+        while (picked == _chosenInstrument)
         {
             index = Random.Range(0, 4);
-            picked = instruments[index];
+            picked = _instruments[index];
         }
 
         return picked;
@@ -186,7 +227,7 @@ public class SimonLoad : MonoBehaviour {
     /// <param name="enabled">true pour activer, false pour désactiver</param>
     void EnableInstrumentsColliders(bool enabled)
     {
-        foreach (Instrument instrument in instruments)
+        foreach (Instrument instrument in _instruments)
         {
             instrument.Collider.enabled = enabled;
         }
@@ -208,46 +249,46 @@ public class SimonLoad : MonoBehaviour {
     IEnumerator PlayCurrentSequence()
     {
         // Si success on incrémente la séquence d'une note
-        if (success)
+        if (_success)
         {
-            if (sequence.Count == partition.NotesCount)
+            if (_sequence.Count == _partition.NotesCount)
             {
-                igInterface.enabled = false;
-                igSuccess.enabled = true;
+                _igInterface.enabled = false;
+                _igSuccess.enabled = true;
                 yield break;
             }
-            chosenInstrument = PickRandomInstrument();
-            sequence.Add(chosenInstrument);
+            _chosenInstrument = PickRandomInstrument();
+            _sequence.Add(_chosenInstrument);
         }
         // Sinon on agit en fonction du nombre d'erreurs du joueur
         else
         {
             // Erreurs autorisées
-            if (errorCount < MAX_ERRORS_ALLOWED + 1)
+            if (_errorCount < MAX_ERRORS_ALLOWED + 1)
             {                
                 Image target;
-                switch (errorCount)
+                switch (_errorCount)
                 {
                     case 1:
-                        target = error1;
+                        target = _error1;
                         break;
                     case 2:
-                        target = error2;
+                        target = _error2;
                         break;
                     default:
-                        target = error3;
+                        target = _error3;
                         break;
                 }
 
-                target.sprite = errorSprite;
+                target.sprite = _errorSprite;
             }
             // Nombre d'erreurs autorisées dépassé --> GAME OVER
             else
             {
                 // On cache l'interface et on affiche le game over
-                gameOver = true;
-                igInterface.enabled = false;
-                igGameOver.enabled = true;
+                _gameOver = true;
+                _igInterface.enabled = false;
+                _igGameOver.enabled = true;
 
                 // On interrompt la co-routine à cet endroit - plus besoin de jouer de séquence.
                 yield break;
@@ -255,34 +296,34 @@ public class SimonLoad : MonoBehaviour {
         }
 
         // On anime tous les instruments pendant la séquence de démonstration
-        for (int i = 0; i < instruments.Length; i++)
-            instruments[i].StartAnimation(true);
+        for (int i = 0; i < _instruments.Length; i++)
+            _instruments[i].StartAnimation(true);
 
         // On assigne le dernier instrument ajouté à la séquence
-        chosenInstrument = sequence[0];
+        _chosenInstrument = _sequence[0];
 
         // On arrête d'éventuels applaudissements / booos
-        if (audioSource.isPlaying)
-            audioSource.Stop();
+        if (_audioSource.isPlaying)
+            _audioSource.Stop();
 
         // On rejoue la séquence
-        for (int i = 0; i < sequence.Count; i++)
+        for (int i = 0; i < _sequence.Count; i++)
         {
-            Note note = partition.GetNoteAt(i);
-            audioSource.clip = Resources.Load<AudioClip>(note.GetFileNameFor(sequence[i]));
-            audioSource.Play();
+            Note note = _partition.GetNoteAt(i);
+            _audioSource.clip = Resources.Load<AudioClip>(note.GetFileNameFor(_sequence[i]));
+            _audioSource.Play();
             yield return new WaitForSeconds(note.GetLengthInSeconds());
         }
 
         // On signale que c'est au joueur de répéter la séquenc et on réinitialise les booléens.
-        currentIndexInSequence = 0;
-        playerTurn = true;
-        sequenceIsPlaying = false;
-        success = false;
+        _currentIndexInSequence = 0;
+        _playerTurn = true;
+        _sequenceIsPlaying = false;
+        _success = false;
 
         // On arrête l'animation des instruments
-        for (int i = 0; i < instruments.Length; i++)
-            instruments[i].StopAnimation();
+        for (int i = 0; i < _instruments.Length; i++)
+            _instruments[i].StopAnimation();
 
         EnableInstrumentsColliders(true);
     }
@@ -310,73 +351,69 @@ public class SimonLoad : MonoBehaviour {
         }
         if (clicked)
         {
-            Ray ray = mainCamera.ScreenPointToRay(clickedPosition);
+            Ray ray = _mainCamera.ScreenPointToRay(clickedPosition);
             RaycastHit hit;
             Instrument selected;
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (audioSource.isPlaying)
-                    audioSource.Stop();
+                if (_audioSource.isPlaying)
+                    _audioSource.Stop();
 
-                selected = instruments[0];
-                for (int i = 0; i < instruments.Length; i++)
+                selected = _instruments[0];
+                for (int i = 0; i < _instruments.Length; i++)
                 {
-                    if (hit.transform.name == instruments[i].Name)
-                        selected = instruments[i];
-                }
+                    if (hit.transform.name == _instruments[i].Name)
+                        selected = _instruments[i];
+                }                
 
-                EnableInstrumentsColliders(false);
-
-                if (selected == chosenInstrument)
+                if (selected == _chosenInstrument)
                 {
                     bool finished = false;
-                    Note toPlay = partition.GetNoteAt(currentIndexInSequence);
-                    audioSource.clip = Resources.Load<AudioClip>(toPlay.GetFileNameFor(selected));
-                    audioSource.Play();
+                    Note toPlay = _partition.GetNoteAt(_currentIndexInSequence);
+                    _audioSource.clip = Resources.Load<AudioClip>(toPlay.GetFileNameFor(selected));
+                    _audioSource.Play();
 
                     selected.StartAnimation(true);
 
-                    if (currentIndexInSequence != sequence.Count - 1)
+                    if (_currentIndexInSequence != _sequence.Count - 1)
                     {
-                        currentIndexInSequence++;
-                        chosenInstrument = sequence[currentIndexInSequence];
+                        _currentIndexInSequence++;
+                        _chosenInstrument = _sequence[_currentIndexInSequence];
                     }
                     else
                     {
                         finished = true;
+                        EnableInstrumentsColliders(false);
                     }
 
                     yield return new WaitForSeconds(toPlay.GetLengthInSeconds());
 
                     if (finished)
                     {
-                        success = true;
+                        _success = true;
 
                         // MAJ de la séquence max du joueur
-                        sequenceCount++;
-                        sequenceCountText.text = sequenceCount.ToString();
+                        _sequenceCount++;
+                        _sequenceCountText.text = _sequenceCount.ToString();
 
-                        audioSource.Stop();
-                        audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_applause");
-                        audioSource.Play();
+                        _audioSource.Stop();
+                        _audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_applause");
+                        _audioSource.Play();
                         yield return new WaitForSeconds(3);
-                        playerTurn = false;
-                    }
-                    else
-                    {
-                        EnableInstrumentsColliders(true);
+                        _playerTurn = false;
                     }
 
                     selected.StopAnimation();
                 }
                 else
                 {
-                    audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_boo");
-                    audioSource.Play();                    
-                    yield return new WaitForSeconds(audioSource.clip.length);
-                    errorCount++;                    
-                    playerTurn = false;
+                    EnableInstrumentsColliders(false);
+                    _audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_boo");
+                    _audioSource.Play();                    
+                    yield return new WaitForSeconds(_audioSource.clip.length);
+                    _errorCount++;                    
+                    _playerTurn = false;
                 }
             }
         }
@@ -388,14 +425,18 @@ public class SimonLoad : MonoBehaviour {
     /// <returns></returns>
     IEnumerator StartingRoutine()
     {
-        countdownText.text = "";
+        _countdownText.text = "";
         for (int i = 0; i < 5; i++)
         {
-            countdownText.text = (5 - i).ToString();
+            _countdownText.text = (5 - i).ToString();
             yield return new WaitForSeconds(1);
         }
-        this.igMenu.enabled = false;
-        sequenceIsPlaying = false;
+        this._igMenu.enabled = false;
+        _sequenceIsPlaying = false;
+        _actionsPanel.SetActive(true);
+        Color color = _menuBackground.color;
+        color.a = 0.5f;
+        _menuBackground.color = color;
     }
 
     #endregion
