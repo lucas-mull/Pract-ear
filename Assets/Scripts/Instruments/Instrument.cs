@@ -229,6 +229,30 @@ public abstract class Instrument {
         return InstantiateOrMoveAt(getMiddleRightVector());
     }
 
+
+    public void EnableParticles(bool emitParticles)
+    {
+        ParticleSystem particleSystem = this.Instance.GetComponent<ParticleSystem>();
+        if (emitParticles)
+        {
+            if (particleSystem != null && !particleSystem.emission.enabled)
+            {
+                ParticleSystem.EmissionModule em = particleSystem.emission;
+                em.enabled = true;
+                particleSystem.Play();
+            }
+        }
+        else
+        {
+            if (particleSystem != null && particleSystem.emission.enabled)
+            {
+                particleSystem.Stop();
+                ParticleSystem.EmissionModule em = particleSystem.emission;
+                em.enabled = false;
+            }
+        }
+    }
+
     /// <summary>
     /// Lance l'animation de l'instrument
     /// </summary>
@@ -241,17 +265,8 @@ public abstract class Instrument {
             {
                 this.Animator.enabled = true;
             }
-            
-            if (emitParticles)
-            {
-                ParticleSystem particleSystem = this.Instance.GetComponent<ParticleSystem>();
-                if (particleSystem != null && !particleSystem.emission.enabled)
-                {
-                    ParticleSystem.EmissionModule em = particleSystem.emission;
-                    em.enabled = true;
-                    particleSystem.Play();
-                }
-            }            
+
+            EnableParticles(emitParticles);               
         }
     }
 
@@ -267,13 +282,7 @@ public abstract class Instrument {
                 this.Animator.enabled = false;
             }
 
-            ParticleSystem particleSystem = this.Instance.GetComponent<ParticleSystem>();
-            if (particleSystem != null && particleSystem.emission.enabled)
-            {
-                particleSystem.Stop();
-                ParticleSystem.EmissionModule em = particleSystem.emission;
-                em.enabled = false;
-            }
+            EnableParticles(false);            
         }
     }
 
