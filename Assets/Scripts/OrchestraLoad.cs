@@ -14,19 +14,19 @@ public class OrchestraLoad : MonoBehaviour {
 
     #region Attributs assignés à travers l'Inspector
 
-    public Button _playButton;              // Bouton 'Play' pour jouer / arrêter l'extrait
-    public Slider _soundtrackSlider;        // Slider pour se déplacer facilement dans le morceau
-    public Canvas _igInterface;             // Canvas contenant l'interface du jeu
-    public Sprite _playSprite;              // Sprite 'Play' du bouton play
-    public Sprite _pauseSprite;             // Sprite 'Pause' du bouton play
-    public Camera _mainCamera;              // Camera de la scène
-    public Text   _questionText;            // Texte qui affiche la question actuelle
+    public Button _playButton;                  // Bouton 'Play' pour jouer / arrêter l'extrait
+    public Slider _soundtrackSlider;            // Slider pour se déplacer facilement dans le morceau
+    public Canvas _igInterface;                 // Canvas contenant l'interface du jeu
+    public Canvas _igMenu;                      // Canvas contenant le menu de pause (appui sur le bouton 'menu')
+    public Sprite _playSprite;                  // Sprite 'Play' du bouton play
+    public Sprite _pauseSprite;                 // Sprite 'Pause' du bouton play
+    public Camera _mainCamera;                  // Camera de la scène
+    public Text   _questionText;                // Texte qui affiche la question actuelle
 
-    // Ensemble des spots en fonction de leur position sur la scène
-    public Light farLeftLight;
-    public Light farRightLight;
-    public Light middleLeftLight;
-    public Light middleRightLight;
+    public Light farLeftLight;                  // Spot en bas à gauche
+    public Light farRightLight;                 // Spot en bas à droite
+    public Light middleLeftLight;               // Spot en haut à gauche
+    public Light middleRightLight;              // Spot en haut à droite
 
     #endregion
 
@@ -34,7 +34,7 @@ public class OrchestraLoad : MonoBehaviour {
 
     string difficulty_level;                    // Niveau de difficulté
 
-    List<BlindTestInstrument> _instruments;      // Liste des instruments présents sur la scène
+    List<BlindTestInstrument> _instruments;     // Liste des instruments présents sur la scène
     BlindTestQuestion _question;                // Question du blindtest
 
     AudioSource _extractAudioSource;            // Source audio pour l'extrait
@@ -46,8 +46,9 @@ public class OrchestraLoad : MonoBehaviour {
 
     Extract _extract;                           // Extrait joué pendant la partie
 
-    bool _isPaused = false;                     // Indique si l'extrait est actuellement en pause ou pas
+    bool _isExtractPaused = false;              // Indique si l'extrait est actuellement en pause ou pas
     bool _isReadingQuestion = true;             // Indique si on est encore dans le temps de lecture de la question
+    bool _isGamePaused = false;                 // Indique si le jeu est en pause (appui sur le bouton 'menu')
 
     #endregion
 
@@ -91,7 +92,7 @@ public class OrchestraLoad : MonoBehaviour {
             StartCoroutine(PlayExtractCoroutine());
         }
         // Si l'audio ne joue pas et qu'elle n'est pas en pause, cela veut dire qu'on est arrivé à la fin du morceau.
-        else if (!_isPaused)
+        else if (!_isExtractPaused)
         {
             // Dans ce cas on réinitialise le lecteur en haut de l'interface.
             ResetExtractPlayback();
@@ -146,7 +147,7 @@ public class OrchestraLoad : MonoBehaviour {
     {
         if (_extractAudioSource.isPlaying)
         {
-            _isPaused = true;
+            _isExtractPaused = true;
             _extractAudioSource.Pause();
         }        
     }
@@ -157,10 +158,10 @@ public class OrchestraLoad : MonoBehaviour {
     public void OnSliderUp()
     {
         _extractAudioSource.time = (int)(_soundtrackSlider.value * _extractAudioSource.clip.length / _soundtrackSlider.maxValue);
-        if (_isPaused)
+        if (_isExtractPaused)
         {
             _extractAudioSource.UnPause();
-            _isPaused = false;
+            _isExtractPaused = false;
         }        
     }
 
@@ -168,28 +169,53 @@ public class OrchestraLoad : MonoBehaviour {
     /// Listener du bouton 'play'
     /// Change l'état du bouton et de l'audio en fonction de l'état actuel.
     /// </summary>
-    public void Play()
+    public void PlayOrPauseExtract()
     {
         if (_extractAudioSource.isPlaying)
         {
-            _playButton.image.sprite = _playSprite;
-            _extractAudioSource.Pause();
-            _isPaused = true;
-            AnimateInstruments(false);
-        }
-        else if (_isPaused)
-        {
-            _playButton.image.sprite = _pauseSprite;
-            _extractAudioSource.UnPause();
-            _isPaused = false;
-            AnimateInstruments(true);
+            PauseExtract();
         }
         else
         {
-            _playButton.image.sprite = _pauseSprite;
-            _extractAudioSource.Play();
-            AnimateInstruments(true);
+            PlayExtract();
         }
+    }
+
+    /// <summary>
+    /// Met en pause ou reprend le jeu
+    /// Utilisation du hack du timeScale à 0 pour "stopper" l'exécution du jeu.
+    /// Note : les sons qui ont commencé se terminent
+    /// </summary>
+    public void PauseOrResumeGame()
+    {
+        if (!_isGamePaused)
+        {
+            EnableInstrumentsColliders(false);
+            Time.timeScale = 0;
+            _isGamePaused = true;
+            _igMenu.enabled = true;            
+            if (!_isExtractPaused)
+            {
+                PauseExtract();
+            }
+        }
+        else
+        {            
+            _isGamePaused = false;
+            _igMenu.enabled = false;
+            Time.timeScale = 1;
+            EnableInstrumentsColliders(true);
+            PlayExtract();
+        }
+    }
+
+    /// <summary>
+    /// Retour au menu principal
+    /// </summary>
+    public void Back()
+    {
+        Time.timeScale = 1;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
     }
 
     /// <summary>
@@ -239,7 +265,7 @@ public class OrchestraLoad : MonoBehaviour {
         // Et si l'audio n'était pas déjà en train de jouer, on la lance.
         if (!_extractAudioSource.isPlaying)
         {
-            this.Play();
+            this.PlayExtract();
         }        
     }
 
@@ -257,6 +283,37 @@ public class OrchestraLoad : MonoBehaviour {
     #endregion
 
     #region Méthodes privées
+
+    /// <summary>
+    /// Pause l'extrait
+    /// </summary>
+    public void PauseExtract()
+    {
+        _playButton.image.sprite = _playSprite;
+        _extractAudioSource.Pause();
+        _isExtractPaused = true;
+        AnimateInstruments(false);
+    }
+
+    /// <summary>
+    /// Unpause / Démarre l'extrait
+    /// </summary>
+    void PlayExtract()
+    {
+        if (_isExtractPaused)
+        {
+            _playButton.image.sprite = _pauseSprite;
+            _extractAudioSource.UnPause();
+            _isExtractPaused = false;
+            AnimateInstruments(true);
+        }
+        else
+        {
+            _playButton.image.sprite = _pauseSprite;
+            _extractAudioSource.Play();
+            AnimateInstruments(true);
+        }
+    }
 
     /// <summary>
     /// Place les instruments au hasard sur la scène
@@ -326,6 +383,10 @@ public class OrchestraLoad : MonoBehaviour {
         AnimateInstruments(false);   
     }
 
+    /// <summary>
+    /// Démarre ou arrête l'animation des instruments sur la scène
+    /// </summary>
+    /// <param name="animate">true pour animer les instruments, false pour arrêter l'animation</param>
     void AnimateInstruments(bool animate)
     {
         for (int i = 0; i < _instruments.Count; i++)
@@ -338,6 +399,18 @@ public class OrchestraLoad : MonoBehaviour {
             {
                 _instruments[i].Instrument.StopAnimation();
             }
+        }
+    }
+
+    /// <summary>
+    /// Active ou désactive les colliders des instruments dans le but d'empêcher le joueur de cliquer quand il ne doit pas
+    /// </summary>
+    /// <param name="enabled">true pour activer, false pour désactiver</param>
+    void EnableInstrumentsColliders(bool enabled)
+    {
+        foreach (BlindTestInstrument blindTestInstrument in _instruments)
+        {
+            blindTestInstrument.Instrument.Collider.enabled = enabled;
         }
     }
 
