@@ -75,10 +75,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\InstrumentLighting.cs" />
+    <Compile Include="Assets\Scripts\BlindTestQuestion.cs" />
+    <Compile Include="Assets\Scripts\Extract.cs" />
+    <Compile Include="Assets\Scripts\Instruments\BlindTestInstrument.cs" />
     <Compile Include="Assets\Scripts\Instruments\Instrument.cs" />
     <Compile Include="Assets\Scripts\Instruments\Marimba.cs" />
     <Compile Include="Assets\Scripts\Instruments\Piano.cs" />
+    <Compile Include="Assets\Scripts\Instruments\Tamtam.cs" />
+    <Compile Include="Assets\Scripts\Instruments\TamtamInstrument.cs" />
     <Compile Include="Assets\Scripts\Instruments\Trompette.cs" />
     <Compile Include="Assets\Scripts\Instruments\Violon.cs" />
     <Compile Include="Assets\Scripts\LoadLevel.cs" />
@@ -86,7 +90,16 @@
     <Compile Include="Assets\Scripts\OrchestraLoad.cs" />
     <Compile Include="Assets\Scripts\Partition.cs" />
     <Compile Include="Assets\Scripts\SceneStart.cs" />
+    <Compile Include="Assets\Scripts\ShowNameBubbles.cs" />
     <Compile Include="Assets\Scripts\SimonLoad.cs" />
+    <Compile Include="Assets\Scripts\TamtamLoad.cs" />
+    <Compile Include="Assets\Scripts\TamtamQuestion.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
