@@ -12,18 +12,19 @@ public class TamtamQuestion : BlindTestQuestion {
     
     public TamtamQuestion() :base(4)
     {
-        int _questionNumber = UnityEngine.Random.Range(1, 3);
-        switch (_questionNumber)
-        {
-            case 1:
-                this.type = "Ternaire";             //Question pour savoir si le rythme est ternaire
-                break;
-            case 2:
-                this.type = "Piano";                //Question pour savoir si la nuance est piano
-                break;              
-            default:                                //renvoyer une erreur si le numbre est negatif;
-                break;                          
-        }
+        this.type = "Rythm";
+        //int _questionNumber = UnityEngine.Random.Range(1, 3);
+        //switch (_questionNumber)
+        //{
+        //    case 1:
+        //        this.type = "Ternaire";             //Question pour savoir si le rythme est ternaire
+        //        break;
+        //    case 2:
+        //        this.type = "Piano";                //Question pour savoir si la nuance est piano
+        //        break;              
+        //    default:                                //renvoyer une erreur si le numbre est negatif;
+        //        break;                          
+        //}
     }
     #region Attributs
 

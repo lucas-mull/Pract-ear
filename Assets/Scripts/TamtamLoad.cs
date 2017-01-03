@@ -19,6 +19,15 @@ public class TamtamLoad : MonoBehaviour {
 
     public Text _questionText;                // Texte qui affiche la question actuelle
 
+    public Button farLeftButton;
+    public Button farRightButton;
+    public Button middleLeftButton;
+    public Button middleRightButton;
+
+    public Sprite _playSprite;                  // Sprite 'Play' du bouton play
+    public Sprite _pauseSprite;                 // Sprite 'Pause' du bouton play
+
+
     public Light farLeftLight;                  // Spot en bas à gauche
     public Light farRightLight;                 // Spot en bas à droite
     public Light middleLeftLight;               // Spot en haut à gauche
@@ -54,7 +63,7 @@ public class TamtamLoad : MonoBehaviour {
     void Start () {
         SetDifficulty(DIFFICULTY_EASY);
 
-        
+        _extractAudioSource = GetComponent<AudioSource>();
         _sfxAudioSource = GetComponent<AudioSource>();
 
         _clipSpotlight = Resources.Load<AudioClip>("SFX/spotlight_on");
@@ -65,6 +74,7 @@ public class TamtamLoad : MonoBehaviour {
         _questionText.text = _question.Question;
 
         _instruments = _question.GenerateInstrumentListForQuestion();
+        
 
         PlaceInstruments();
 
@@ -100,11 +110,9 @@ public class TamtamLoad : MonoBehaviour {
             {
                 for (int i = 0; i < _instruments.Count ; i++)
                 {
-                    _instruments[i].Instrument.EnableParticles(false);
 
                     if (hit.transform.name == _instruments[i].Instrument.Name )
                     {
-                        _instruments[i].Instrument.EnableParticles(true);
                         
                         // Et on toggle le spotlight correspondant (on ou off en fonction de ce qu'il était avant)
                         _instruments[i].ToggleLight();
@@ -162,63 +170,35 @@ public class TamtamLoad : MonoBehaviour {
         int index = UnityEngine.Random.Range(0, temp.Count);
         temp[index].Instrument.PutFarLeft(null);
         temp[index].SpotLight = farLeftLight;
+        temp[index].play = farLeftButton;
+        temp[index].source = _sfxAudioSource;
         temp.RemoveAt(index);
 
         // Far right
         index = UnityEngine.Random.Range(0, temp.Count);
         temp[index].Instrument.PutFarRight(null);
         temp[index].SpotLight = farRightLight;
+        temp[index].source = _sfxAudioSource;
+        temp[index].play = farRightButton;
         temp.RemoveAt(index);
 
         // Middle Left
         index = UnityEngine.Random.Range(0, temp.Count);
         temp[index].Instrument.PutMiddleLeft(null);
         temp[index].SpotLight = middleLeftLight;
+        temp[index].source = _sfxAudioSource;
+        temp[index].play = middleLeftButton;
         temp.RemoveAt(index);
 
         // Middle Right
         temp[0].Instrument.PutMiddleRight(null);
         temp[0].SpotLight = middleRightLight;
+        temp[0].source = _sfxAudioSource;
+        temp[0].play = middleRightButton;
         temp.RemoveAt(0);
-
-        //_instruments = new List<TamtamInstrument>();
-        //_instruments.Add(new TamtamInstrument("tamtam", false, farLeftLight));
-        //_instruments.Add(new TamtamInstrument("tamtam", false, farRightLight));
-        //_instruments.Add(new TamtamInstrument("tamtam", false, middleLeftLight));
-        //_instruments.Add(new TamtamInstrument("tamtam", false, middleRightLight));
-
-
-        // Far left
-        /*int index = UnityEngine.Random.Range(0, temp.Count);
-        _instruments[index].Instrument.PutFarLeft(null);
-        _instruments[index].SpotLight = farLeftLight;
-        _instruments[index].Instrument.Name = "tamtam1";
-        _instruments[index].extrait = _question.GetExtractsforQuestion()[index];
-        temp.RemoveAt(index);
-
-        // Far right
-        index = UnityEngine.Random.Range(0, 4);
-        _instruments[1].Instrument.PutFarRight(null);
-        _instruments[1].SpotLight = farRightLight;
-        _instruments[0].Instrument.Name = "tamtam2";
-        _instruments[index].extrait = _question.GetExtractsforQuestion()[index];
-        temp.RemoveAt(index);
-
-        // Middle Left
-        index = UnityEngine.Random.Range(0, 4);
-        _instruments[2].Instrument.PutMiddleLeft(null);
-        _instruments[2].SpotLight = middleLeftLight;
-        _instruments[0].Instrument.Name = "tamtam3";
-        _instruments[index].extrait = _question.GetExtractsforQuestion()[index];
-
-        // Middle Right
-        index = UnityEngine.Random.Range(0, 4);
-        _instruments[3].Instrument.PutMiddleRight(null);
-        _instruments[3].SpotLight = middleRightLight;
-        _instruments[0].Instrument.Name = "tamtam4";
-        _instruments[index].extrait = _question.GetExtractsforQuestion()[index];*/
-
-
     }
 
+    
+
+    
 }

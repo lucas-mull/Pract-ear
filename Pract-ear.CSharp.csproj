@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\Instruments\Piano.cs" />
     <Compile Include="Assets\Scripts\Instruments\Tamtam.cs" />
     <Compile Include="Assets\Scripts\Instruments\TamtamInstrument.cs" />
+    <Compile Include="Assets\Scripts\Instruments\TamtamIntruInstrument.cs" />
     <Compile Include="Assets\Scripts\Instruments\Trompette.cs" />
     <Compile Include="Assets\Scripts\Instruments\Violon.cs" />
     <Compile Include="Assets\Scripts\LoadLevel.cs" />
