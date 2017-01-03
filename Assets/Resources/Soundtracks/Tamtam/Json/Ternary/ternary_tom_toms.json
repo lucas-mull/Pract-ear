@@ -1,0 +1,12 @@
+{
+"title": "Ternary tom-toms",
+"clipFileName": "ternary_tom_toms",
+"path":"SoundTracks/Tamtam/Ternary/ternary_tom_toms",
+"instrumentCount": "1",
+"instruments":
+ [
+  {
+   "instrument": "Tamtam"
+  }
+ ]
+}

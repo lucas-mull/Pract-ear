@@ -1,0 +1,12 @@
+{
+"title" : "Bare Necessities"
+"clipFileName": "bare_necessities",
+"path":"SoundTracks/Tamtam/Binary/bare_necessities",
+"instrumentCount": "1",
+"instruments":
+ [
+  {
+   "instrument": "Tamtam"
+  }
+ ]
+}

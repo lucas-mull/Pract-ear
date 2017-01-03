@@ -12,6 +12,8 @@ public class OrchestraLoad : MonoBehaviour {
     const int MAX_INSTRUMENTS = 4;
     const int QUESTION_READING_TIME = 3;
 
+    const string PATH_TO_BLINDTEST = "Soundtracks/Blindtest/";
+
     #region Attributs assignés à travers l'Inspector
 
     public Button _playButton;                  // Bouton 'Play' pour jouer / arrêter l'extrait
@@ -64,7 +66,7 @@ public class OrchestraLoad : MonoBehaviour {
         _clipApplause = Resources.Load<AudioClip>("SFX/crowd_applause");
         _clipBoo = Resources.Load<AudioClip>("SFX/crowd_boo");
 
-        _extract = Extract.LoadExtraitFromJson("star_wars_theme");
+        _extract = Extract.LoadExtraitFromJson("star_wars_theme", PATH_TO_BLINDTEST);
         _extractAudioSource.clip = _extract.Clip;
 
         _question = new BlindTestQuestion(4);

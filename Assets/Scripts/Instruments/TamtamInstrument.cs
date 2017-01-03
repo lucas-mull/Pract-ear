@@ -1,20 +1,29 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class TamtamInstrument : BlindTestInstrument {
 
     // attribut indiquant si le tamtam est l'intru
-    public bool isIntru = false;
+    public bool isIntrus = false;
+    public static int tamtamId = 1;
+    public Extract  extrait { get; set; }
 
-    public TamtamInstrument(string instrumentName) :base(instrumentName)
-    {
-    }
+
+  
 	
-    public TamtamInstrument(string instrumentName, bool isIntru) : this(instrumentName)
+    public TamtamInstrument(bool isIntru) : base(Instrument.TAMTAM)
     {
-        this.isIntru = isIntru;
+        this.isIntrus = isIntru;
+        this.Instrument.Name += tamtamId;
+        tamtamId++;
     }
 
-    public TamtamInstrument(string instrumentName, bool isIntru, Light spotlight) : this(instrumentName, isIntru)
+    public TamtamInstrument(bool isIntru, Extract extract) : this(isIntru)
+    {
+        this.extrait = extract;
+    }
+
+    public TamtamInstrument(bool isIntru, Extract extract, Light spotlight) : this(isIntru, extract)
     {
         this.SpotLight = spotlight;
     }
@@ -27,17 +36,17 @@ public class TamtamInstrument : BlindTestInstrument {
 
     public new bool ToggleLightAnswerFor(bool affirmative)
     {
-        if (isIntru && this.isLit)
+        if (isIntrus && this.isLit)
         {
             this.SpotLight.color = Color.green;
             return true;
         }
-        else if (!isIntru && this.isLit)
+        else if (!isIntrus && this.isLit)
         {
             this.SpotLight.color = Color.red;
             return false;
         }
-        else if (isIntru && !this.isLit)
+        else if (isIntrus && !this.isLit)
         {
             this.ToggleLight();
             this.SpotLight.color = Color.green;
@@ -46,4 +55,6 @@ public class TamtamInstrument : BlindTestInstrument {
         else
             return true;
     }
+
+  
 }

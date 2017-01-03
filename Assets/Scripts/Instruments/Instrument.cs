@@ -27,6 +27,11 @@ public abstract class Instrument {
     /// </summary>
     private GameObject instance;
 
+    /// <summary>
+    /// Nom a donner l'instance
+    /// </summary>
+    private string name;
+
     // Composant UI.Text contenant les noms des instruments au lancement
     private Text toolTip;
 
@@ -83,14 +88,14 @@ public abstract class Instrument {
             if (this.isInstantiated)
                 return this.Instance.name;
 
-            return this.Model.name;
+            return this.name;
         }
         set
         {
             if (this.isInstantiated)
                 this.Instance.name = value;
 
-            this.Model.name = value;
+            this.name = value;
         }
     }
 
@@ -171,7 +176,7 @@ public abstract class Instrument {
             isInstantiated = true;
 
             // Change le nom de l'instance créée (pour enlever le "(Clone)")
-            this.Name = this.Model.name;            
+            this.Name = this.name;            
         }
         else
         {
