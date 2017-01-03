@@ -7,8 +7,12 @@ public class Note
     const string SOURCE_FOLDER = "Notes/";
 
     const string LONGUEUR_NOIRE = "noire";
+    const string LONGUEUR_NOIRE_POINTEE = "noire pointee";
     const string LONGUEUR_BLANCHE = "blanche";
+    const string LONGUEUR_BLANCHE_POINTEE = "blanche pointee";
     const string LONGUEUR_CROCHE = "croche";
+    const string LONGUEUR_CROCHE_POINTEE = "croche pointee";
+    const string LONGUEUR_RONDE = "ronde";
 
     #region Attributs
 
@@ -81,6 +85,14 @@ public class Note
                 return 0.5f;
             case LONGUEUR_CROCHE:
                 return 0.25f;
+            case LONGUEUR_NOIRE_POINTEE:
+                return 0.75f;
+            case LONGUEUR_CROCHE_POINTEE:
+                return 0.375f;
+            case LONGUEUR_BLANCHE_POINTEE:
+                return 1.5f;
+            case LONGUEUR_RONDE:
+                return 2.0f;
             default:
                 return 1.0f;
         }
