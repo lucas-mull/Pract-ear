@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using UnityEngine.EventSystems;
 
 public class TamtamLoad : MonoBehaviour {
 
@@ -55,6 +57,7 @@ public class TamtamLoad : MonoBehaviour {
     bool _isReadingQuestion = true;             // Indique si on est encore dans le temps de lecture de la question
     bool _isGamePaused = false;                 // Indique si le jeu est en pause (appui sur le bouton 'menu')
 
+    EventSystem eventsystem;
 
     #endregion
 
@@ -118,9 +121,41 @@ public class TamtamLoad : MonoBehaviour {
                         _instruments[i].ToggleLight();
                         _sfxAudioSource.PlayOneShot(_clipSpotlight, 0.5f);
                     }
+                    
                 }
             }
+            RaycastHit2D hit2 = Physics2D.Raycast(clickedPosition, Vector2.zero);
+            for(int i =0; i<_instruments.Count; i++)
+            {
+                if(hit2.collider != null)
+                {
+                    if (hit2.collider.name == _instruments[i].play.name)
+                    {
+                        if (!_instruments[i].isPlaying)
+                        {
+                            for (int j = 0; j < _instruments.Count; j++)
+                            {
+                                if (_instruments[j].isPlaying && j!=i)
+                                    _instruments[j].PlayExtract();
+                            }
+
+                        }
+                        else
+                        {
+
+                        }
+                        
+
+                        //_sfxAudioSource.PlayOneShot(_clipSpotlight, 0.5f);
+                    }
+                }
+                
+            }
+            
+
         }
+        
+
     }
 
     public void Validate()
@@ -197,8 +232,5 @@ public class TamtamLoad : MonoBehaviour {
         temp[0].play = middleRightButton;
         temp.RemoveAt(0);
     }
-
-    
-
     
 }

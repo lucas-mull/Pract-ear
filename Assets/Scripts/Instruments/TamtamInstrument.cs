@@ -11,6 +11,7 @@ public class TamtamInstrument : BlindTestInstrument {
 
     // attribut indiquant si le tamtam est l'intru
     public bool isIntrus = false;
+    public bool isPlaying = false;
     public static int tamtamId = 1;
     public Extract  extrait { get; set; }
     public Button play
@@ -86,14 +87,16 @@ public class TamtamInstrument : BlindTestInstrument {
             initSprites();
         }
 
-        if (source.isPlaying)
+        if (isPlaying || source.isPlaying)
         {
+            isPlaying = false;
             play.image.sprite = _playSprite;
             source.Stop();
             Instrument.EnableParticles(false);
         }
         else
         {
+            isPlaying = true;
             play.image.sprite = _pauseSprite;
             source.clip = this.extrait.Clip;
             source.Play();
@@ -118,5 +121,7 @@ public class TamtamInstrument : BlindTestInstrument {
             this.PlayExtract();
         });
     }
+
+
   
 }
