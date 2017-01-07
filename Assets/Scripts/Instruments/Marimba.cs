@@ -4,7 +4,8 @@ using System;
 
 public class Marimba : Instrument
 {
-    public Marimba() : base(Instrument.MARIMBA) { }
+    public Marimba() : base(Instrument.MARIMBA, 
+        Category.GetInstance(Category.DETERMINE)) { }
 
     public override Vector3 getFarLeftVector()
     {

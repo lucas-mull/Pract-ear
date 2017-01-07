@@ -4,7 +4,8 @@ using System;
 
 public class Violon : Instrument
 {
-    public Violon() : base(Instrument.VIOLON) { }
+    public Violon() : base(Instrument.VIOLON,
+        Category.GetInstance(Category.FROTTEES)) { }
 
     public override Vector3 getFarLeftVector()
     {

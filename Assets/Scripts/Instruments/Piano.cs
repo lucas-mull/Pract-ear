@@ -4,7 +4,8 @@ using System;
 
 public class Piano : Instrument {
 
-    public Piano() : base(Instrument.PIANO) { }
+    public Piano() : base(Instrument.PIANO, 
+        Category.GetInstance(Category.CLAVIERS)) { }
 
     public override Vector3 getFarLeftVector()
     {

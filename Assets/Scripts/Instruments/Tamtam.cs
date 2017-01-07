@@ -4,7 +4,8 @@ using System;
 
 public class Tamtam : Instrument
 {
-    public Tamtam() : base(Instrument.TAMTAM) { }
+    public Tamtam() : base(Instrument.TAMTAM,
+        Category.GetInstance(Category.INDETERMINE)) { }
 
     public override Vector3 getFarLeftVector()
     {

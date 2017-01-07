@@ -4,7 +4,8 @@ using System;
 
 public class Trompette : Instrument
 {
-    public Trompette() : base(Instrument.TROMPETTE) { }
+    public Trompette() : base(Instrument.TROMPETTE,
+        Category.GetInstance(Category.CUIVRES)) { }
 
     public override Vector3 getFarLeftVector()
     {
