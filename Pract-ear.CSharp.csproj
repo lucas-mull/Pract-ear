@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\BlindTestQuestion.cs" />
+    <Compile Include="Assets\Scripts\Category.cs" />
     <Compile Include="Assets\Scripts\Extract.cs" />
     <Compile Include="Assets\Scripts\Instruments\BlindTestInstrument.cs" />
     <Compile Include="Assets\Scripts\Instruments\Instrument.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="Assets\Scripts\Instruments\Piano.cs" />
     <Compile Include="Assets\Scripts\Instruments\Tamtam.cs" />
     <Compile Include="Assets\Scripts\Instruments\TamtamInstrument.cs" />
-    <Compile Include="Assets\Scripts\Instruments\TamtamIntruInstrument.cs" />
     <Compile Include="Assets\Scripts\Instruments\Trompette.cs" />
     <Compile Include="Assets\Scripts\Instruments\Violon.cs" />
     <Compile Include="Assets\Scripts\LoadLevel.cs" />

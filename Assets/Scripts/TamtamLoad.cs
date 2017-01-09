@@ -18,6 +18,7 @@ public class TamtamLoad : MonoBehaviour {
 
        
     public Camera _mainCamera;                  // Camera de la scène
+    public Canvas _igMenu;                      // Canvas contenant le menu de pause (appui sur le bouton 'menu')
 
     public Text _questionText;                // Texte qui affiche la question actuelle
 
@@ -77,7 +78,6 @@ public class TamtamLoad : MonoBehaviour {
         _questionText.text = _question.Question;
 
         _instruments = _question.GenerateInstrumentListForQuestion();
-        
 
         PlaceInstruments();
 
@@ -138,24 +138,49 @@ public class TamtamLoad : MonoBehaviour {
                                 if (_instruments[j].isPlaying && j!=i)
                                     _instruments[j].PlayExtract();
                             }
-
                         }
-                        else
-                        {
-
-                        }
-                        
-
-                        //_sfxAudioSource.PlayOneShot(_clipSpotlight, 0.5f);
                     }
                 }
-                
             }
-            
+        }
+    }
+
+    /// <summary>
+    /// Met en pause ou reprend le jeu
+    /// Utilisation du hack du timeScale à 0 pour "stopper" l'exécution du jeu.
+    /// Note : les sons qui ont commencé se terminent
+    /// </summary>
+    public void PauseOrResumeGame()
+    {
+        if (!_isGamePaused)
+        {
+            EnableInstrumentsColliders(false);
+            Time.timeScale = 0;
+            _isGamePaused = true;
+            _igMenu.enabled = true;
+           for(int i=0; i<_instruments.Count; i++)
+            {
+                if (_instruments[i].isPlaying)
+                    _instruments[i].PlayExtract();
+            }
 
         }
-        
+        else
+        {
+            _isGamePaused = false;
+            _igMenu.enabled = false;
+            Time.timeScale = 1;
+            EnableInstrumentsColliders(true);
+        }
+    }
 
+    /// <summary>
+    /// Retour au menu principal
+    /// </summary>
+    public void Back()
+    {
+        Time.timeScale = 1;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
     }
 
     public void Validate()
@@ -232,5 +257,17 @@ public class TamtamLoad : MonoBehaviour {
         temp[0].play = middleRightButton;
         temp.RemoveAt(0);
     }
-    
+
+    /// <summary>
+    /// Active ou désactive les colliders des instruments dans le but d'empêcher le joueur de cliquer quand il ne doit pas
+    /// </summary>
+    /// <param name="enabled">true pour activer, false pour désactiver</param>
+    void EnableInstrumentsColliders(bool enabled)
+    {
+        foreach (TamtamInstrument tamtamTestInstrument  in _instruments)
+        {
+            tamtamTestInstrument.Instrument.Collider.enabled = enabled;
+        }
+    }
+
 }
