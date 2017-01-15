@@ -109,7 +109,7 @@ public class TamtamInstrument : BlindTestInstrument {
     private void initSprites()
     {
         _playSprite = Resources.Load<Sprite>("Sprites/play_button");
-        _pauseSprite = Resources.Load<Sprite>("Sprites/pause");
+        _pauseSprite = Resources.Load<Sprite>("Sprites/pause_button");
     }
 
     public void initButtonListener()
