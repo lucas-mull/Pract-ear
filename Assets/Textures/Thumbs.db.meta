@@ -1,6 +1,18 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Notes/Do.meta
+<<<<<<< HEAD
+guid: 53cb2f3097902624d8979e345dce8858
+folderAsset: yes
+timeCreated: 1481469621
+=======
+guid: 353dc2bdcf67ca74a837c6b31f132604
+folderAsset: yes
+timeCreated: 1481474441
+>>>>>>> 2eaeb4ff3154b991f59e90faec933c339092572e
+=======
 guid: 9f7f74676460ebb4ca97283ae271ce38
 timeCreated: 1483799546
+>>>>>>> 415987b1bd90249ddc01c69931793e2d7efff709:Assets/Textures/Thumbs.db.meta
 licenseType: Free
 DefaultImporter:
   userData: 

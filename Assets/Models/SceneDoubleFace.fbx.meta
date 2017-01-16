@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: baf5dc0b267a6bf48b448536576aa16c
-timeCreated: 1479824831
+guid: c596a183b6da64248bcc8cc18269aed2
+timeCreated: 1484559588
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -52,6 +52,8 @@ ModelImporter:
     4300008: Plane028_MeshPart0
     4300010: Plane028_MeshPart1
     4300012: Plane028_MeshPart2
+    7400000: Take 001
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -93,7 +95,7 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 1
+    normalImportMode: 0
     tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
@@ -110,7 +112,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
