@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public abstract class Instrument {
 
     const string PATH_TO_PREFABS = "Prefabs/";
-    const int INSTRUMENTS_COUNT = 5;
+    const int INSTRUMENTS_COUNT = 4;
 
     // Noms des prefabs des instruments dans Assets/Resources/Prefabs
     public const string PIANO = "piano";
@@ -15,8 +16,10 @@ public abstract class Instrument {
 
     public static string[] ALL_INSTRUMENTS = new string[INSTRUMENTS_COUNT]
     {
-        PIANO, TROMPETTE, VIOLON, MARIMBA, TAMTAM
+        PIANO, TROMPETTE, VIOLON, MARIMBA
     };
+
+    private static List<Instrument> InstrumentsList = new List<Instrument>();
 
     #region Attributs
 
@@ -32,13 +35,18 @@ public abstract class Instrument {
     /// </summary>
     private string name;
 
+    /// <summary>
+    /// Nom de la prefab à instantier
+    /// </summary>
+    private string prefabName;
+
     // Composant UI.Text contenant les noms des instruments au lancement
     private Text toolTip;
 
     /// <summary>
-    /// Modèle (GameObject) de l'instrument.
+    /// Catégorie à laquelle appartient l'instrument.
     /// </summary>
-    private GameObject model;
+    private Category category;
 
     /// <summary>
     /// Attribut indiquant si notre instrument possède une instance existante sur la scène.
@@ -100,19 +108,20 @@ public abstract class Instrument {
     }
 
     /// <summary>
+    /// Propriété pour l'attribut category
+    /// </summary>
+    public Category Category
+    {
+        get { return this.category; }
+        set { this.category = value; }
+    }
+
+    /// <summary>
     /// Propriété représentant le component Animator du GameObject
     /// </summary>
     public Animator Animator
     {
         get { return this.Instance.GetComponent<Animator>(); }
-    }
-
-    /// <summary>
-    /// Propriété pour l'attribut 'model'
-    /// </summary>
-    public GameObject Model {
-        get { return this.model; }
-        set { this.model = value; }
     }
 
     #endregion
@@ -130,11 +139,12 @@ public abstract class Instrument {
     /// <summary>
     /// Constructeur simple
     /// </summary>
-    /// <param name="modelName">Nom de l'instrument pour lequel on souhaite récupérer la prefab</param>
-    public Instrument(string modelName) : this()
+    /// <param name="prefabName">Nom de l'instrument pour lequel on souhaite récupérer la prefab</param>
+    public Instrument(string prefabName, Category category) : this()
     {
-        this.setModelFromName(modelName);
-        this.Name = modelName;
+        this.prefabName = prefabName;
+        this.name = prefabName;
+        this.category = category;
     }
 
     #endregion
@@ -152,17 +162,6 @@ public abstract class Instrument {
     #region Méthodes de classe
 
     /// <summary>
-    /// Récupération du GameObject depuis les resources du projet pour l'instrument actuel en fonction du nom donné.
-    /// </summary>
-    /// <param name="modelName">Nom de l'instrument</param>
-    /// <returns>true si le GameObject a pu être chargé, false sinon</returns>
-    public bool setModelFromName(string modelName)
-    {
-        this.Model = Resources.Load(PATH_TO_PREFABS + modelName, typeof(GameObject)) as GameObject;
-        return this.Model != null;
-    }
-
-    /// <summary>
     /// Créé une instance de la prefab de l'instrument actuel à la position donnée
     /// Si une instance existe déjà, la déplace à la position désirée
     /// </summary>
@@ -172,10 +171,11 @@ public abstract class Instrument {
     {
         if (!isInstantiated)
         {
-            this.Instance = (GameObject)Object.Instantiate(this.Model, position, this.Model.transform.rotation);
+            GameObject gameObject = Resources.Load<GameObject>(PATH_TO_PREFABS + this.prefabName);
+            this.Instance = (GameObject)Object.Instantiate(gameObject, position, gameObject.transform.rotation);
             isInstantiated = true;
 
-            // Change le nom de l'instance créée (pour enlever le "(Clone)")
+            // Met à jour le nom de l'instance créée s'il a été modifié
             this.Name = this.name;            
         }
         else
@@ -335,6 +335,20 @@ public abstract class Instrument {
     {
         int index = Random.Range(0, INSTRUMENTS_COUNT);
         return ALL_INSTRUMENTS[index];
+    }
+
+    public static List<Instrument> GetInstrumentsList()
+    {
+        // Si la liste est vide on l'initialise
+        if (InstrumentsList.Count == 0)
+        {
+            foreach (string instrumentName in ALL_INSTRUMENTS)
+            {
+                InstrumentsList.Add(Instrument.GetInstanceFor(instrumentName));
+            }
+        }
+
+        return InstrumentsList;
     }
 
     #endregion

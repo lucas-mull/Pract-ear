@@ -123,7 +123,8 @@ public class BlindTestInstrument
                 return false;
             }
         }
-        else if (!isInExtract && this.isLit)
+
+        if (!isInExtract && this.isLit)
         {
             if (!affirmative)
             {
@@ -136,7 +137,8 @@ public class BlindTestInstrument
                 return false;
             }
         }
-        else if (!this.isLit && isInExtract && affirmative)
+
+        if (!this.isLit && isInExtract && affirmative)
         {
             this.ToggleLight();
             this.SpotLight.color = Color.green;
@@ -144,7 +146,7 @@ public class BlindTestInstrument
         }
         else
         {
-            return true;
+            return false;
         }
     }
 
