@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 6a91275ff79b81248a1244a6dd01de4d
-timeCreated: 1484690856
+guid: f44072bb013bc04448f1cf2fc21747b2
+timeCreated: 1484691770
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -15,8 +15,8 @@ ModelImporter:
     2300002: scene 1
     3300000: rideaux
     3300002: scene 1
-    4300000: scene
-    4300002: rideaux
+    4300000: rideaux
+    4300002: scene
   materials:
     importMaterials: 1
     materialName: 0
