@@ -315,23 +315,9 @@ public class SimonLoad : MonoBehaviour {
     /// <returns></returns>
     IEnumerator PlayerCoRoutine()
     {
-        bool clicked;
-        Vector3 clickedPosition = new Vector3();
-        if (Application.platform == RuntimePlatform.Android)
+        if (Utils.Clicked())
         {
-            clicked = Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
-            if (clicked)
-                clickedPosition = Input.GetTouch(0).position;
-        }
-        else
-        {
-            clicked = Input.GetMouseButtonDown(0);
-            if (clicked)
-                clickedPosition = Input.mousePosition;
-        }
-        if (clicked)
-        {
-            Ray ray = _mainCamera.ScreenPointToRay(clickedPosition);
+            Ray ray = _mainCamera.ScreenPointToRay(Utils.GetClickedPosition());
             RaycastHit hit;
             Instrument selected;
 

@@ -9,21 +9,21 @@ public class Trompette : Instrument
 
     public override Vector3 getFarLeftVector()
     {
-        return new Vector3(0, 50, 62);
+        return new Vector3(20, 35, 130);
     }
 
     public override Vector3 getFarRightVector()
     {
-        return new Vector3(120, 50, 65);
+        return new Vector3(95, 35, 130);
     }
 
     public override Vector3 getMiddleLeftVector()
     {
-        return new Vector3(25, 50, 125);
+        return new Vector3(33, 35, 210);
     }
 
     public override Vector3 getMiddleRightVector()
     {
-        return new Vector3(75, 50, 125);
+        return new Vector3(80, 35, 210);
     }
 }

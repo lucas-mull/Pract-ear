@@ -445,11 +445,11 @@ public class OrchestraLoad : MonoBehaviour {
         Text text = _validateButton.GetComponentInChildren<Text>();
         if (enable)
         {
-            text.color = new Color(1, 0.984f, 0.545f);
+            text.color = Colors.YELLOW;
         }
         else
         {
-            text.color = new Color(0.859f, 0.859f, 0.859f);
+            text.color = Colors.BLACK;
         }
     }
 
