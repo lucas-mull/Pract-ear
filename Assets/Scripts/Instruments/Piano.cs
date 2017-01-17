@@ -9,21 +9,21 @@ public class Piano : Instrument {
 
     public override Vector3 getFarLeftVector()
     {
-        return new Vector3(2, 64, 67);
+        return new Vector3(20, 40, 130);
     }
 
     public override Vector3 getFarRightVector()
     {
-        return new Vector3(120, 64, 67);
+        return new Vector3(95, 40, 130);
     }
 
     public override Vector3 getMiddleLeftVector()
     {
-        return new Vector3(25, 64, 130);
+        return new Vector3(30, 40, 210);
     }
 
     public override Vector3 getMiddleRightVector()
     {
-        return new Vector3(80, 64, 135);
+        return new Vector3(85, 40, 210);
     }
 }

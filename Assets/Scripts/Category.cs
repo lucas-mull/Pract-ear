@@ -13,29 +13,29 @@ public class Category
 
     // VENTS
     private static Category Vents;
-    public const string VENTS = "vents";
-    public const string BOIS = "bois";
-    public const string CUIVRES = "cuivres";
-    public const string BISEAU = "biseau";
-    public const string ANCHE_SIMPLE = "anche simple";
-    public const string ANCH_DOUBLE = "anche double";
+    public const string VENTS = "Vents";
+    public const string BOIS = "Bois";
+    public const string CUIVRES = "Cuivres";
+    public const string BISEAU = "Biseau";
+    public const string ANCHE_SIMPLE = "Anche simple";
+    public const string ANCH_DOUBLE = "Anche double";
 
     // CORDES
     private static Category Cordes;
-    public const string CORDES = "cordes";
-    public const string FRAPPEES = "frappees";
-    public const string PINCEES = "pincees";
-    public const string FROTTEES = "frottees";
+    public const string CORDES = "Cordes";
+    public const string FRAPPEES = "Frappées";
+    public const string PINCEES = "Pincées";
+    public const string FROTTEES = "Frottées";
 
     // Percussion
     private static Category Percussions;
-    public const string PERCUSSIONS = "percussions";
-    public const string DETERMINE = "determine";
-    public const string INDETERMINE = "indetermine";
+    public const string PERCUSSIONS = "Percussions";
+    public const string DETERMINE = "A son déterminé";
+    public const string INDETERMINE = "A son indéterminé";
 
     // Claviers
     private static Category Claviers;
-    public const string CLAVIERS = "claviers";
+    public const string CLAVIERS = "Claviers";
 
     #endregion
 
@@ -99,7 +99,7 @@ public class Category
         // Il est également possible de les initialisés soi-même en appelant InitArbres() à nimporte quel moment
         InitArbres();
 
-        switch (categoryName.ToLower())
+        switch (categoryName)
         {
             case VENTS:
             case BOIS:
@@ -131,7 +131,7 @@ public class Category
     /// <param name="name">nom de la catégorie à créer</param>
     private Category(string name)
     {
-        this.name = name.ToLower();
+        this.name = name;
     }
 
     #endregion
@@ -159,12 +159,12 @@ public class Category
     /// Récursif.
     /// </summary>
     /// <returns>La racine de l'arbre</returns>
-    public Category getRoot()
+    public Category GetRoot()
     {
         if (this.isRoot)
             return this;
 
-        return this.parent.getRoot();
+        return this.parent.GetRoot();
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ public class Category
     /// <returns>true si la catégorie est un enfant de la categorie donnée, false sinon</returns>
     public bool BelongsTo(string category)
     {
-        if (category.ToLower() == this.name)
+        if (category == this.name)
             return true;
 
         if (this.parent != null)
@@ -207,7 +207,34 @@ public class Category
     /// <returns>Le nombre de catégories total dans tout l'arbre</returns>
     public int TotalCategoriesInTree()
     {
-        return getRoot().CategoriesBelow();
+        return GetRoot().CategoriesBelow();
+    }
+
+    override
+    public string ToString()
+    {
+        string res = "";
+        foreach (Category c in GetAllParents())
+        {
+            res += " > " + c.name;
+        }
+
+        return res + " > " + this.name;
+    }
+
+    private List<Category> GetAllParents()
+    {
+        List<Category> liste = new List<Category>();
+        Category pointer = this;
+        while (pointer.parent != null)
+        {
+            liste.Add(pointer.parent);
+            pointer = pointer.parent;
+        }
+
+        liste.Reverse();
+
+        return liste;
     }
 
     #endregion
@@ -309,7 +336,7 @@ public class Category
     /// <returns>La catégorie si elle a été trouvée, null sinon</returns>
     private static Category SearchChildren(string categoryName, Category tree)
     {
-        if (tree.name == categoryName.ToLower())
+        if (tree.name == categoryName)
             return tree;
 
         Category result = null;
@@ -332,7 +359,7 @@ public class Category
     /// <returns>La catégorie si elle a été trouvée, null sinon</returns>
     private static Category SearchParents(string categoryName, Category tree)
     {
-        if (tree.name == categoryName.ToLower())
+        if (tree.name == categoryName)
             return tree;
 
         if (tree.parent != null)

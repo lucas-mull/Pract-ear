@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using SimpleJSON;
-
+using System.Collections.Generic;
 
 public class Partition
 {
@@ -85,13 +85,18 @@ public class Partition
     public Note ReadNextNote()
     {
         // Si on est à la fin de la lecture, on revient au début
-        if (currentRead == notesCount)
+        if (isDoneReading())
             StartReading();
 
         Note next = this.notes[currentRead];
         currentRead++;
 
         return next;
+    }
+
+    public bool isDoneReading()
+    {
+        return currentRead == notesCount;
     }
 
     /// <summary>
@@ -121,6 +126,22 @@ public class Partition
         TextAsset file = Resources.Load<TextAsset>(PATH_TO_PARTITIONS + fileName);
         JSONNode node = JSONNode.Parse(file.text);
         return new Partition(node);
+    }
+
+    public static List<Partition> LoadAll()
+    {
+        List<Partition> all = new List<Partition>();
+        Object[] files;
+
+        files = (Object[])Resources.LoadAll(PATH_TO_PARTITIONS);
+
+        foreach (TextAsset t in files)
+        {
+            JSONNode node = JSONNode.Parse(t.text);
+            all.Add(new Partition(node));
+        }
+
+        return all;
     }
 
     #endregion

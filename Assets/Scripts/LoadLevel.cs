@@ -27,6 +27,7 @@ public class LoadLevel : MonoBehaviour {
 
     public Canvas MenuCanvas;
     public Canvas ModalCanvas;
+    public Canvas ExtrasCanvas;
     public GameObject ModalPanel;
     public Text Name;
     public Text Description;
@@ -91,13 +92,20 @@ public class LoadLevel : MonoBehaviour {
 
     public void LoadLevelOnClick(int gameId)
     {
-        MenuCanvas.enabled = false;        
-        SceneManager.LoadScene(gameId);
+        MenuCanvas.enabled = false;
+        ExtrasCanvas.enabled = false;    
+        LoadGame(gameId);
     }
 
     public void LoadGame(int gameId)
     {
         SceneManager.LoadScene(gameId);
+    }
+
+    public void ShowExtras()
+    {
+        MenuCanvas.enabled = false;
+        ExtrasCanvas.GetComponent<Animator>().enabled = true;
     }
 
 }
