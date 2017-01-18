@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 81377f9f9f5ccad448a6ba7d46798f0e
-timeCreated: 1484688415
+guid: 24a96eb8f075c974ea2f4ec3325491a3
+timeCreated: 1484738572
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -123,7 +123,7 @@ ModelImporter:
     4300038: corde017
     4300040: corde018
     4300042: pilier
-    7400000: Take 001
+    7400000: Play
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -145,7 +145,87 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: corps_cordes
+        weight: 1
+      - path: corps_cordes/cordes
+        weight: 1
+      - path: corps_cordes/cordes/corde
+        weight: 1
+      - path: corps_cordes/cordes/corde001
+        weight: 1
+      - path: corps_cordes/cordes/corde002
+        weight: 1
+      - path: corps_cordes/cordes/corde003
+        weight: 1
+      - path: corps_cordes/cordes/corde004
+        weight: 1
+      - path: corps_cordes/cordes/corde005
+        weight: 1
+      - path: corps_cordes/cordes/corde006
+        weight: 1
+      - path: corps_cordes/cordes/corde007
+        weight: 1
+      - path: corps_cordes/cordes/corde008
+        weight: 1
+      - path: corps_cordes/cordes/corde009
+        weight: 1
+      - path: corps_cordes/cordes/corde010
+        weight: 1
+      - path: corps_cordes/cordes/corde011
+        weight: 1
+      - path: corps_cordes/cordes/corde012
+        weight: 1
+      - path: corps_cordes/cordes/corde013
+        weight: 1
+      - path: corps_cordes/cordes/corde014
+        weight: 1
+      - path: corps_cordes/cordes/corde015
+        weight: 1
+      - path: corps_cordes/cordes/corde016
+        weight: 1
+      - path: corps_cordes/cordes/corde017
+        weight: 1
+      - path: corps_cordes/cordes/corde018
+        weight: 1
+      - path: corps_cordes/corps
+        weight: 1
+      - path: corps_cordes/corps/coprs_interieur
+        weight: 1
+      - path: corps_cordes/corps/corps 1
+        weight: 1
+      - path: pilier
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
