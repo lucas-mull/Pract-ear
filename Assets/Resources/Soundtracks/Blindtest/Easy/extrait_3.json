@@ -1,0 +1,15 @@
+{
+  "title": "Extrait 3",
+  "clipFileName": "extrait_3",
+  "path":"SoundTracks/Blindtest/extrait_3",
+  "instrumentsCount":  "2",
+  "instruments": 
+  [
+    {
+      "instrument": "Trombone"
+    },
+    {
+      "instrument": "Harpe"
+    }
+  ]
+}

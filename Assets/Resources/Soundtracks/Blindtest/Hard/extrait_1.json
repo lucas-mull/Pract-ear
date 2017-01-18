@@ -1,0 +1,18 @@
+{
+  "title": "Extrait 1",
+  "clipFileName": "extrait_1",
+  "path":"SoundTracks/Blindtest/extrait_1",
+  "instrumentsCount":  "3",
+  "instruments": 
+  [
+    {
+      "instrument": "Violon"
+    },
+    {
+      "instrument": "Contrebasse"
+    }
+    {
+      "instrument": "Violoncelle"
+    }
+  ]
+}
