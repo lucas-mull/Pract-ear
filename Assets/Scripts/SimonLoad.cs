@@ -257,13 +257,8 @@ public class SimonLoad : MonoBehaviour {
         // Sinon on agit en fonction du nombre d'erreurs du joueur
         else
         {
-            // Erreurs autorisées
-            if (_errorCount < MAX_ERRORS_ALLOWED + 1)
-            {
-                _lifeSprites[_errorCount - 1].GetComponent<Animator>().SetBool("died", true);
-            }
             // Nombre d'erreurs autorisées dépassé --> GAME OVER
-            else
+            if (_errorCount > MAX_ERRORS_ALLOWED)
             {
                 // On cache l'interface et on affiche le game over
                 _gameOver = true;
@@ -359,6 +354,11 @@ public class SimonLoad : MonoBehaviour {
                     {
                         _success = true;
 
+                        for (int i = _errorCount; i < _lifeSprites.Length; i++)
+                        {
+                            _lifeSprites[i].GetComponent<Animator>().SetBool("won", true);
+                        }
+
                         // MAJ de la séquence max du joueur
                         _sequenceCount++;
                         _sequenceCountText.text = _sequenceCount.ToString();
@@ -367,6 +367,12 @@ public class SimonLoad : MonoBehaviour {
                         _audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_applause");
                         _audioSource.Play();
                         yield return new WaitForSeconds(3);
+
+                        for (int i = _errorCount; i < _lifeSprites.Length; i++)
+                        {
+                            _lifeSprites[i].GetComponent<Animator>().SetBool("won", false);
+                        }
+
                         _playerTurn = false;
                     }
 
@@ -375,10 +381,18 @@ public class SimonLoad : MonoBehaviour {
                 else
                 {
                     EnableInstrumentsColliders(false);
+
+                    _errorCount++;
+
+                    // Erreurs autorisées
+                    if (_errorCount < MAX_ERRORS_ALLOWED + 1)
+                    {
+                        _lifeSprites[_errorCount - 1].GetComponent<Animator>().SetBool("died", true);
+                    }
+
                     _audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_boo");
                     _audioSource.Play();                    
-                    yield return new WaitForSeconds(_audioSource.clip.length);
-                    _errorCount++;                    
+                    yield return new WaitForSeconds(_audioSource.clip.length);                   
                     _playerTurn = false;
                 }
             }

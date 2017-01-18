@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 66980b4f312bd7d4886f328018bf1f77
-timeCreated: 1484667591
+guid: 1e179f87c0daada48a3c77dfd7776b02
+timeCreated: 1484737548
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -16,8 +16,8 @@ ModelImporter:
     100016: clefs
     100018: cordes
     100020: fond_guitare
-    100022: //RootNode
-    100024: guitare 1
+    100022: guitare 1
+    100024: //RootNode
     400000: barrette_bas
     400002: barrette_haut
     400004: clef
@@ -29,8 +29,8 @@ ModelImporter:
     400016: clefs
     400018: cordes
     400020: fond_guitare
-    400022: //RootNode
-    400024: guitare 1
+    400022: guitare 1
+    400024: //RootNode
     2300000: barrette_bas
     2300002: barrette_haut
     2300004: clef
@@ -64,7 +64,7 @@ ModelImporter:
     4300016: guitare
     4300018: barrette_bas
     4300020: barrette_haut
-    7400000: Take 001
+    7400000: Play
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -86,7 +86,61 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: barrette_bas
+        weight: 1
+      - path: barrette_haut
+        weight: 1
+      - path: clefs
+        weight: 1
+      - path: clefs/clef
+        weight: 1
+      - path: clefs/clef001
+        weight: 1
+      - path: clefs/clef002
+        weight: 1
+      - path: clefs/clef003
+        weight: 1
+      - path: clefs/clef004
+        weight: 1
+      - path: clefs/clef005
+        weight: 1
+      - path: cordes
+        weight: 1
+      - path: fond_guitare
+        weight: 1
+      - path: guitare 1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

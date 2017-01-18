@@ -19,11 +19,11 @@ public class Violon : Instrument
 
     public override Vector3 getMiddleLeftVector()
     {
-        return new Vector3(35, 38, 210);
+        return new Vector3(35, 38, 200);
     }
 
     public override Vector3 getMiddleRightVector()
     {
-        return new Vector3(85, 38, 210);
+        return new Vector3(85, 38, 200);
     }
 }

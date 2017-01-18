@@ -85,7 +85,7 @@ public class Extract
         // A noter qu'on ne recrée pas le clip s'il existe déjà pour éviter de charger des ressources inutilement
         if (this.Clip == null)
         {
-            this.Clip = Resources.Load<AudioClip>(node["path"]);
+            this.Clip = Resources.Load<AudioClip>(node["path"] + clipName);
         }
     }
 
