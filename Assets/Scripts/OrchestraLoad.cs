@@ -103,26 +103,10 @@ public class OrchestraLoad : MonoBehaviour {
             ResetExtractPlayback();
         }
 
-        // Détection d'un click sur Android ou PC.
-        bool clicked;
-        Vector3 clickedPosition = new Vector3();
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            clicked = Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
-            if (clicked)
-                clickedPosition = Input.GetTouch(0).position;
-        }
-        else
-        {
-            clicked = Input.GetMouseButtonDown(0);
-            if (clicked)
-                clickedPosition = Input.mousePosition;
-        }
-
         // Si un clic a été réalisé
-        if (clicked)
+        if (Utils.Clicked())
         {
-            Ray ray = _mainCamera.ScreenPointToRay(clickedPosition);
+            Ray ray = _mainCamera.ScreenPointToRay(Utils.GetClickedPosition());
             RaycastHit hit;
 
             // On cherche quel instrument a été cliqué
@@ -433,6 +417,7 @@ public class OrchestraLoad : MonoBehaviour {
     /// <param name="enabled">true pour activer, false pour désactiver</param>
     void EnableInstrumentsColliders(bool enabled)
     {
+        List<BlindTestInstrument> instruments = _instruments;
         foreach (BlindTestInstrument blindTestInstrument in _instruments)
         {
             blindTestInstrument.Instrument.Collider.enabled = enabled;

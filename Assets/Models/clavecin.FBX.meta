@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 8ceb039088cca1c47b1cf5f769d5f104
-timeCreated: 1484689480
+guid: 1b38274f4e2fdcf4faab2055b7a3cde7
+timeCreated: 1484746693
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: barre
-    100002: //RootNode
-    100004: clavecin 1
+    100002: clavecin 1
+    100004: //RootNode
     100006: couvercle
     100008: touche065
     100010: touche066
@@ -234,8 +234,8 @@ ModelImporter:
     100452: touchesNoiresBas
     100454: touchesNoiresHaut
     400000: barre
-    400002: //RootNode
-    400004: clavecin 1
+    400002: clavecin 1
+    400004: //RootNode
     400006: couvercle
     400008: touche065
     400010: touche066
@@ -1124,7 +1124,7 @@ ModelImporter:
     4300436: toucheNoire047
     4300438: toucheNoire046
     4300440: barre
-    7400000: Take 001
+    7400000: Play
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -1146,7 +1146,491 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 20
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: barre
+        weight: 1
+      - path: clavecin 1
+        weight: 1
+      - path: couvercle
+        weight: 1
+      - path: touches_haut
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire091
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire092
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire093
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire094
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire095
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire096
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire097
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire098
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire099
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire100
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire101
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire102
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire103
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire104
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire105
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire106
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire107
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire108
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire109
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire110
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire111
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire112
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire113
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire114
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire115
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire116
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire117
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire118
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire119
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire120
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire121
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire122
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire123
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire124
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire125
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire126
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire127
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire128
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire129
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire130
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire131
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire132
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire133
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire134
+        weight: 1
+      - path: touches_haut/touchesBlanchesHaut/toucheNoire135
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche129
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche130
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche131
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche132
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche133
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche134
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche135
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche136
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche137
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche138
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche139
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche140
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche141
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche142
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche143
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche144
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche145
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche146
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche147
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche148
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche149
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche150
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche151
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche152
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche153
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche154
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche155
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche156
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche157
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche158
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche159
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche160
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche161
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche162
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche163
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche164
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche165
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche166
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche167
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche168
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche169
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche170
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche171
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche172
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche173
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche174
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche175
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche176
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche177
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche178
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche179
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche180
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche181
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche182
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche183
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche184
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche185
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche186
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche187
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche188
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche189
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche190
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche191
+        weight: 1
+      - path: touches_haut/touchesNoiresHaut/touche192
+        weight: 1
+      - path: touchesBas
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire046
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire047
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire048
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire049
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire050
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire051
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire052
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire053
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire054
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire055
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire056
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire057
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire058
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire059
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire060
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire061
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire062
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire063
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire064
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire065
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire066
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire067
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire068
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire069
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire070
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire071
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire072
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire073
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire074
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire075
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire076
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire077
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire078
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire079
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire080
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire081
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire082
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire083
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire084
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire085
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire086
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire087
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire088
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire089
+        weight: 1
+      - path: touchesBas/touchesBlanchesBas/toucheNoire090
+        weight: 1
+      - path: touchesBas/touchesNoiresBas
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche065
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche066
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche067
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche068
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche069
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche070
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche071
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche072
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche073
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche074
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche075
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche076
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche077
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche078
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche079
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche080
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche081
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche082
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche083
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche084
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche085
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche086
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche087
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche088
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche089
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche090
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche091
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche092
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche093
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche094
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche095
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche096
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche097
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche098
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche099
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche100
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche101
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche102
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche103
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche104
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche105
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche106
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche107
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche108
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche109
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche110
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche111
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche112
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche113
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche114
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche115
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche116
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche117
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche118
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche119
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche120
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche121
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche122
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche123
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche124
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche125
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche126
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche127
+        weight: 1
+      - path: touchesBas/touchesNoiresBas/touche128
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

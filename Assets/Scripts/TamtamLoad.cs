@@ -139,6 +139,7 @@ public class TamtamLoad : MonoBehaviour {
                                     _instruments[j].PlayExtract();
                             }
                         }
+                        _instruments[i].PlayExtract();
                     }
                 }
             }

@@ -9,8 +9,12 @@ public abstract class Instrument {
 
     // Noms des prefabs des instruments dans Assets/Resources/Prefabs
     public const string PIANO = "piano";
+    public const string CLAVECIN = "clavecin";
     public const string TROMPETTE = "trompette";
+    public const string TROMBONE = "trombone";
     public const string VIOLON = "violon";
+    public const string GUITARE = "guitare";
+    public const string HARPE = "harpe";
     public const string MARIMBA = "marimba";
     public const string TAMTAM = "tamtam";
 
@@ -314,10 +318,18 @@ public abstract class Instrument {
         {
             case PIANO:
                 return new Piano();
+            case CLAVECIN:
+                return new Clavecin();
             case TROMPETTE:
                 return new Trompette();
+            case TROMBONE:
+                return new Trombone();
             case VIOLON:
                 return new Violon();
+            case GUITARE:
+                return new Guitare();
+            case HARPE:
+                return new Harpe();
             case MARIMBA:
                 return new Marimba();
             case TAMTAM:

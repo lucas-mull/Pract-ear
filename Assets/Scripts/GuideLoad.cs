@@ -81,6 +81,11 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
         }
     }
 
+    public void Back()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
+    }
+
     private void EnableButton(GameObject button, bool enable)
     {
         if (enable)
