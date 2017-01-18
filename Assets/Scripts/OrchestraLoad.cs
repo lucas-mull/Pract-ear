@@ -17,6 +17,7 @@ public class OrchestraLoad : MonoBehaviour {
     #region Attributs assignés à travers l'Inspector
 
     public Button _playButton;                  // Bouton 'Play' pour jouer / arrêter l'extrait
+    public Button _validateButton;              // Bouton 'Valider' pour valider ses choix
     public Slider _soundtrackSlider;            // Slider pour se déplacer facilement dans le morceau
     public Canvas _igInterface;                 // Canvas contenant l'interface du jeu
     public Canvas _igMenu;                      // Canvas contenant le menu de pause (appui sur le bouton 'menu')
@@ -25,16 +26,16 @@ public class OrchestraLoad : MonoBehaviour {
     public Camera _mainCamera;                  // Camera de la scène
     public Text   _questionText;                // Texte qui affiche la question actuelle
 
-    public Light farLeftLight;                  // Spot en bas à gauche
-    public Light farRightLight;                 // Spot en bas à droite
-    public Light middleLeftLight;               // Spot en haut à gauche
-    public Light middleRightLight;              // Spot en haut à droite
+    public Light _farLeftLight;                 // Spot en bas à gauche
+    public Light _farRightLight;                // Spot en bas à droite
+    public Light _middleLeftLight;              // Spot en haut à gauche
+    public Light _middleRightLight;             // Spot en haut à droite
 
     #endregion
 
     #region Attributs privées
 
-    string difficulty_level;                    // Niveau de difficulté
+    string _difficultyLevel;                    // Niveau de difficulté
 
     List<BlindTestInstrument> _instruments;     // Liste des instruments présents sur la scène
     BlindTestQuestion _question;                // Question du blindtest
@@ -51,6 +52,8 @@ public class OrchestraLoad : MonoBehaviour {
     bool _isExtractPaused = false;              // Indique si l'extrait est actuellement en pause ou pas
     bool _isReadingQuestion = true;             // Indique si on est encore dans le temps de lecture de la question
     bool _isGamePaused = false;                 // Indique si le jeu est en pause (appui sur le bouton 'menu')
+
+    int _selectedInstrumentsCount = 0;          // Nombre d'instruments sélectionnés
 
     #endregion
 
@@ -100,26 +103,10 @@ public class OrchestraLoad : MonoBehaviour {
             ResetExtractPlayback();
         }
 
-        // Détection d'un click sur Android ou PC.
-        bool clicked;
-        Vector3 clickedPosition = new Vector3();
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            clicked = Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
-            if (clicked)
-                clickedPosition = Input.GetTouch(0).position;
-        }
-        else
-        {
-            clicked = Input.GetMouseButtonDown(0);
-            if (clicked)
-                clickedPosition = Input.mousePosition;
-        }
-
         // Si un clic a été réalisé
-        if (clicked)
+        if (Utils.Clicked())
         {
-            Ray ray = _mainCamera.ScreenPointToRay(clickedPosition);
+            Ray ray = _mainCamera.ScreenPointToRay(Utils.GetClickedPosition());
             RaycastHit hit;
 
             // On cherche quel instrument a été cliqué
@@ -128,9 +115,26 @@ public class OrchestraLoad : MonoBehaviour {
                 for (int i = 0; i < _instruments.Count; i++)
                 {
                     if (hit.transform.name == _instruments[i].Instrument.Name)
-                    {
+                    {                        
                         // Et on toggle le spotlight correspondant (on ou off en fonction de ce qu'il était avant)
                         _instruments[i].ToggleLight();
+                        if (_instruments[i].isLit)
+                        {
+                            _selectedInstrumentsCount++;
+                            if (_selectedInstrumentsCount == 1)
+                            {
+                                EnableValidationButton(true);
+                            }
+                        }
+                        else
+                        {
+                            _selectedInstrumentsCount--;
+                            if (_selectedInstrumentsCount == 0)
+                            {
+                                EnableValidationButton(false);
+                            }
+                        }
+
                         _sfxAudioSource.PlayOneShot(_clipSpotlight, 0.5f);
                     }
                 }
@@ -227,6 +231,9 @@ public class OrchestraLoad : MonoBehaviour {
     /// </summary>
     public void Validate()
     {
+        if (!_validateButton.IsInteractable())
+            return;
+
         bool success = true;
         foreach(BlindTestInstrument instrument in _instruments)
         {
@@ -334,24 +341,24 @@ public class OrchestraLoad : MonoBehaviour {
         // Far left
         int index = UnityEngine.Random.Range(0, temp.Count);
         temp[index].Instrument.PutFarLeft(null);
-        temp[index].SpotLight = farLeftLight;
+        temp[index].SpotLight = _farLeftLight;
         temp.RemoveAt(index);
 
         // Far right
         index = UnityEngine.Random.Range(0, temp.Count);
         temp[index].Instrument.PutFarRight(null);
-        temp[index].SpotLight = farRightLight;
+        temp[index].SpotLight = _farRightLight;
         temp.RemoveAt(index);
 
         // Middle Left
         index = UnityEngine.Random.Range(0, temp.Count);
         temp[index].Instrument.PutMiddleLeft(null);
-        temp[index].SpotLight = middleLeftLight;
+        temp[index].SpotLight = _middleLeftLight;
         temp.RemoveAt(index);
 
         // Middle Right
         temp[0].Instrument.PutMiddleRight(null);
-        temp[0].SpotLight = middleRightLight;
+        temp[0].SpotLight = _middleRightLight;
         temp.RemoveAt(0);
     }
 
@@ -362,7 +369,7 @@ public class OrchestraLoad : MonoBehaviour {
             case DIFFICULTY_EASY:
             case DIFFICULTY_MEDIUM:
             case DIFFICULTY_HARD:
-                this.difficulty_level = difficulty;
+                this._difficultyLevel = difficulty;
                 break;
             default:
                 Console.WriteLine(difficulty + " is not a valid difficulty input");
@@ -410,9 +417,24 @@ public class OrchestraLoad : MonoBehaviour {
     /// <param name="enabled">true pour activer, false pour désactiver</param>
     void EnableInstrumentsColliders(bool enabled)
     {
+        List<BlindTestInstrument> instruments = _instruments;
         foreach (BlindTestInstrument blindTestInstrument in _instruments)
         {
             blindTestInstrument.Instrument.Collider.enabled = enabled;
+        }
+    }
+
+    void EnableValidationButton(bool enable)
+    {
+        _validateButton.interactable = enable;
+        Text text = _validateButton.GetComponentInChildren<Text>();
+        if (enable)
+        {
+            text.color = Colors.YELLOW;
+        }
+        else
+        {
+            text.color = Colors.BLACK;
         }
     }
 

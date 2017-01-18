@@ -1,0 +1,271 @@
+fileFormatVersion: 2
+guid: 24a96eb8f075c974ea2f4ec3325491a3
+timeCreated: 1484738572
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: coprs_interieur
+    100002: corde
+    100004: corde001
+    100006: corde002
+    100008: corde003
+    100010: corde004
+    100012: corde005
+    100014: corde006
+    100016: corde007
+    100018: corde008
+    100020: corde009
+    100022: corde010
+    100024: corde011
+    100026: corde012
+    100028: corde013
+    100030: corde014
+    100032: corde015
+    100034: corde016
+    100036: corde017
+    100038: corde018
+    100040: cordes
+    100042: corps
+    100044: corps 1
+    100046: corps_cordes
+    100048: //RootNode
+    100050: pilier
+    400000: coprs_interieur
+    400002: corde
+    400004: corde001
+    400006: corde002
+    400008: corde003
+    400010: corde004
+    400012: corde005
+    400014: corde006
+    400016: corde007
+    400018: corde008
+    400020: corde009
+    400022: corde010
+    400024: corde011
+    400026: corde012
+    400028: corde013
+    400030: corde014
+    400032: corde015
+    400034: corde016
+    400036: corde017
+    400038: corde018
+    400040: cordes
+    400042: corps
+    400044: corps 1
+    400046: corps_cordes
+    400048: //RootNode
+    400050: pilier
+    2300000: coprs_interieur
+    2300002: corde
+    2300004: corde001
+    2300006: corde002
+    2300008: corde003
+    2300010: corde004
+    2300012: corde005
+    2300014: corde006
+    2300016: corde007
+    2300018: corde008
+    2300020: corde009
+    2300022: corde010
+    2300024: corde011
+    2300026: corde012
+    2300028: corde013
+    2300030: corde014
+    2300032: corde015
+    2300034: corde016
+    2300036: corde017
+    2300038: corde018
+    2300040: corps 1
+    2300042: pilier
+    3300000: coprs_interieur
+    3300002: corde
+    3300004: corde001
+    3300006: corde002
+    3300008: corde003
+    3300010: corde004
+    3300012: corde005
+    3300014: corde006
+    3300016: corde007
+    3300018: corde008
+    3300020: corde009
+    3300022: corde010
+    3300024: corde011
+    3300026: corde012
+    3300028: corde013
+    3300030: corde014
+    3300032: corde015
+    3300034: corde016
+    3300036: corde017
+    3300038: corde018
+    3300040: corps 1
+    3300042: pilier
+    4300000: corps
+    4300002: coprs_interieur
+    4300004: corde
+    4300006: corde001
+    4300008: corde002
+    4300010: corde003
+    4300012: corde004
+    4300014: corde005
+    4300016: corde006
+    4300018: corde007
+    4300020: corde008
+    4300022: corde009
+    4300024: corde010
+    4300026: corde011
+    4300028: corde012
+    4300030: corde013
+    4300032: corde014
+    4300034: corde015
+    4300036: corde016
+    4300038: corde017
+    4300040: corde018
+    4300042: pilier
+    7400000: Play
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: corps_cordes
+        weight: 1
+      - path: corps_cordes/cordes
+        weight: 1
+      - path: corps_cordes/cordes/corde
+        weight: 1
+      - path: corps_cordes/cordes/corde001
+        weight: 1
+      - path: corps_cordes/cordes/corde002
+        weight: 1
+      - path: corps_cordes/cordes/corde003
+        weight: 1
+      - path: corps_cordes/cordes/corde004
+        weight: 1
+      - path: corps_cordes/cordes/corde005
+        weight: 1
+      - path: corps_cordes/cordes/corde006
+        weight: 1
+      - path: corps_cordes/cordes/corde007
+        weight: 1
+      - path: corps_cordes/cordes/corde008
+        weight: 1
+      - path: corps_cordes/cordes/corde009
+        weight: 1
+      - path: corps_cordes/cordes/corde010
+        weight: 1
+      - path: corps_cordes/cordes/corde011
+        weight: 1
+      - path: corps_cordes/cordes/corde012
+        weight: 1
+      - path: corps_cordes/cordes/corde013
+        weight: 1
+      - path: corps_cordes/cordes/corde014
+        weight: 1
+      - path: corps_cordes/cordes/corde015
+        weight: 1
+      - path: corps_cordes/cordes/corde016
+        weight: 1
+      - path: corps_cordes/cordes/corde017
+        weight: 1
+      - path: corps_cordes/cordes/corde018
+        weight: 1
+      - path: corps_cordes/corps
+        weight: 1
+      - path: corps_cordes/corps/coprs_interieur
+        weight: 1
+      - path: corps_cordes/corps/corps 1
+        weight: 1
+      - path: pilier
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

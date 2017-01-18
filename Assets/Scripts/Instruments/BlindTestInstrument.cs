@@ -110,41 +110,15 @@ public class BlindTestInstrument
     /// <returns></returns>
     public bool ToggleLightAnswerFor(bool affirmative)
     {
-        if (isInExtract && this.isLit)
+        if ((isInExtract && affirmative) || (!isInExtract && !affirmative))
         {
-            if (affirmative)
-            {
-                this.SpotLight.color = Color.green;
-                return true;
-            }
-            else
-            {
-                this.SpotLight.color = Color.red;
-                return false;
-            }
-        }
-        else if (!isInExtract && this.isLit)
-        {
-            if (!affirmative)
-            {
-                this.SpotLight.color = Color.green;
-                return true;
-            }
-            else
-            {
-                this.SpotLight.color = Color.red;
-                return false;
-            }
-        }
-        else if (!this.isLit && isInExtract && affirmative)
-        {
-            this.ToggleLight();
             this.SpotLight.color = Color.green;
-            return false;
+            return isLit;
         }
         else
         {
-            return true;
+            this.SpotLight.color = Color.red;
+            return !isLit;
         }
     }
 

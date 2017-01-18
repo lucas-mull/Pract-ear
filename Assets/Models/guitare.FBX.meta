@@ -1,0 +1,186 @@
+fileFormatVersion: 2
+guid: 1e179f87c0daada48a3c77dfd7776b02
+timeCreated: 1484737548
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: barrette_bas
+    100002: barrette_haut
+    100004: clef
+    100006: clef001
+    100008: clef002
+    100010: clef003
+    100012: clef004
+    100014: clef005
+    100016: clefs
+    100018: cordes
+    100020: fond_guitare
+    100022: guitare 1
+    100024: //RootNode
+    400000: barrette_bas
+    400002: barrette_haut
+    400004: clef
+    400006: clef001
+    400008: clef002
+    400010: clef003
+    400012: clef004
+    400014: clef005
+    400016: clefs
+    400018: cordes
+    400020: fond_guitare
+    400022: guitare 1
+    400024: //RootNode
+    2300000: barrette_bas
+    2300002: barrette_haut
+    2300004: clef
+    2300006: clef001
+    2300008: clef002
+    2300010: clef003
+    2300012: clef004
+    2300014: clef005
+    2300016: cordes
+    2300018: fond_guitare
+    2300020: guitare 1
+    3300000: barrette_bas
+    3300002: barrette_haut
+    3300004: clef
+    3300006: clef001
+    3300008: clef002
+    3300010: clef003
+    3300012: clef004
+    3300014: clef005
+    3300016: cordes
+    3300018: fond_guitare
+    3300020: guitare 1
+    4300000: fond_guitare
+    4300002: clef
+    4300004: clef001
+    4300006: clef002
+    4300008: clef003
+    4300010: clef004
+    4300012: clef005
+    4300014: cordes
+    4300016: guitare
+    4300018: barrette_bas
+    4300020: barrette_haut
+    7400000: Play
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: barrette_bas
+        weight: 1
+      - path: barrette_haut
+        weight: 1
+      - path: clefs
+        weight: 1
+      - path: clefs/clef
+        weight: 1
+      - path: clefs/clef001
+        weight: 1
+      - path: clefs/clef002
+        weight: 1
+      - path: clefs/clef003
+        weight: 1
+      - path: clefs/clef004
+        weight: 1
+      - path: clefs/clef005
+        weight: 1
+      - path: cordes
+        weight: 1
+      - path: fond_guitare
+        weight: 1
+      - path: guitare 1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
