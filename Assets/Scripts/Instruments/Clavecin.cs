@@ -7,7 +7,9 @@ public class Clavecin : Instrument
 
     public Clavecin() : base(Instrument.CLAVECIN,
         Category.GetInstance(Category.CLAVIERS))
-    { }
+    {
+
+    }
 
     public override Vector3 getFarLeftVector()
     {

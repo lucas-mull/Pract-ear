@@ -44,6 +44,11 @@ public abstract class Instrument {
     /// </summary>
     private string prefabName;
 
+    /// <summary>
+    /// Informations sur l'instrument
+    /// </summary>
+    private string description;
+
     // Composant UI.Text contenant les noms des instruments au lancement
     private Text toolTip;
 
@@ -126,6 +131,12 @@ public abstract class Instrument {
     public Animator Animator
     {
         get { return this.Instance.GetComponent<Animator>(); }
+    }
+
+    public string Info
+    {
+        get { return this.description; }
+        set { this.description = value; }
     }
 
     #endregion
