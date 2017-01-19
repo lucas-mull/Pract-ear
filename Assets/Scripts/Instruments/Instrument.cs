@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public abstract class Instrument {
 
     const string PATH_TO_PREFABS = "Prefabs/";
-    const int INSTRUMENTS_COUNT = 4;
+    const int INSTRUMENTS_COUNT = 8;
 
     // Noms des prefabs des instruments dans Assets/Resources/Prefabs
     public const string PIANO = "piano";
@@ -20,7 +20,7 @@ public abstract class Instrument {
 
     public static string[] ALL_INSTRUMENTS = new string[INSTRUMENTS_COUNT]
     {
-        PIANO, TROMPETTE, VIOLON, MARIMBA
+        PIANO, TROMPETTE, VIOLON, MARIMBA, CLAVECIN, TROMBONE, GUITARE, TAMTAM
     };
 
     private static List<Instrument> InstrumentsList = new List<Instrument>();

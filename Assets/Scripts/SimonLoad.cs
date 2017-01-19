@@ -38,7 +38,8 @@ public class SimonLoad : MonoBehaviour {
 
     #region Variables privées
 
-    string _difficulty_level;                               // Niveau de difficulté (pas encore implémenté)
+    string _difficulty_level = DIFFICULTY_EASY;             // Niveau de difficulté (pas encore implémenté)
+    int _subLevel = 1;
 
     List<Instrument> _instruments = new List<Instrument>(); // Instruments présents sur la scène
     List<Instrument> _sequence;                             // Séquence actuelle des instruments
@@ -61,7 +62,7 @@ public class SimonLoad : MonoBehaviour {
     void Start () {
         Init();
 
-        SetDifficulty(DIFFICULTY_EASY);
+        SetDifficulty(_difficulty_level);
 
         _partition = Partition.LoadPartitionFromJson("clair_de_la_lune");
 
@@ -85,10 +86,6 @@ public class SimonLoad : MonoBehaviour {
         else if (!_hasStarted)
         {
             StartCoroutine(StartingRoutine());
-            for (int i = 0; i < _instruments.Count; i++)
-            {
-                _instruments[i].Tooltip.transform.parent.localScale = new Vector3(0, 0, 0);
-            }
             _hasStarted = true;
         }
         else if (!_playerTurn && !_sequenceIsPlaying)

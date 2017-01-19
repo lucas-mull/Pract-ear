@@ -1,0 +1,15 @@
+{
+  "title": "Star Wars Theme",
+  "clipFileName": "star_wars_theme",
+  "path":"SoundTracks/Blindtest/star_wars_theme",
+  "instrumentsCount":  "2",
+  "instruments": 
+  [
+    {
+      "instrument": "Violon"
+    },
+    {
+      "instrument": "Piano"
+    }
+  ]
+}
