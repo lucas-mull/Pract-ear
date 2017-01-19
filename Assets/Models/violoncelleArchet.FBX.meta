@@ -65,7 +65,7 @@ ModelImporter:
     4300014: Box072
     4300016: cordes005
     4300018: corps005
-    7400000: Take 001
+    7400000: Play
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -87,7 +87,65 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: archet001
+        weight: 1
+      - path: archet001/baseArchet004
+        weight: 1
+      - path: archet001/bouts005
+        weight: 1
+      - path: archet001/bouts005/Object012
+        weight: 1
+      - path: archet001/bouts005/Object013
+        weight: 1
+      - path: archet001/corde022
+        weight: 1
+      - path: violoncelle
+        weight: 1
+      - path: violoncelle/bouts_noirs
+        weight: 1
+      - path: violoncelle/bouts_noirs/Box072
+        weight: 1
+      - path: violoncelle/bouts_noirs/Box073
+        weight: 1
+      - path: violoncelle/bouts_noirs/Box074
+        weight: 1
+      - path: violoncelle/bouts_noirs/Box075
+        weight: 1
+      - path: violoncelle/cordes005
+        weight: 1
+      - path: violoncelle/corps005
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

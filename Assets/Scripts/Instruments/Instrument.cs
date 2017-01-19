@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 public abstract class Instrument {
 
-    const string PATH_TO_PREFABS = "Prefabs/";
-    const int INSTRUMENTS_COUNT = 8;
+    const string PATH_TO_PREFABS = "Prefabs/Instruments/";
+    const string PATH_TO_SPRITE_PREFAB = "Prefabs/UI/InstrumentGuide";
+    const string PATH_TO_SPRITES = "Sprites/Instruments/";
+    const int INSTRUMENTS_COUNT = 9;
 
     // Noms des prefabs des instruments dans Assets/Resources/Prefabs
     public const string PIANO = "piano";
@@ -13,14 +15,18 @@ public abstract class Instrument {
     public const string TROMPETTE = "trompette";
     public const string TROMBONE = "trombone";
     public const string VIOLON = "violon";
+    public const string ALTO = "alto";
+    public const string CONTREBASSE = "contrebasse";
+    public const string VIOLONCELLE = "violoncelle";
     public const string GUITARE = "guitare";
+    public const string GUITARE_FOLK = "guitare folk";
     public const string HARPE = "harpe";
     public const string MARIMBA = "marimba";
     public const string TAMTAM = "tamtam";
 
     public static string[] ALL_INSTRUMENTS = new string[INSTRUMENTS_COUNT]
     {
-        PIANO, TROMPETTE, VIOLON, MARIMBA, CLAVECIN, TROMBONE, GUITARE, TAMTAM
+        PIANO, TROMPETTE, VIOLON, MARIMBA, CLAVECIN, TROMBONE, GUITARE, TAMTAM, HARPE
     };
 
     private static List<Instrument> InstrumentsList = new List<Instrument>();
@@ -154,11 +160,11 @@ public abstract class Instrument {
     /// <summary>
     /// Constructeur simple
     /// </summary>
-    /// <param name="prefabName">Nom de l'instrument pour lequel on souhaite récupérer la prefab</param>
-    public Instrument(string prefabName, Category category) : this()
+    /// <param name="name">Nom de l'instrument pour lequel on souhaite récupérer la prefab</param>
+    public Instrument(string name, Category category) : this()
     {
-        this.prefabName = prefabName;
-        this.name = prefabName;
+        this.prefabName = name.Replace(" ", "");
+        this.name = name;
         this.category = category;
     }
 
@@ -175,6 +181,26 @@ public abstract class Instrument {
     #endregion
 
     #region Méthodes de classe
+
+    /// <summary>
+    /// Renvoie un sprite prêt à être utilisé pour le guide
+    /// </summary>
+    /// <returns></returns>
+    public GameObject InstantiateSprite()
+    {
+        GameObject prefab = Resources.Load<GameObject>(PATH_TO_SPRITE_PREFAB);
+        prefab = Object.Instantiate(prefab);
+
+        Image sprite = prefab.GetComponent<Image>();
+        sprite.sprite = Resources.Load<Sprite>(PATH_TO_SPRITES + prefabName);
+
+        Text title = prefab.GetComponentInChildren<Text>();
+        title.text = this.name;
+
+        prefab.name = this.name;
+
+        return prefab;
+    }
 
     /// <summary>
     /// Créé une instance de la prefab de l'instrument actuel à la position donnée

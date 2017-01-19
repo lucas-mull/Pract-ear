@@ -66,7 +66,7 @@ ModelImporter:
     4300016: cordes007
     4300018: barrette_haut001
     4300020: barrette_bas001
-    7400000: Take 001
+    7400000: Play
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -88,7 +88,63 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Play
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: barrette_bas001
+        weight: 1
+      - path: barrette_haut001
+        weight: 1
+      - path: clefsFolk
+        weight: 1
+      - path: clefsFolk/clef008
+        weight: 1
+      - path: clefsFolk/clef009
+        weight: 1
+      - path: clefsFolk/clef010
+        weight: 1
+      - path: clefsFolk/clef011
+        weight: 1
+      - path: clefsFolk/clef012
+        weight: 1
+      - path: clefsFolk/clef013
+        weight: 1
+      - path: clefsFolk/clef014
+        weight: 1
+      - path: cordes007
+        weight: 1
+      - path: fond_guitare001
+        weight: 1
+      - path: guitare001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

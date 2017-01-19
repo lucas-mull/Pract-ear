@@ -264,8 +264,8 @@ public class Category
     /// <summary>
     /// Génère un instrument au hasard dans une catégorie donnée
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="categoryName">Nom de la catégorie</param>
+    /// <returns>un instrument choisi au hasard dans la catégorie</returns>
     public static Instrument GetRandomInstrumentInCategory(string categoryName)
     {
         List<Instrument> all = GetAllInstrumentsInCategory(categoryName);

@@ -44,6 +44,7 @@ public class SimonLoad : MonoBehaviour {
     List<Instrument> _instruments = new List<Instrument>(); // Instruments présents sur la scène
     List<Instrument> _sequence;                             // Séquence actuelle des instruments
     Instrument _chosenInstrument;                           // Instrument choisi pour la prochaine note
+    List<Partition> _partitions;                            // Ensemble de toutes les partitions
     Partition _partition;                                   // Partition jouée
 
     // Différents booléens qui servent à réguler le jeu
@@ -64,7 +65,8 @@ public class SimonLoad : MonoBehaviour {
 
         SetDifficulty(_difficulty_level);
 
-        _partition = Partition.LoadPartitionFromJson("clair_de_la_lune");
+        _partitions = Partition.LoadAll();
+        _partition = _partitions[Random.Range(0, _partitions.Count)];
 
         _instruments[0].PutFarLeft(_farLeftText);
         _instruments[1].PutFarRight(_farRightText);
