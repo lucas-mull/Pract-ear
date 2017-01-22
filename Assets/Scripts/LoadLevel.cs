@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class LoadLevel : MonoBehaviour {
-
-    const string SIMON_KEY = "simon";
-    const string BLINDTEST_KEY = "blindtest";
-    const string TAMTAM_KEY = "tamtam";
-    const string TEMPO_KEY = "tempo";
 
     const string SIMON_NAME = "Instru' Simon";
     const string BLINDTEST_NAME = "Orchestra Blindtest";
@@ -28,19 +25,56 @@ public class LoadLevel : MonoBehaviour {
     public Canvas MenuCanvas;
     public Canvas ModalCanvas;
     public Canvas ExtrasCanvas;
+    public Canvas LevelCanvas;
     public GameObject ModalPanel;
     public Text Name;
     public Text Description;
     public Text Skill;
+    public Button[] _difficultyButtons;
+
+    Sprite _unlockedSprite;
+    Sprite _lockedSprite;
+    int _selectedGame = 0;
+    bool _onDifficultyScreen = false;
+    GraphicRaycaster _raycaster;
+    List<RaycastResult> _results = new List<RaycastResult>();
+    PointerEventData _ped = new PointerEventData(null);
 
     // Use this for initialization
     void Start () {
         MenuCanvas.GetComponent<Animator>().Play("MenuFliesIn");
-	}
+        _unlockedSprite = Resources.Load<Sprite>("Sprites/next_icon");
+        _lockedSprite = Resources.Load<Sprite>("Sprites/lock_closed");
+        _raycaster = LevelCanvas.GetComponent<GraphicRaycaster>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    if (_onDifficultyScreen)
+        {
+            if (Utils.Clicked())
+            {
+                int size = _results.Count;
+                _ped.position = Utils.GetClickedPosition();
+                _raycaster.Raycast(_ped, _results);
+                if (_results.Count > size)
+                {
+                    Debug.Log("clicked : " + _results[size].gameObject.name);
+                    Button clicked = _results[size].gameObject.GetComponent<Button>();
+                    if (clicked != null)
+                    {
+                        if (!clicked.IsInteractable())
+                            return;
+
+                        if (DifficultyManager.isDifficultyValid(clicked.tag))
+                        {
+                            DifficultyManager.PICKED_DIFFICULTY = clicked.tag;
+                            LoadGame(_selectedGame);
+                        }
+                    }
+                }
+            }
+        }
 	}
 
     public void TriggerModalFor(string gameKey)
@@ -51,22 +85,22 @@ public class LoadLevel : MonoBehaviour {
 
         switch (gameKey.ToLower())
         {
-            case SIMON_KEY:
+            case DifficultyManager.SIMON:
                 Name.text = SIMON_NAME;
                 Description.text = SIMON_DESCRIPTION;
                 Skill.text = SIMON_SKILL;
                 break;
-            case BLINDTEST_KEY:
+            case DifficultyManager.BLINDTEST:
                 Name.text = BLINDTEST_NAME;
                 Description.text = BLINDTEST_DESCRIPTION;
                 Skill.text = BLINDTEST_SKILL;
                 break;
-            case TAMTAM_KEY:
+            case DifficultyManager.TAMTAM:
                 Name.text = TAMTAM_NAME;
                 Description.text = TAMTAM_DESCRIPTION;
                 Skill.text = TAMTAM_SKILL;
                 break;
-            case TEMPO_KEY:
+            case DifficultyManager.TEMPO:
                 Name.text = TEMPO_NAME;
                 Description.text = TEMPO_DESCRIPTION;
                 Skill.text = TEMPO_SKILL;
@@ -91,33 +125,66 @@ public class LoadLevel : MonoBehaviour {
         ModalPanel.GetComponent<Animator>().SetBool("dismissed", true);
     }
 
-    public void LoadLevelOnClick(int gameId)
+    public void LoadDifficultyScreen(int gameId)
     {
-        MenuCanvas.enabled = false;
-        ExtrasCanvas.enabled = false;    
-        LoadGame(gameId);
+        _selectedGame = gameId;
+        
+        foreach (Button button in _difficultyButtons)
+        {
+            string difficulty = button.tag;
+            Image icon = button.transform.GetChild(1).GetComponent<Image>();
+            if (DifficultyManager.isDifficultyUnlocked(difficulty, _selectedGame))
+            {
+                button.interactable = true;                
+                icon.sprite = _unlockedSprite;
+            }
+            else
+            {
+                button.interactable = false;
+                icon.sprite = _lockedSprite;
+            }
+        }
+
+        ShowLevelPicking();
     }
 
     public void LoadGame(int gameId)
     {
+        ShowLoadingScreen();
         SceneManager.LoadScene(gameId);
     }
 
     public void Back()
     {
+        _onDifficultyScreen = false;
         MenuCanvas.enabled = true;
+        LevelCanvas.enabled = true;
         MenuCanvas.GetComponent<Animator>().Play("MenuFliesIn");
     }
 
     public void ShowExtras()
     {
+        LevelCanvas.enabled = false;
         MenuCanvas.enabled = false;
+        ExtrasCanvas.enabled = true;       
         Animator animator = ExtrasCanvas.GetComponent<Animator>();
 
-        if (!animator.enabled)
-            animator.enabled = true;
-        else
-            animator.Play("ExtrasFlyIn");
+        animator.Play("ExtrasFlyIn");
+    }
+
+    public void ShowLevelPicking()
+    {
+        MenuCanvas.enabled = false;
+        Animator animator = LevelCanvas.GetComponent<Animator>();
+
+        animator.Play("LevelFliesIn");
+        _onDifficultyScreen = true;
+    }
+
+    void ShowLoadingScreen()
+    {
+        ExtrasCanvas.enabled = false;
+        LevelCanvas.enabled = false;
     }
 
 }

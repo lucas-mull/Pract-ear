@@ -4,12 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SimonLoad : MonoBehaviour {
-
-    const string DIFFICULTY_EASY = "easy";
+    
     string[] EASY_CATEGORIES = new string[]{ Category.VENTS, Category.CORDES, Category.CLAVIERS, Category.PERCUSSIONS };
 
-    const string DIFFICULTY_MEDIUM = "medium";
-    const string DIFFICULTY_HARD = "hard";
     const int MAX_ERRORS_ALLOWED = 3;
 
     #region Objets assignés à travers l'Inspector
@@ -38,7 +35,7 @@ public class SimonLoad : MonoBehaviour {
 
     #region Variables privées
 
-    string _difficulty_level = DIFFICULTY_EASY;             // Niveau de difficulté (pas encore implémenté)
+    string _difficulty_level;                               // Niveau de difficulté (pas encore implémenté)
     int _subLevel = 1;
 
     List<Instrument> _instruments = new List<Instrument>(); // Instruments présents sur la scène
@@ -62,6 +59,7 @@ public class SimonLoad : MonoBehaviour {
     // Use this for initialization
     void Start () {
         Init();
+        _difficulty_level = DifficultyManager.PICKED_DIFFICULTY;
 
         SetDifficulty(_difficulty_level);
 
@@ -142,6 +140,8 @@ public class SimonLoad : MonoBehaviour {
         {
             life.GetComponent<Animator>().SetBool("died", false);
         }
+
+        _sequenceCountText.text = "" + _sequenceCount;
     }
     
     /// <summary>
@@ -185,16 +185,18 @@ public class SimonLoad : MonoBehaviour {
     {
         switch(difficulty)
         {
-            case DIFFICULTY_EASY:
+            case DifficultyManager.EASY:
                 // On génère un instrument par catégorie
                 foreach (string category in EASY_CATEGORIES)
                 {
                     _instruments.Add(Category.GetRandomInstrumentInCategory(category));
                 }
                 break;
-            case DIFFICULTY_MEDIUM:
+            case DifficultyManager.MEDIUM:
                 break;
-            case DIFFICULTY_HARD:                
+            case DifficultyManager.HARD:                
+                break;
+            case DifficultyManager.EXTREME:
                 break;
             default:
                 System.Console.WriteLine(difficulty + " is not a valid difficulty input");

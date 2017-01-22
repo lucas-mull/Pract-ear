@@ -6,7 +6,13 @@ public class Contrebasse : Instrument
 {
     public Contrebasse() : base(Instrument.CONTREBASSE,
         Category.GetInstance(Category.FROTTEES))
-    { }
+    {
+        this.Info = "La contrebasse fait partie de la famille des instruments à cordes." +
+            "De tous les cordes, c’est l’instrument le plus grand et le plus grave." + 
+            "Son corps est légèrement plus bombé que celui d’un violon ou violoncelle. " + 
+            "Il est possible d’en jouer en frottant les cordes avec un archet (arco) ou bien" + 
+            " en les pinçant avec les doigts (pizzicato).";
+    }
 
     public override Vector3 getFarLeftVector()
     {

@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using System;
 
 public class GuideLoad : MonoBehaviour, IPointerUpHandler{
 
@@ -22,6 +21,8 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
     Instrument _lastHit;    
     GameObject _activePanel;
     List<Partition> _partitions;
+    List<List<Instrument>> _famillesInstruments = new List<List<Instrument>>();
+    List<Instrument> _selectedCategory;
     Partition _selectedPartition;
     AudioSource _audioSource;
     bool _play = false;
@@ -37,6 +38,7 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
         foreach (GameObject panel in _instrumentsPanels)
         {
             List<Instrument> famille = Category.GetAllInstrumentsInCategory(panel.name);
+            _famillesInstruments.Add(famille);
             foreach (Instrument instrument in famille)
             {
                 GridLayoutGroup layout = panel.GetComponent<GridLayoutGroup>();
@@ -44,6 +46,8 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
                 sprite.transform.SetParent(layout.transform, false);
             }
         }
+
+        _selectedCategory = _famillesInstruments[0];
 
         _songChoices.options.Clear();
 
@@ -72,12 +76,8 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
             if (hit.tag == "Instrument")
             {
                 Debug.Log("Hit : " + hit.name);
-                _lastHit = Instrument.GetInstanceFor(hit.name.ToLower());
-                _panelDetails.SetActive(true);
-                _activePanel.SetActive(false);
-                _instrumentDisplay.sprite = hit.GetComponent<Image>().sprite;
-                _title.text = _lastHit.Name;
-                _categoryText.text = _lastHit.Category.ToString();              
+                _lastHit = FindInstrument(hit.name);
+                ShowDetails();
             }
             
         }
@@ -91,12 +91,76 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
         {
             EnableButton(tab, true);
             _selectedTab = tab;
+            UpdateSelectedCategory();
         }
+    }
+
+    public void ShowNext()
+    {
+        int nextIndex = _selectedCategory.IndexOf(_lastHit) + 1;
+        if (nextIndex >= _selectedCategory.Count)
+        {
+            nextIndex = 0;
+        }
+
+        _lastHit = _selectedCategory[nextIndex];
+
+        ShowDetails();
+    }
+
+    public void ShowPrevious()
+    {
+        int previousIndex = _selectedCategory.IndexOf(_lastHit) - 1;
+        if (previousIndex < 0)
+        {
+            previousIndex = _selectedCategory.Count - 1;
+        }
+
+        _lastHit = _selectedCategory[previousIndex];
+
+        ShowDetails();
+    }
+
+    public void BackToMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
     }
 
     public void Back()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
+        _panelDetails.SetActive(false);
+        _activePanel.SetActive(true);
+        _play = false;
+    }
+
+    private int FindIndexOf(GameObject panel)
+    {
+        int res = 0;
+        foreach(GameObject p in _instrumentsPanels)
+        {
+            if (p == panel)
+                return res;
+
+            res++;
+        }
+
+        return -1;
+    }
+
+    private Instrument FindInstrument(string name)
+    {
+        foreach(Instrument instrument in _selectedCategory)
+        {
+            if (instrument.Name == name)
+                return instrument;
+        }
+
+        return null;
+    }
+
+    private void UpdateSelectedCategory()
+    {
+        _selectedCategory = _famillesInstruments[FindIndexOf(_activePanel)];
     }
 
     private void EnableButton(GameObject button, bool enable)
@@ -123,10 +187,23 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
         }
     }
 
+    private void ShowDetails()
+    {
+        _panelDetails.SetActive(true);
+        _activePanel.SetActive(false);
+        _instrumentDisplay.sprite = _lastHit.sprite;
+        _title.text = _lastHit.Name;
+        _infoText.text = _lastHit.Info;
+        _categoryText.text = _lastHit.Category.ToString();
+    }
+
     public void StartListening()
     {
-        _play = true;
-        StartCoroutine(PlayPartition());
+        if (!_play)
+        {
+            _play = true;
+            StartCoroutine(PlayPartition());
+        }
     }
 
     public void onValueChanged()

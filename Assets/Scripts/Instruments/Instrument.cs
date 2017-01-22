@@ -139,6 +139,8 @@ public abstract class Instrument {
         get { return this.Instance.GetComponent<Animator>(); }
     }
 
+    public Sprite sprite { get; set; }
+
     public string Info
     {
         get { return this.description; }
@@ -155,6 +157,7 @@ public abstract class Instrument {
     public Instrument()
     {
         this.isInstantiated = false;
+        this.Info = "Aucune information pour cet instrument";
     }
 
     /// <summary>
@@ -191,8 +194,9 @@ public abstract class Instrument {
         GameObject prefab = Resources.Load<GameObject>(PATH_TO_SPRITE_PREFAB);
         prefab = Object.Instantiate(prefab);
 
-        Image sprite = prefab.GetComponent<Image>();
-        sprite.sprite = Resources.Load<Sprite>(PATH_TO_SPRITES + prefabName);
+        Image spriteContainer = prefab.GetComponent<Image>();
+        this.sprite = Resources.Load<Sprite>(PATH_TO_SPRITES + prefabName);
+        spriteContainer.sprite = this.sprite;
 
         Text title = prefab.GetComponentInChildren<Text>();
         title.text = this.name;

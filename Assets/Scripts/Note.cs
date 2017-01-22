@@ -1,4 +1,5 @@
-﻿
+﻿using UnityEngine;
+
 /// <summary>
 /// Classe pour définir une note de musique. Utilisé dans les partitions.
 /// </summary>
@@ -52,6 +53,11 @@ public class Note
     #endregion
 
     #region Méthodes de classe
+
+    public AudioClip GetClipFor(Instrument instrument)
+    {
+        return Resources.Load<AudioClip>(GetFileNameFor(instrument));
+    }
 
     /// <summary>
     /// Retourne le nom du fichier nécessaire pour jouer la note actuelle pour un instrument donné

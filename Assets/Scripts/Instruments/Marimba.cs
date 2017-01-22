@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 
 public class Marimba : Instrument
 {
     public Marimba() : base(Instrument.MARIMBA, 
-        Category.GetInstance(Category.DETERMINE)) { }
+        Category.GetInstance(Category.DETERMINE))
+    {
+        this.Info = "Le marimba est une sorte de xylophone africain." +
+            "Ses lames sont donc en bois. " +
+            "Il se joue avec des baguettes, généralement avec une paire dans chaque main," +
+            "et peut-être joué par plusieurs personnes en même temps.";
+    }
 
     public override Vector3 getFarLeftVector()
     {
