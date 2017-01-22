@@ -35,7 +35,7 @@ public class LoadLevel : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-	    
+        MenuCanvas.GetComponent<Animator>().Play("MenuFliesIn");
 	}
 	
 	// Update is called once per frame
@@ -45,7 +45,9 @@ public class LoadLevel : MonoBehaviour {
 
     public void TriggerModalFor(string gameKey)
     {
-        ModalPanel.GetComponent<Animator>().SetBool("dismissed", false);
+        Animator animator = ModalPanel.GetComponent<Animator>();
+
+        animator.SetBool("dismissed", false);
 
         switch (gameKey.ToLower())
         {
@@ -73,8 +75,7 @@ public class LoadLevel : MonoBehaviour {
                 break;
         }
 
-        ModalCanvas.enabled = true;
-        Animator animator = ModalPanel.GetComponent<Animator>();
+        ModalCanvas.enabled = true;        
         if (!animator.enabled)
         {
             animator.enabled = true;
@@ -102,10 +103,21 @@ public class LoadLevel : MonoBehaviour {
         SceneManager.LoadScene(gameId);
     }
 
+    public void Back()
+    {
+        MenuCanvas.enabled = true;
+        MenuCanvas.GetComponent<Animator>().Play("MenuFliesIn");
+    }
+
     public void ShowExtras()
     {
         MenuCanvas.enabled = false;
-        ExtrasCanvas.GetComponent<Animator>().enabled = true;
+        Animator animator = ExtrasCanvas.GetComponent<Animator>();
+
+        if (!animator.enabled)
+            animator.enabled = true;
+        else
+            animator.Play("ExtrasFlyIn");
     }
 
 }

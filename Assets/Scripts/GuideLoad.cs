@@ -8,6 +8,7 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
 
     public GameObject _panelDetails;
     public GameObject _selectedTab;
+    public GameObject[] _instrumentsPanels;
     public Image _instrumentDisplay;
     public Text _title;
     public Text _categoryText;
@@ -18,20 +19,32 @@ public class GuideLoad : MonoBehaviour, IPointerUpHandler{
     List<RaycastResult> results = new List<RaycastResult>();
     PointerEventData ped = new PointerEventData(null);
 
-    Instrument _lastHit;
+    Instrument _lastHit;    
     GameObject _activePanel;
     List<Partition> _partitions;
     Partition _selectedPartition;
-    AudioSource _audioSource;    
+    AudioSource _audioSource;
     bool _play = false;
 
     // Use this for initialization
     void Start () {
         _rayCaster = this.GetComponent<GraphicRaycaster>();
-        _activePanel = _selectedTab.transform.GetChild(1).gameObject;
+        _activePanel = _instrumentsPanels[0];
         _audioSource = GetComponent<AudioSource>();
         _partitions = Partition.LoadAll();
         _selectedPartition = _partitions[0];
+
+        foreach (GameObject panel in _instrumentsPanels)
+        {
+            List<Instrument> famille = Category.GetAllInstrumentsInCategory(panel.name);
+            foreach (Instrument instrument in famille)
+            {
+                GridLayoutGroup layout = panel.GetComponent<GridLayoutGroup>();
+                GameObject sprite = instrument.InstantiateSprite();
+                sprite.transform.SetParent(layout.transform, false);
+            }
+        }
+
         _songChoices.options.Clear();
 
         foreach (Partition partition in _partitions)
