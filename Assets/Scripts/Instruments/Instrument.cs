@@ -7,7 +7,7 @@ public abstract class Instrument {
     const string PATH_TO_PREFABS = "Prefabs/Instruments/";
     const string PATH_TO_SPRITE_PREFAB = "Prefabs/UI/InstrumentGuide";
     const string PATH_TO_SPRITES = "Sprites/Instruments/";
-    const int INSTRUMENTS_COUNT = 9;
+    const int INSTRUMENTS_COUNT = 12;
 
     // Noms des prefabs des instruments dans Assets/Resources/Prefabs
     public const string PIANO = "piano";
@@ -26,7 +26,7 @@ public abstract class Instrument {
 
     public static string[] ALL_INSTRUMENTS = new string[INSTRUMENTS_COUNT]
     {
-        PIANO, TROMPETTE, VIOLON, MARIMBA, CLAVECIN, TROMBONE, GUITARE, TAMTAM, HARPE
+        PIANO, TROMPETTE, VIOLON, MARIMBA, CLAVECIN, TROMBONE, GUITARE, TAMTAM, HARPE, CONTREBASSE, VIOLONCELLE, ALTO
     };
 
     private static List<Instrument> InstrumentsList = new List<Instrument>();
@@ -62,12 +62,6 @@ public abstract class Instrument {
     /// Catégorie à laquelle appartient l'instrument.
     /// </summary>
     private Category category;
-
-    /// <summary>
-    /// Attribut indiquant si notre instrument possède une instance existante sur la scène.
-    /// Accessible en dehors de la classe.
-    /// </summary>
-    public bool isInstantiated;
 
     #endregion
 
@@ -108,7 +102,7 @@ public abstract class Instrument {
     {
         get
         {
-            if (this.isInstantiated)
+            if (isInstantiated)
                 return this.Instance.name;
 
             return this.name;
@@ -139,6 +133,15 @@ public abstract class Instrument {
         get { return this.Instance.GetComponent<Animator>(); }
     }
 
+    /// <summary>
+    /// Attribut indiquant si notre instrument possède une instance existante sur la scène.
+    /// Accessible en dehors de la classe.
+    /// </summary>
+    public bool isInstantiated
+    {
+        get { return this.Instance != null; }
+    }
+
     public Sprite sprite { get; set; }
 
     public string Info
@@ -156,7 +159,6 @@ public abstract class Instrument {
     /// </summary>
     public Instrument()
     {
-        this.isInstantiated = false;
         this.Info = "Aucune information pour cet instrument";
     }
 
@@ -218,7 +220,6 @@ public abstract class Instrument {
         {
             GameObject gameObject = Resources.Load<GameObject>(PATH_TO_PREFABS + this.prefabName);
             this.Instance = (GameObject)Object.Instantiate(gameObject, position, gameObject.transform.rotation);
-            isInstantiated = true;
 
             // Met à jour le nom de l'instance créée s'il a été modifié
             this.Name = this.name;            
@@ -341,7 +342,8 @@ public abstract class Instrument {
     /// </summary>
     public void Destroy()
     {
-        Resources.UnloadUnusedAssets();
+        if (isInstantiated)
+            Object.Destroy(this.Instance);
     }
 
     #endregion
@@ -375,6 +377,12 @@ public abstract class Instrument {
                 return new Marimba();
             case TAMTAM:
                 return new Tamtam();
+            case VIOLONCELLE:
+                return new Violoncelle();
+            case ALTO:
+                return new Alto();
+            case CONTREBASSE:
+                return new Contrebasse();
             default:
                 return null;              
         }

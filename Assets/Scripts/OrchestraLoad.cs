@@ -5,10 +5,6 @@ using System;
 
 public class OrchestraLoad : MonoBehaviour {
 
-    const string DIFFICULTY_EASY = "easy";
-    const string DIFFICULTY_MEDIUM = "medium";
-    const string DIFFICULTY_HARD = "hard";
-
     const int MAX_INSTRUMENTS = 4;
     const int QUESTION_READING_TIME = 3;
 
@@ -21,10 +17,19 @@ public class OrchestraLoad : MonoBehaviour {
     public Slider _soundtrackSlider;            // Slider pour se déplacer facilement dans le morceau
     public Canvas _igInterface;                 // Canvas contenant l'interface du jeu
     public Canvas _igMenu;                      // Canvas contenant le menu de pause (appui sur le bouton 'menu')
+    public Canvas _igSuccess;                   // Canvas affiché quand on réussit
+    public Canvas _igGameOver;                  // Canvas affiché quand on rate
     public Sprite _playSprite;                  // Sprite 'Play' du bouton play
     public Sprite _pauseSprite;                 // Sprite 'Pause' du bouton play
     public Camera _mainCamera;                  // Camera de la scène
     public Text   _questionText;                // Texte qui affiche la question actuelle
+    public Image _logoDefeat;                   // Image du logo quand on perd
+
+    // Tooltips
+    public Text _farLeftText;                   
+    public Text _farRightText;
+    public Text _middleLeftText;
+    public Text _middleRightText;
 
     public Light _farLeftLight;                 // Spot en bas à gauche
     public Light _farRightLight;                // Spot en bas à droite
@@ -69,16 +74,49 @@ public class OrchestraLoad : MonoBehaviour {
         _clipApplause = Resources.Load<AudioClip>("SFX/crowd_applause");
         _clipBoo = Resources.Load<AudioClip>("SFX/crowd_boo");
 
-        _extract = Extract.LoadExtraitFromJson("star_wars_theme", PATH_TO_BLINDTEST);
+        Init();
+
+        EnableInstrumentsColliders(false);
+        _logoDefeat.GetComponent<Animator>().SetTrigger("lost");
+    }
+
+    void Init()
+    {
+        SetDifficulty();
         _extractAudioSource.clip = _extract.Clip;
 
-        _question = new BlindTestQuestion(4);
+        _question = new BlindTestQuestion(MAX_INSTRUMENTS);
         _question.InstrumentsInExtract = _extract.InstrumentsNames;
         _questionText.text = _question.Question;
 
         _instruments = _question.GenerateInstrumentListForQuestion();
 
-        PlaceInstrumentsRandomly();
+        _selectedInstrumentsCount = 0;
+        _validateButton.interactable = false;
+        SetValidateButtonColor(Color.white);
+        PlaceInstrumentsRandomly();        
+    }
+
+    public void Restart()
+    {
+        foreach (BlindTestInstrument instrument in _instruments)
+        {
+            instrument.ToggleLight(false);
+            instrument.Destroy();
+        }
+
+        Init();
+        _igSuccess.enabled = false;
+        _igGameOver.enabled = false;
+        _isReadingQuestion = true;        
+
+        _questionText.transform.parent.GetComponent<Animator>().SetBool("start", false);
+    }
+
+    public void NextLevel()
+    {
+        DifficultyManager.IncrementDifficulty();
+        Restart();
     }
 
     // Update is called once per frame
@@ -234,6 +272,8 @@ public class OrchestraLoad : MonoBehaviour {
         if (!_validateButton.IsInteractable())
             return;
 
+        EnableInstrumentsColliders(false);
+
         bool success = true;
         foreach(BlindTestInstrument instrument in _instruments)
         {
@@ -246,10 +286,18 @@ public class OrchestraLoad : MonoBehaviour {
         if (success)
         {
             _sfxAudioSource.PlayOneShot(_clipApplause, 0.8f);
+
+            SetValidateButtonColor(Colors.GREEN);
+
+            _igSuccess.enabled = true;
+            DifficultyManager.UnlockNextDifficulty(DifficultyManager.BLINDTEST);
         }
         else
         {
+            SetValidateButtonColor(Colors.RED);
+
             _sfxAudioSource.PlayOneShot(_clipBoo, 0.8f);
+            _igGameOver.enabled = true;
         }
 
         ResetExtractPlayback();
@@ -266,16 +314,17 @@ public class OrchestraLoad : MonoBehaviour {
     System.Collections.IEnumerator WaitForReadingTimeCoroutine()
     {
         yield return new WaitForSeconds(QUESTION_READING_TIME);
-        
+
         // Une fois le temps écoulé on déclenche l'animation qui déplace la question en haut de l'écran.
-        Animator animator = _questionText.transform.parent.GetComponent<Animator>();
-        animator.enabled = true;
+        _questionText.transform.parent.GetComponent<Animator>().SetBool("start", true);
 
         // Et si l'audio n'était pas déjà en train de jouer, on la lance.
         if (!_extractAudioSource.isPlaying)
         {
             this.PlayExtract();
-        }        
+        }
+
+        EnableInstrumentsColliders(true);
     }
 
     /// <summary>
@@ -292,6 +341,15 @@ public class OrchestraLoad : MonoBehaviour {
     #endregion
 
     #region Méthodes privées
+
+    void SetDifficulty()
+    {
+        if (DifficultyManager.PICKED_DIFFICULTY == null)
+            DifficultyManager.PICKED_DIFFICULTY = DifficultyManager.EASY;
+
+        string folder = DifficultyManager.PICKED_DIFFICULTY + "/json/";
+        _extract = Extract.PickRandomFrom(PATH_TO_BLINDTEST + folder);
+    }
 
     /// <summary>
     /// Pause l'extrait
@@ -340,41 +398,26 @@ public class OrchestraLoad : MonoBehaviour {
 
         // Far left
         int index = UnityEngine.Random.Range(0, temp.Count);
-        temp[index].Instrument.PutFarLeft(null);
+        temp[index].Instrument.PutFarLeft(_farLeftText);
         temp[index].SpotLight = _farLeftLight;
         temp.RemoveAt(index);
 
         // Far right
         index = UnityEngine.Random.Range(0, temp.Count);
-        temp[index].Instrument.PutFarRight(null);
+        temp[index].Instrument.PutFarRight(_farRightText);
         temp[index].SpotLight = _farRightLight;
         temp.RemoveAt(index);
 
         // Middle Left
         index = UnityEngine.Random.Range(0, temp.Count);
-        temp[index].Instrument.PutMiddleLeft(null);
+        temp[index].Instrument.PutMiddleLeft(_middleLeftText);
         temp[index].SpotLight = _middleLeftLight;
         temp.RemoveAt(index);
 
         // Middle Right
-        temp[0].Instrument.PutMiddleRight(null);
+        temp[0].Instrument.PutMiddleRight(_middleRightText);
         temp[0].SpotLight = _middleRightLight;
         temp.RemoveAt(0);
-    }
-
-    void setDifficulty(string difficulty)
-    {
-        switch (difficulty)
-        {
-            case DIFFICULTY_EASY:
-            case DIFFICULTY_MEDIUM:
-            case DIFFICULTY_HARD:
-                this._difficultyLevel = difficulty;
-                break;
-            default:
-                Console.WriteLine(difficulty + " is not a valid difficulty input");
-                break;
-        }
     }
 
     /// <summary>
@@ -427,15 +470,20 @@ public class OrchestraLoad : MonoBehaviour {
     void EnableValidationButton(bool enable)
     {
         _validateButton.interactable = enable;
-        Text text = _validateButton.GetComponentInChildren<Text>();
+        Image image = _validateButton.transform.GetChild(1).GetComponent<Image>();
         if (enable)
         {
-            text.color = Colors.YELLOW;
+            image.color = Colors.YELLOW;
         }
         else
         {
-            text.color = Colors.BLACK;
+            image.color = Colors.WHITE;
         }
+    }
+
+    void SetValidateButtonColor(Color color)
+    {
+        _validateButton.GetComponent<Image>().color = color;
     }
 
     #endregion

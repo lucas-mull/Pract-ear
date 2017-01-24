@@ -68,7 +68,7 @@ public class TamtamQuestion : BlindTestQuestion {
         //{
         string pd = PATH_TO_TAMTAM + "Ternary/";
         res.Add(Extract.LoadExtraitFromJson("ternary_tom_toms", pd));
-        wrong = Extract.LoadFalseExtraitsFromJson(PATH_TO_TAMTAM + "Binary/");
+        wrong = Extract.LoadAll(PATH_TO_TAMTAM + "Binary/");
         res.AddRange(wrong);
         //}
         //else

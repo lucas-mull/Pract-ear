@@ -19,6 +19,7 @@ public class SimonLoad : MonoBehaviour {
     public Canvas _igSuccess;                               // Canvas du Success (quand on réussit un niveau)
     public GameObject _actionsPanel;                        // Panel des actions dans le menu (reprendre / retour au menu)
     public Image _menuBackground;                           // Image background du menu pause
+    public Image _logoGameOver;                             // Mascotte triste du game over
 
     public Text _farLeftText;                               // Texte pour le nom d'instrument en bas à gauche
     public Text _middleLeftText;                            // Texte pour le nom d'instrument en haut à gauche
@@ -26,6 +27,7 @@ public class SimonLoad : MonoBehaviour {
     public Text _farRightText;                              // Texte pour le nom d'instrument en bas à droite
     public Text _countdownText;                             // Texte contenant le compte à rebours de départ
     public Text _sequenceCountText;                         // Texte contenant le score actuel (longueur de la séquence)
+    public Text _goalText;                                  // Texte contenant le score à atteindre pour passer le niveau
 
     public Image[] _lifeSprites;                            // Sprites pour les "vies"
 
@@ -51,6 +53,7 @@ public class SimonLoad : MonoBehaviour {
     int _currentIndexInSequence;                            // Index actuelle dans la liste d'instruments
     int _errorCount;                                        // Nombre d'erreurs effectuées par l'utilisateur
     int _sequenceCount;                                     // Nombre de notes enchaînées correctement par le joueur
+    int _goalCount = 0;                                     // Nombre de notes nécessaires pour passer le niveau
 
     #endregion
 
@@ -66,14 +69,13 @@ public class SimonLoad : MonoBehaviour {
         _partitions = Partition.LoadAll();
         _partition = _partitions[Random.Range(0, _partitions.Count)];
 
-        _instruments[0].PutFarLeft(_farLeftText);
-        _instruments[1].PutFarRight(_farRightText);
-        _instruments[2].PutMiddleLeft(_middleLeftText);
-        _instruments[3].PutMiddleRight(_middleRightText);
+        PlaceInstruments();
 
         EnableInstrumentsColliders(false);
 
         _audioSource = GetComponent<AudioSource>();
+
+        _logoGameOver.GetComponent<Animator>().SetTrigger("lost");
     }
 
     // Update is called once per frame
@@ -133,7 +135,6 @@ public class SimonLoad : MonoBehaviour {
     {
         Init();
         _sequenceIsPlaying = false;
-        _hasStarted = true;
 
         _igInterface.enabled = true;
         foreach (Image life in _lifeSprites)
@@ -142,6 +143,25 @@ public class SimonLoad : MonoBehaviour {
         }
 
         _sequenceCountText.text = "" + _sequenceCount;
+    }
+
+    public void NextLevel()
+    {
+        DifficultyManager.IncrementDifficulty();
+        Restart();
+        foreach(Instrument instrument in _instruments)
+        {
+            instrument.Destroy();
+        }
+
+        _instruments.Clear();
+        SetDifficulty(DifficultyManager.PICKED_DIFFICULTY);
+
+        PlaceInstruments();
+
+        EnableInstrumentsColliders(false);
+
+        _hasStarted = false;
     }
     
     /// <summary>
@@ -191,15 +211,33 @@ public class SimonLoad : MonoBehaviour {
                 {
                     _instruments.Add(Category.GetRandomInstrumentInCategory(category));
                 }
+                SetGoal(7);
                 break;
             case DifficultyManager.MEDIUM:
+                _instruments.Add(new Marimba());
+                _instruments.Add(new Tamtam());
+                _instruments.Add(new Trompette());
+                _instruments.Add(new Trombone());
+                SetGoal(9);
                 break;
-            case DifficultyManager.HARD:                
+            case DifficultyManager.HARD:
+                _instruments.Add(new Harpe());
+                _instruments.Add(new Guitare());
+                _instruments.Add(new Violon());
+                _instruments.Add(new Contrebasse());
+                SetGoal(11);
                 break;
             case DifficultyManager.EXTREME:
+                _instruments.Add(new Violon());
+                _instruments.Add(new Contrebasse());
+                _instruments.Add(new Violoncelle());
+                _instruments.Add(new Alto());
+                SetGoal(11);
                 break;
             default:
-                System.Console.WriteLine(difficulty + " is not a valid difficulty input");
+                Debug.Log(difficulty + " is not a valid difficulty input");
+                DifficultyManager.PICKED_DIFFICULTY = DifficultyManager.EASY;
+                SetDifficulty(DifficultyManager.EASY);
                 break;
         }
     }
@@ -219,6 +257,40 @@ public class SimonLoad : MonoBehaviour {
         }
 
         return _instruments[newIndex];
+    }
+
+    void PlaceInstruments()
+    {
+        _instruments[0].PutFarLeft(_farLeftText);
+        _instruments[1].PutFarRight(_farRightText);
+        _instruments[2].PutMiddleLeft(_middleLeftText);
+        _instruments[3].PutMiddleRight(_middleRightText);
+    }
+
+    void SetGoal(int goal)
+    {
+        _goalCount = goal;
+        _goalText.text = "" + goal;
+    }
+
+    void ShowCountdown()
+    {
+        this._igMenu.enabled = true;
+        _sequenceIsPlaying = true;
+        _actionsPanel.SetActive(false);
+        Color color = _menuBackground.color;
+        color.a = 0.0f;
+        _menuBackground.color = color;
+    }
+
+    void HideCountdown()
+    {
+        this._igMenu.enabled = false;
+        _sequenceIsPlaying = false;
+        _actionsPanel.SetActive(true);
+        Color color = _menuBackground.color;
+        color.a = 0.5f;
+        _menuBackground.color = color;
     }
 
     /// <summary>
@@ -246,10 +318,11 @@ public class SimonLoad : MonoBehaviour {
         // Si success on incrémente la séquence d'une note
         if (_success)
         {
-            if (_sequence.Count == _partition.NotesCount)
+            if (_sequence.Count == _goalCount)
             {
                 _igInterface.enabled = false;
                 _igSuccess.enabled = true;
+                DifficultyManager.UnlockNextDifficulty(DifficultyManager.SIMON);                
                 yield break;
             }
             _chosenInstrument = PickRandomInstrument();
@@ -367,12 +440,14 @@ public class SimonLoad : MonoBehaviour {
                         _audioSource.Stop();
                         _audioSource.clip = Resources.Load<AudioClip>("SFX/crowd_applause");
                         _audioSource.Play();
-                        yield return new WaitForSeconds(3);
 
                         for (int i = _errorCount; i < _lifeSprites.Length; i++)
                         {
-                            _lifeSprites[i].GetComponent<Animator>().SetBool("won", false);
+                            _lifeSprites[i].GetComponent<Animator>().Play("Happy");
                         }
+
+                        yield return new WaitForSeconds(3);
+                        
 
                         _playerTurn = false;
                     }
@@ -406,18 +481,16 @@ public class SimonLoad : MonoBehaviour {
     /// <returns></returns>
     IEnumerator StartingRoutine()
     {
+        ShowCountdown();
+
         _countdownText.text = "";
         for (int i = 0; i < 5; i++)
         {
             _countdownText.text = (5 - i).ToString();
             yield return new WaitForSeconds(1);
         }
-        this._igMenu.enabled = false;
-        _sequenceIsPlaying = false;
-        _actionsPanel.SetActive(true);
-        Color color = _menuBackground.color;
-        color.a = 0.5f;
-        _menuBackground.color = color;
+
+        HideCountdown();
     }
 
     #endregion

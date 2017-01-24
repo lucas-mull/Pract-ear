@@ -12,6 +12,7 @@ public class TutoSimonLoad : MonoBehaviour {
     public Canvas _canvasIntro;
     public Canvas _canvasSuccess;
     public Canvas _canvasGameOver;
+    public Canvas _canvasMenu;
     public GameObject _rideaux;
     public Text _bulleAdvice;
     public Text _goalText;
@@ -19,6 +20,11 @@ public class TutoSimonLoad : MonoBehaviour {
     public Camera _camera;
     public GameObject _panelArrows;
     public Image[] _lifeSprites;
+    public Image _logoDefeat;
+    public Text _farLeftText;
+    public Text _farRightText;
+    public Text _middleLeftText;
+    public Text _middleRightText;
 
     Instrument _piano;
     Instrument _guitare;
@@ -41,6 +47,7 @@ public class TutoSimonLoad : MonoBehaviour {
     int _step = 0;
     bool _nextStep = false;
     bool _gameOver = false;
+    bool _isGamePaused = false;
 
     List<Instrument> _sequence = new List<Instrument>(4);
 
@@ -52,16 +59,16 @@ public class TutoSimonLoad : MonoBehaviour {
         _currentScoreText.text = "" + 0;
 
         _piano = new Piano();
-        _piano.PutFarLeft(null);
+        _piano.PutFarLeft(_farLeftText);
 
         _guitare = new Guitare();
-        _guitare.PutMiddleLeft(null);
+        _guitare.PutMiddleLeft(_middleLeftText);
 
         _trompette = new Trompette();
-        _trompette.PutMiddleRight(null);
+        _trompette.PutMiddleRight(_middleRightText);
 
         _marimba = new Marimba();
-        _marimba.PutFarRight(null);
+        _marimba.PutFarRight(_farRightText);
 
         _sequence.Add(_trompette);
         _sequence.Add(_piano);
@@ -75,6 +82,7 @@ public class TutoSimonLoad : MonoBehaviour {
         _mainAnimator = _canvasIntro.GetComponent<Animator>();
 
         EnableColliders(false);
+        _logoDefeat.GetComponent<Animator>().SetTrigger("lost");
     }
 
     public void Restart()
@@ -122,6 +130,7 @@ public class TutoSimonLoad : MonoBehaviour {
             else if (_step > 5)
             {
                 _canvasSuccess.enabled = true;
+                DifficultyManager.PICKED_DIFFICULTY = DifficultyManager.EASY;
                 DifficultyManager.UnlockDifficulty(DifficultyManager.EASY, DifficultyManager.SIMON);
             }
             _nextStep = false;
@@ -231,11 +240,11 @@ public class TutoSimonLoad : MonoBehaviour {
                     if (_currentIndex == _sequenceIndex)
                     {
                         _bulleAdvice.text = WIN_MESSAGES[Random.Range(0, WIN_MESSAGES.Length)];
+                        EnableColliders(false);
 
                         Note note = PlayNote(_sequence[_currentIndex]);
                         yield return new WaitForSeconds(note.GetLengthInSeconds());
-
-                        EnableColliders(false);
+                        
                         _audioSource.clip = _yeaah;
                         _audioSource.Play();
 
@@ -309,5 +318,37 @@ public class TutoSimonLoad : MonoBehaviour {
             else
                 instrument.StopAnimation();
         }
+    }
+
+    /// <summary>
+    /// Met en pause ou reprend le jeu
+    /// Utilisation du hack du timeScale à 0 pour "stopper" l'exécution du jeu.
+    /// Note : les sons qui ont commencé se terminent
+    /// </summary>
+    public void PauseOrResume()
+    {
+        if (!_isGamePaused)
+        {
+            EnableColliders(false);
+            Time.timeScale = 0;
+            _isGamePaused = true;
+            _canvasMenu.enabled = true;
+        }
+        else
+        {
+            _isGamePaused = false;
+            _canvasMenu.enabled = false;
+            Time.timeScale = 1;
+            EnableColliders(true);
+        }
+    }
+
+    /// <summary>
+    /// Retour au menu principal
+    /// </summary>
+    public void Back()
+    {
+        Time.timeScale = 1;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
     }
 }

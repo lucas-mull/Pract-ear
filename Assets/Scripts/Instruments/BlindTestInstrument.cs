@@ -122,5 +122,10 @@ public class BlindTestInstrument
         }
     }
 
+    public void Destroy()
+    {
+        this.Instrument.Destroy();
+    }
+
     #endregion
 }

@@ -31,6 +31,7 @@ public class LoadLevel : MonoBehaviour {
     public Text Description;
     public Text Skill;
     public Button[] _difficultyButtons;
+    public Button _tutoButton;
 
     Sprite _unlockedSprite;
     Sprite _lockedSprite;
@@ -46,6 +47,10 @@ public class LoadLevel : MonoBehaviour {
         _unlockedSprite = Resources.Load<Sprite>("Sprites/next_icon");
         _lockedSprite = Resources.Load<Sprite>("Sprites/lock_closed");
         _raycaster = LevelCanvas.GetComponent<GraphicRaycaster>();
+        if (!DifficultyManager.isDifficultyUnlocked(DifficultyManager.EASY, DifficultyManager.BLINDTEST))
+        {
+            DifficultyManager.UnlockDifficulty(DifficultyManager.EASY, DifficultyManager.BLINDTEST);
+        }
     }
 	
 	// Update is called once per frame
@@ -145,13 +150,27 @@ public class LoadLevel : MonoBehaviour {
             }
         }
 
+        if (gameId == DifficultyManager.ID_SIMON)
+        {
+            _tutoButton.interactable = true;
+        }
+        else
+        {
+            _tutoButton.interactable = false;
+        }            
+
         ShowLevelPicking();
     }
 
     public void LoadGame(int gameId)
     {
+        if (gameId == 6 && !_tutoButton.IsInteractable())
+        {
+            return;
+        }
+
         ShowLoadingScreen();
-        SceneManager.LoadScene(gameId);
+        SceneManager.LoadSceneAsync(gameId);
     }
 
     public void Back()

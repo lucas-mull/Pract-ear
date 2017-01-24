@@ -10,21 +10,21 @@ public class Alto : Instrument
 
     public override Vector3 getFarLeftVector()
     {
-        return new Vector3(30, 45, 130);
+        return new Vector3(25, 38, 130);
     }
 
     public override Vector3 getFarRightVector()
     {
-        return new Vector3(100, 45, 130);
+        return new Vector3(100, 38, 130);
     }
 
     public override Vector3 getMiddleLeftVector()
     {
-        return new Vector3(40, 45, 210);
+        return new Vector3(40, 38, 210);
     }
 
     public override Vector3 getMiddleRightVector()
     {
-        return new Vector3(90, 45, 210);
+        return new Vector3(90, 38, 210);
     }
 }

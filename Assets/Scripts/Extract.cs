@@ -107,7 +107,7 @@ public class Extract
         return new Extract(node);
     }
 
-    public static List<Extract> LoadFalseExtraitsFromJson(string pathToJsons)
+    public static List<Extract> LoadAll(string pathToJsons)
     {
         Object[] files;
         List<Extract> res = new List<Extract>();
@@ -119,7 +119,14 @@ public class Extract
             JSONNode node = JSONNode.Parse(t.text);
             res.Add(new Extract(node));
         }
+
         return res;
+    }
+
+    public static Extract PickRandomFrom(string path)
+    {
+        List<Extract> all = LoadAll(path);
+        return all[Random.Range(0, all.Count)];
     }
 
 

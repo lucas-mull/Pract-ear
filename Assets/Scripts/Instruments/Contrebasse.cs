@@ -16,21 +16,21 @@ public class Contrebasse : Instrument
 
     public override Vector3 getFarLeftVector()
     {
-        return new Vector3(30, 55, 130);
+        return new Vector3(30, 46, 130);
     }
 
     public override Vector3 getFarRightVector()
     {
-        return new Vector3(110, 55, 130);
+        return new Vector3(100, 46, 130);
     }
 
     public override Vector3 getMiddleLeftVector()
     {
-        return new Vector3(40, 55, 210);
+        return new Vector3(40, 46, 210);
     }
 
     public override Vector3 getMiddleRightVector()
     {
-        return new Vector3(100, 55, 210);
+        return new Vector3(100, 46, 210);
     }
 }

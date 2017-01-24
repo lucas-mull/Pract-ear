@@ -8,4 +8,6 @@ static class Colors
     public static Color BLACK_BACKGROUND = new Color(0.251f, 0.251f, 0.251f);
     public static Color WHITE = new Color(0.859f, 0.859f, 0.859f);
     public static Color WHITE_BACKGROUND = new Color(0.882f, 0.882f, 0.882f);
+    public static Color GREEN = new Color(0.000f, 0.392f, 0.000f);
+    public static Color RED = new Color(0.698f, 0.133f, 0.133f);
 }

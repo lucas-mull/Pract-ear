@@ -38,6 +38,26 @@ class DifficultyManager
         return isDifficultyUnlocked(difficulty, GetGameName(game));
     }
 
+    public static void IncrementDifficulty()
+    {
+        switch (PICKED_DIFFICULTY)
+        {
+            case EASY:
+                PICKED_DIFFICULTY = MEDIUM;
+                break;
+            case MEDIUM:
+                PICKED_DIFFICULTY = HARD;
+                break;
+            case HARD:
+                PICKED_DIFFICULTY = EXTREME;
+                break;
+            case EXTREME:
+                break;
+            default:
+                break;
+        }
+    }
+
     public static void UnlockDifficulty(string difficulty, string game)
     {
         if (isDifficultyValid(difficulty) && isGameValid(game))
