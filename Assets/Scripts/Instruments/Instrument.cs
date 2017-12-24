@@ -1,416 +1,335 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
+using UnityEngine.EventSystems;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Practear.Utils.Extensions;
+using UnityEngine.Events;
 
-public abstract class Instrument {
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-    const string PATH_TO_PREFABS = "Prefabs/Instruments/";
-    const string PATH_TO_SPRITE_PREFAB = "Prefabs/UI/InstrumentGuide";
-    const string PATH_TO_SPRITES = "Sprites/Instruments/";
-    const int INSTRUMENTS_COUNT = 12;
+namespace Practear.Instruments
+{
 
-    // Noms des prefabs des instruments dans Assets/Resources/Prefabs
-    public const string PIANO = "piano";
-    public const string CLAVECIN = "clavecin";
-    public const string TROMPETTE = "trompette";
-    public const string TROMBONE = "trombone";
-    public const string VIOLON = "violon";
-    public const string ALTO = "alto";
-    public const string CONTREBASSE = "contrebasse";
-    public const string VIOLONCELLE = "violoncelle";
-    public const string GUITARE = "guitare";
-    public const string GUITARE_FOLK = "guitare folk";
-    public const string HARPE = "harpe";
-    public const string MARIMBA = "marimba";
-    public const string TAMTAM = "tamtam";
-
-    public static string[] ALL_INSTRUMENTS = new string[INSTRUMENTS_COUNT]
+    /// <summary>
+    /// Describes an instrument's instance at runtime.
+    /// Can be used to render the instrument, play the instrument's sounds and animations.
+    /// </summary>
+    [RequireComponent(typeof(Collider2D), typeof(SpriteRenderer))]
+    public class Instrument : MonoBehaviour, IPointerClickHandler
     {
-        PIANO, TROMPETTE, VIOLON, MARIMBA, CLAVECIN, TROMBONE, GUITARE, TAMTAM, HARPE, CONTREBASSE, VIOLONCELLE, ALTO
-    };
 
-    private static List<Instrument> InstrumentsList = new List<Instrument>();
+        #region Events
 
-    #region Attributs
+        /// <summary>
+        /// Event fired whenever this instrument was clicked on.
+        /// </summary>
+        public UnityEvent InstrumentClicked = new UnityEvent();
 
-    /// <summary>
-    /// Utilisé pour stocker l'instance de l'object découlant de la prefab.
-    /// En gros, contient l'instance du GameObject renvoyé par la méthode Object.Instantiate
-    /// cf. placeInstrumentFarLeft, etc...
-    /// </summary>
-    private GameObject instance;
+        #endregion // Events
 
-    /// <summary>
-    /// Nom a donner l'instance
-    /// </summary>
-    private string name;
+        #region Instance variables
 
-    /// <summary>
-    /// Nom de la prefab à instantier
-    /// </summary>
-    private string prefabName;
+        /// <summary>
+        /// The text element used to display the instrument's name at runtime.
+        /// </summary>
+        [Tooltip("The text element used to display the instrument's name at runtime.")]
+        [SerializeField]
+        private TMP_Text m_TextComponent;
 
-    /// <summary>
-    /// Informations sur l'instrument
-    /// </summary>
-    private string description;
+        /// <summary>
+        /// The name of the initial instrument
+        /// </summary>
+        [SerializeField]
+        [HideInInspector]
+        private string m_InitialInstrumentName;
 
-    // Composant UI.Text contenant les noms des instruments au lancement
-    private Text toolTip;
+        /// <summary>
+        /// The sprite renderer used to render this instrument.
+        /// </summary>
+        private SpriteRenderer m_SpriteRenderer;
 
-    /// <summary>
-    /// Catégorie à laquelle appartient l'instrument.
-    /// </summary>
-    private Category category;
+        /// <summary>
+        /// The audio source used to play the instrument's sounds.
+        /// </summary>
+        private AudioSource m_AudioSource;
 
-    #endregion
+        /// <summary>
+        /// The animator attached to this gameObject (if any).
+        /// </summary>
+        private Animator m_Animator;
 
-    #region Propriétés
+        /// <summary>
+        /// The data regarding the current instrument.
+        /// </summary>
+        private InstrumentData m_Current;
 
-    /// <summary>
-    /// Propriété pour l'attribut privé 'instance'
-    /// </summary>
-    public GameObject Instance
-    {
-        set { this.instance = value; }
-        get { return this.instance; }
-    }
+        #endregion // Instance variables
 
-    public Collider Collider
-    {
-        get { return this.Instance.GetComponent<Collider>(); }
-    }
+        #region Properties
 
-    /// <summary>
-    /// Propriété pour l'attribut privé 'toolTip'
-    /// </summary>
-    public Text Tooltip
-    {
-        get { return this.toolTip; }
-        set
+        /// <summary>
+        /// Does the current object possess an animator ?
+        /// </summary>
+        public bool HasAnimator { get { return m_AudioSource != null; } }
+
+        /// <summary>
+        /// Set the current instrument data.
+        /// </summary>
+        public InstrumentData Current
         {
-            this.toolTip = value;
-            if (toolTip != null)
-                this.toolTip.text = this.Name;
-        }
-    }
-
-    /// <summary>
-    /// Propriété pour le nom du GameObject
-    /// </summary>
-    public string Name
-    {
-        get
-        {
-            if (isInstantiated)
-                return this.Instance.name;
-
-            return this.name;
-        }
-        set
-        {
-            if (this.isInstantiated)
-                this.Instance.name = value;
-
-            this.name = value;
-        }
-    }
-
-    /// <summary>
-    /// Propriété pour l'attribut category
-    /// </summary>
-    public Category Category
-    {
-        get { return this.category; }
-        set { this.category = value; }
-    }
-
-    /// <summary>
-    /// Propriété représentant le component Animator du GameObject
-    /// </summary>
-    public Animator Animator
-    {
-        get { return this.Instance.GetComponent<Animator>(); }
-    }
-
-    /// <summary>
-    /// Attribut indiquant si notre instrument possède une instance existante sur la scène.
-    /// Accessible en dehors de la classe.
-    /// </summary>
-    public bool isInstantiated
-    {
-        get { return this.Instance != null; }
-    }
-
-    public Sprite sprite { get; set; }
-
-    public string Info
-    {
-        get { return this.description; }
-        set { this.description = value; }
-    }
-
-    #endregion
-
-    #region Constructeurs
-
-    /// <summary>
-    /// Constructeur par défaut
-    /// </summary>
-    public Instrument()
-    {
-        this.Info = "Aucune information pour cet instrument";
-    }
-
-    /// <summary>
-    /// Constructeur simple
-    /// </summary>
-    /// <param name="name">Nom de l'instrument pour lequel on souhaite récupérer la prefab</param>
-    public Instrument(string name, Category category) : this()
-    {
-        this.prefabName = name.Replace(" ", "");
-        this.name = name;
-        this.category = category;
-    }
-
-    #endregion
-
-    #region Méthodes abstraites
-
-    // Méthodes abstraites pour les 4 positions possible de chaque instrument
-    public abstract Vector3 getFarLeftVector();
-    public abstract Vector3 getFarRightVector();
-    public abstract Vector3 getMiddleLeftVector();
-    public abstract Vector3 getMiddleRightVector();
-
-    #endregion
-
-    #region Méthodes de classe
-
-    /// <summary>
-    /// Renvoie un sprite prêt à être utilisé pour le guide
-    /// </summary>
-    /// <returns></returns>
-    public GameObject InstantiateSprite()
-    {
-        GameObject prefab = Resources.Load<GameObject>(PATH_TO_SPRITE_PREFAB);
-        prefab = Object.Instantiate(prefab);
-
-        Image spriteContainer = prefab.GetComponent<Image>();
-        this.sprite = Resources.Load<Sprite>(PATH_TO_SPRITES + prefabName);
-        spriteContainer.sprite = this.sprite;
-
-        Text title = prefab.GetComponentInChildren<Text>();
-        title.text = this.name;
-
-        prefab.name = this.name;
-
-        return prefab;
-    }
-
-    /// <summary>
-    /// Créé une instance de la prefab de l'instrument actuel à la position donnée
-    /// Si une instance existe déjà, la déplace à la position désirée
-    /// </summary>
-    /// <param name="position">position à laquelle créer l'instance de l'objet</param>
-    /// <returns>Le GameObject contenant l'instance de la prefab</returns>
-    public GameObject InstantiateOrMoveAt(Vector3 position)
-    {
-        if (!isInstantiated)
-        {
-            GameObject gameObject = Resources.Load<GameObject>(PATH_TO_PREFABS + this.prefabName);
-            this.Instance = (GameObject)Object.Instantiate(gameObject, position, gameObject.transform.rotation);
-
-            // Met à jour le nom de l'instance créée s'il a été modifié
-            this.Name = this.name;            
-        }
-        else
-        {
-            this.Instance.transform.position = getFarLeftVector();
-        }
-
-        return this.Instance;
-    }
-
-    /// <summary>
-    /// Créée une instance de l'instrument actuel le plus à gauche de la scène.
-    /// Si une instance existe déjà, la déplace le plus à gauche de la scène.
-    /// </summary>
-    /// <param name="toolTip">UI Text associé à cet instrument dans la scène.</param>
-    /// <returns>Le GameObject correspondant à l'instance de l'instrument créée / déplacée</returns>
-    public GameObject PutFarLeft(Text toolTip)
-    {
-        this.Tooltip = toolTip;
-        return InstantiateOrMoveAt(getFarLeftVector());
-    }
-
-    /// <summary>
-    /// Créée une instance de l'instrument actuel le plus à droite de la scène.
-    /// Si une instance existe déjà, la déplace le plus à droite de la scène.
-    /// </summary>
-    /// <param name="toolTip">UI Text associé à cet instrument dans la scène.</param>
-    /// <returns>Le GameObject correspondant à l'instance de l'instrument créée / déplacée</returns>
-    public GameObject PutFarRight(Text toolTip)
-    {
-        this.Tooltip = toolTip;
-        return InstantiateOrMoveAt(getFarRightVector());
-    }
-
-    /// <summary>
-    /// Créée une instance de l'instrument actuel au milieu à gauche de la scène.
-    /// Si une instance existe déjà, la déplace au milieu à gauche de la scène.
-    /// </summary>
-    /// <param name="toolTip">UI Text associé à cet instrument dans la scène.</param>
-    /// <returns>Le GameObject correspondant à l'instance de l'instrument créée / déplacée</returns>
-    public GameObject PutMiddleLeft(Text toolTip)
-    {
-        this.Tooltip = toolTip;
-        return InstantiateOrMoveAt(getMiddleLeftVector());
-    }
-
-    /// <summary>
-    /// Créée une instance de l'instrument actuel au milieu à droite de la scène.
-    /// Si une instance existe déjà, la déplace au milieu à droite de la scène.
-    /// </summary>
-    /// <param name="toolTip">UI Text associé à cet instrument dans la scène.</param>
-    /// <returns>Le GameObject correspondant à l'instance de l'instrument créée / déplacée</returns>
-    public GameObject PutMiddleRight(Text toolTip)
-    {
-        this.Tooltip = toolTip;
-        return InstantiateOrMoveAt(getMiddleRightVector());
-    }
-
-
-    public void EnableParticles(bool emitParticles)
-    {
-        ParticleSystem particleSystem = this.Instance.GetComponent<ParticleSystem>();
-        if (emitParticles)
-        {
-            if (particleSystem != null && !particleSystem.emission.enabled)
+            get { return m_Current; }
+            set
             {
-                ParticleSystem.EmissionModule em = particleSystem.emission;
-                em.enabled = true;
-                particleSystem.Play();
-            }
-        }
-        else
-        {
-            if (particleSystem != null && particleSystem.emission.enabled)
-            {
-                particleSystem.Stop();
-                ParticleSystem.EmissionModule em = particleSystem.emission;
-                em.enabled = false;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Lance l'animation de l'instrument
-    /// </summary>
-    /// <param name="emitParticles">true pour emettre les particules de notes de musiques avec l'animation.</param>
-    public void StartAnimation(bool emitParticles)
-    {
-        if (this.Animator != null)
-        {
-            if (!this.Animator.enabled)
-            {
-                this.Animator.enabled = true;
-            }
-
-            EnableParticles(emitParticles);               
-        }
-    }
-
-    /// <summary>
-    /// Arrête l'animation et l'émission des particules pour cet instrument.
-    /// </summary>
-    public void StopAnimation()
-    {
-        if (this.Animator != null)
-        {
-            if (this.Animator.enabled)
-            {
-                this.Animator.enabled = false;
-            }
-
-            EnableParticles(false);            
-        }
-    }
-
-    /// <summary>
-    /// GarbageCollect cet objet
-    /// </summary>
-    public void Destroy()
-    {
-        if (isInstantiated)
-            Object.Destroy(this.Instance);
-    }
-
-    #endregion
-
-    #region Méthodes statiques
-
-    /// <summary>
-    /// Retourne une instance de l'instrument correspondant au nom donné en paramètre
-    /// </summary>
-    /// <param name="instrumentName">Nom de l'instrument à créer</param>
-    /// <returns>L'instance nouvellement créée de cet instrument</returns>
-    public static Instrument GetInstanceFor(string instrumentName)
-    {
-        switch(instrumentName)
-        {
-            case PIANO:
-                return new Piano();
-            case CLAVECIN:
-                return new Clavecin();
-            case TROMPETTE:
-                return new Trompette();
-            case TROMBONE:
-                return new Trombone();
-            case VIOLON:
-                return new Violon();
-            case GUITARE:
-                return new Guitare();
-            case HARPE:
-                return new Harpe();
-            case MARIMBA:
-                return new Marimba();
-            case TAMTAM:
-                return new Tamtam();
-            case VIOLONCELLE:
-                return new Violoncelle();
-            case ALTO:
-                return new Alto();
-            case CONTREBASSE:
-                return new Contrebasse();
-            default:
-                return null;              
-        }
-    }
-
-    /// <summary>
-    /// Génére un nom d'instrument au hasard
-    /// </summary>
-    /// <returns>Un nom d'instrument aléatoire</returns>
-    public static string GenerateRandomInstrumentName()
-    {
-        int index = Random.Range(0, INSTRUMENTS_COUNT);
-        return ALL_INSTRUMENTS[index];
-    }
-
-    public static List<Instrument> GetInstrumentsList()
-    {
-        // Si la liste est vide on l'initialise
-        if (InstrumentsList.Count == 0)
-        {
-            foreach (string instrumentName in ALL_INSTRUMENTS)
-            {
-                InstrumentsList.Add(Instrument.GetInstanceFor(instrumentName));
+                m_Current = value;
+                Initialize();
             }
         }
 
-        return InstrumentsList;
+        /// <summary>
+        /// Access the renderer of this instrument.
+        /// </summary>
+        private SpriteRenderer Renderer
+        {
+            get
+            {
+                if (m_SpriteRenderer == null)
+                    m_SpriteRenderer = GetComponent<SpriteRenderer>();
+
+                return m_SpriteRenderer;
+            }
+        }
+
+        #endregion // Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Called on start for this behaviour
+        /// </summary>
+        private void Start()
+        {
+            // It is mandatory to have an AudioSource. If the object doesn't have one, we add one by default.
+            m_AudioSource = GetComponent<AudioSource>();
+            if (m_AudioSource == null)
+                m_AudioSource = gameObject.AddComponent<AudioSource>();
+
+            // Animator is optional.
+            m_Animator = GetComponent<Animator>();
+
+            SetInstrument(m_InitialInstrumentName);
+        }
+
+        /// <summary>
+        /// Initialize the text component and the sprite for this instrument.
+        /// </summary>
+        private void Initialize()
+        {
+            // Don't do anything if no instrument is specified.
+            if (Current == null)
+                return;
+
+            // Set the text to the current instrument's name.
+            m_TextComponent.text = Current.Name;
+            Renderer.sprite = Current.Sprite;
+        }
+
+        /// <summary>
+        /// Called whenever this gameObject's collider has been clicked.
+        /// </summary>
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            Debug.Log(Current.Name + " was clicked !");
+
+            // Invoke the event.
+            InstrumentClicked.Invoke();
+        }
+
+        /// <summary>
+        /// Set the current instrument using its name.
+        /// Comparison is not case sensitive.
+        /// </summary>
+        /// <param name="instrumentName">The name of the instrument.</param>
+        public void SetInstrument(string instrumentName)
+        {
+            InstrumentData foundData = InstrumentDatabaseManager.Instance.FindInstrumentData(instrumentName);
+            if (foundData != null)
+                Current = foundData;
+        }
+        
+        #endregion // Methods
     }
 
-    #endregion
+#if UNITY_EDITOR
+
+    /// <summary>
+    /// Custom inspector for <see cref="Instrument"/>
+    /// </summary>
+    [CustomEditor(typeof(Instrument))]
+    public class InstrumentEditor : Editor
+    {
+
+        #region Constants
+
+        /// <summary>
+        /// Constant string for the "none" option.
+        /// </summary>
+        private const string NoneOption = "None";
+
+        #endregion // Constants
+
+        #region Instance variables
+
+        /// <summary>
+        /// The reference to <see cref="InstrumentDatabaseManager"/> that we use to access the database.
+        /// </summary>
+        private InstrumentDatabaseManager m_DatabaseManager;
+        
+        /// <summary>
+        /// The current instrument data (instrument names).
+        /// </summary>
+        private string[] m_CurrentData;
+
+        /// <summary>
+        /// SerializedProperty for <see cref="Instrument.m_InitialInstrumentName"/>
+        /// </summary>
+        private SerializedProperty m_InitialNameProp;
+
+        /// <summary>
+        /// SerializedProperty for <see cref="Instrument.m_TextComponent"/>
+        /// </summary>
+        private SerializedProperty m_TextMeshProp;
+
+        #endregion // Instance variables
+
+        #region Properties       
+
+        /// <summary>
+        /// Access the <see cref="InstrumentDatabaseManager"/> in the scene.
+        /// </summary>
+        private InstrumentDatabaseManager DatabaseManager
+        {
+            get
+            {
+                return m_DatabaseManager ?? 
+                    (m_DatabaseManager = FindObjectOfType<InstrumentDatabaseManager>());
+            }
+        }
+
+        /// <summary>
+        /// Access the target <see cref="Instrument"/> script of this editor script.
+        /// </summary>
+        private Instrument Target { get { return (Instrument)target; } }
+
+        /// <summary>
+        /// Access the current data.
+        /// </summary>
+        private IEnumerable<string> CurrentData
+        {
+            get
+            {
+                if (DatabaseManager != null)
+                {
+                    if (m_CurrentData == null)
+                    {
+                        // Add the "None" option.
+                        IList<string> data = DatabaseManager.InstrumentDatabase.Instruments.Select(i => i.Name).ToList();
+                        data.Insert(0, NoneOption);
+
+                        m_CurrentData = data.ToArray();
+                    }
+
+                    return m_CurrentData;
+                }
+
+                return null;
+            }
+        }
+
+        #endregion // Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Called when the editor script is called for the first time.
+        /// </summary>
+        private void OnEnable()
+        {
+            m_InitialNameProp = serializedObject.FindProperty("m_InitialInstrumentName");
+            m_TextMeshProp = serializedObject.FindProperty("m_TextComponent");
+        }
+
+        /// <summary>
+        /// <see cref="Editor.OnInspectorGUI"/>
+        /// </summary>
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            DrawDefaultInspector();
+            TryDrawInstrument();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        /// Try and draw the instrument data.
+        /// </summary>
+        private void TryDrawInstrument()
+        {
+            // Dont draw anything if the database manager is null.
+            if (DatabaseManager == null)
+            {
+                EditorUtils.DrawErrorMessage("Couldn't find a InstrumentsDatabaseManager in the scene. " +
+                    "Add one and specify the database to use.");
+                return;
+            }
+
+            // If no database has been specified, display an error message and a button to assign it.
+            if (DatabaseManager.InstrumentDatabase == null)
+            {
+                EditorUtils.DrawErrorMessage("Please specify a database to use in the database manager");
+                if (GUILayout.Button("Go to Manager"))
+                {
+                    EditorGUIUtility.PingObject(DatabaseManager);
+                }
+
+                return;
+            }
+
+            if (serializedObject.FindProperty("m_TextComponent").objectReferenceValue == null)
+            {
+                EditorUtils.DrawErrorMessage("Please make sure the text component is assigned above");
+                return;
+            }
+
+            // Draw a dropdown for all the available instruments.
+            if (CurrentData != null && CurrentData.Any())
+            {
+                string selectedName = m_InitialNameProp == null ? string.Empty : m_InitialNameProp.stringValue;
+                int selectedIndex = CurrentData.IndexOf(selectedName);
+
+                selectedIndex = EditorGUILayout.Popup("Initial instrument", selectedIndex, CurrentData.ToArray());
+
+                // Reassign the current data according to the selected index.
+                m_InitialNameProp.stringValue = CurrentData.ElementAtOrDefault(selectedIndex);
+                InstrumentData newData = DatabaseManager.FindInstrumentData(m_InitialNameProp.stringValue);
+                if (Target.Current != newData)
+                {
+                    Target.Current = newData;
+                    EditorUtility.SetDirty(m_TextMeshProp.objectReferenceValue);
+                }
+            }            
+        }
+
+        #endregion // Methods
+
+    }
+
+#endif
 }
+
+
