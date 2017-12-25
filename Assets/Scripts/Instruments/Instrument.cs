@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Practear.Utils.Extensions;
 using UnityEngine.Events;
+using Practear.Lights;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -39,6 +39,13 @@ namespace Practear.Instruments
         [Tooltip("The text element used to display the instrument's name at runtime.")]
         [SerializeField]
         private TMP_Text m_TextComponent;
+
+        /// <summary>
+        /// The spotlight associated with this instrument.
+        /// </summary>
+        [Tooltip("The spotlight associated with this instrument.")]
+        [SerializeField]
+        private Light m_Spotlight;
 
         /// <summary>
         /// The name of the initial instrument
@@ -159,9 +166,46 @@ namespace Practear.Instruments
             if (foundData != null)
                 Current = foundData;
         }
-        
+
+        /// <summary>
+        /// Toggle the spotlight associated with this gameobject
+        /// </summary>
+        public void ToggleSpotlight()
+        {
+            if (m_Spotlight)
+            {
+                SpotlightManager.Instance.ToggleSpotlight(m_Spotlight);
+            }
+        }
+
+        /// <summary>
+        /// Toggle spotlight color to "positive"
+        /// </summary>
+        public void ToggleLightPositive()
+        {
+            m_Spotlight.color = SpotlightManager.Instance.PositiveColor;
+        }
+
+        /// <summary>
+        /// Toggle spotlight color to "negative"
+        /// </summary>
+        public void ToggleLightNegative()
+        {
+            m_Spotlight.color = SpotlightManager.Instance.NegativeColor;
+        }
+
+        /// <summary>
+        /// Toggle spotlight color to "neutral"
+        /// </summary>
+        public void ToggleLightNeutral()
+        {
+            m_Spotlight.color = SpotlightManager.Instance.NeutralColor;
+        }
+
         #endregion // Methods
     }
+
+    #region Custom editor
 
 #if UNITY_EDITOR
 
@@ -330,6 +374,8 @@ namespace Practear.Instruments
     }
 
 #endif
+
+    #endregion // Custom editor
 }
 
 
