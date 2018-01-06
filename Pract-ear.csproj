@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -336,11 +338,18 @@
     <Compile Include="Assets\Scripts\Lights\SpotlightManager.cs" />
     <Compile Include="Assets\Scripts\Movement\FreezeTransformComponent.cs" />
     <Compile Include="Assets\Scripts\Movement\Shake.cs" />
+    <Compile Include="Assets\Scripts\Partitions\Configuration.cs" />
+    <Compile Include="Assets\Scripts\Partitions\MusicalNote.cs" />
+    <Compile Include="Assets\Scripts\Partitions\NotesCache.cs" />
+    <Compile Include="Assets\Scripts\Partitions\Partition.cs" />
+    <Compile Include="Assets\Scripts\Partitions\PlayNote.cs" />
+    <Compile Include="Assets\Scripts\Simon\Simon.cs" />
     <Compile Include="Assets\Scripts\UI\AudioPlaybackSlider.cs" />
     <Compile Include="Assets\Scripts\Utils\AbstractSingleton.cs" />
     <Compile Include="Assets\Scripts\Utils\EditorUtils.cs" />
     <Compile Include="Assets\Scripts\Utils\Extensions\GameObjectExt.cs" />
     <Compile Include="Assets\Scripts\Utils\Extensions\IEnumerableExt.cs" />
+    <Compile Include="Assets\Scripts\Utils\PropertyAttributes\DisableIfAttribute.cs" />
     <Compile Include="Assets\Scripts\Utils\PropertyAttributes\EnableIfAttribute.cs" />
     <Compile Include="Assets\Scripts\Utils\PropertyAttributes\ReadOnlyAttribute.cs" />
   </ItemGroup>

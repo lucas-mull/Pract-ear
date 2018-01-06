@@ -7,6 +7,9 @@ using Practear.Utils.Extensions;
 using UnityEngine.Events;
 using Practear.Lights;
 using Practear.Utils;
+using Practear.Partitions;
+using System.Collections;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -23,12 +26,22 @@ namespace Practear.Instruments
     public class Instrument : MonoBehaviour, IPointerClickHandler
     {
 
+        #region Internal classes
+
+        /// <summary>
+        /// Unity event taking an instrument as its parameter.
+        /// </summary>
+        [Serializable]
+        public class InstrumentEvent : UnityEvent<Instrument> {}
+
+        #endregion // Internal classes
+
         #region Events
 
         /// <summary>
         /// Event fired whenever this instrument was clicked on.
         /// </summary>
-        public UnityEvent InstrumentClicked = new UnityEvent();
+        public InstrumentEvent Clicked = new InstrumentEvent();
 
         #endregion // Events
 
@@ -69,6 +82,11 @@ namespace Practear.Instruments
         /// The animator attached to this gameObject (if any).
         /// </summary>
         private Animator m_Animator;
+
+        /// <summary>
+        /// The collider attached to this gameObject.
+        /// </summary>
+        private Collider2D m_Collider;
 
         /// <summary>
         /// The data regarding the current instrument.
@@ -129,6 +147,7 @@ namespace Practear.Instruments
             m_Animator = GetComponent<Animator>();
 
             SetInstrument(m_InitialInstrumentName);
+            m_Collider = GetComponent<Collider2D>();
         }
 
         /// <summary>
@@ -150,10 +169,8 @@ namespace Practear.Instruments
         /// </summary>
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log(Current.Name + " was clicked !");
-
             // Invoke the event.
-            InstrumentClicked.Invoke();
+            Clicked.Invoke(this);
         }
 
         /// <summary>
@@ -166,6 +183,50 @@ namespace Practear.Instruments
             InstrumentData foundData = InstrumentDatabaseManager.Instance.FindInstrumentData(instrumentName);
             if (foundData != null)
                 Current = foundData;
+        }
+
+        /// <summary>
+        /// Play an entire partition.
+        /// </summary>
+        /// <param name="partition"></param>
+        public void Play(Partition partition)
+        {
+            StartCoroutine(PlayPartition(partition));
+        }
+
+        /// <summary>
+        /// Coroutine for playing throughout an entire partition.
+        /// </summary>
+        /// <param name="partition"></param>
+        /// <returns></returns>
+        public IEnumerator PlayPartition(Partition partition)
+        {
+            MusicalNote current = partition.Next();
+            while (current != null)
+            {
+                yield return PlayNote(current);
+                current = partition.Next();
+            }
+        }
+
+        /// <summary>
+        /// Play a given musical note for this instrument.
+        /// </summary>
+        /// <param name="note"></param>
+        public void Play(MusicalNote note)
+        {            
+            StartCoroutine(PlayNote(note));
+        }
+
+        /// <summary>
+        /// <see cref="Play(MusicalNote)"/>
+        /// </summary>
+        public IEnumerator PlayNote(MusicalNote note)
+        {
+            AudioClip clip = Configuration.Instance.GetNote(m_Current, note.Name);
+            float length = Configuration.Instance.GetNoteLengthInSeconds(note.Length);
+
+            yield return new PlayForDuration(m_AudioSource, clip, length);
         }
 
         /// <summary>
@@ -201,6 +262,22 @@ namespace Practear.Instruments
         public void ToggleLightNeutral()
         {
             m_Spotlight.color = SpotlightManager.Instance.NeutralColor;
+        }
+
+        /// <summary>
+        /// Disable the interactions for this instrument
+        /// </summary>
+        public void DisableInteractions()
+        {
+            m_Collider.enabled = false;
+        }
+
+        /// <summary>
+        /// Enable interactions for this instrument
+        /// </summary>
+        public void EnableInteractions()
+        {
+            m_Collider.enabled = true;
         }
 
         #endregion // Methods
