@@ -26,6 +26,15 @@ namespace Practear.Utils
         }
 
         /// <summary>
+        /// Draw a header field (bold label).
+        /// </summary>
+        /// <param name="label">The label content</param>
+        static public void DrawHeader(string label)
+        {
+            EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+        }
+
+        /// <summary>
         /// Draw an error message using a red label field.
         /// </summary>
         /// <param name="message">The message to display</param>
