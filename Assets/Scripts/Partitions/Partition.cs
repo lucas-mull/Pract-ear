@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Practear.Utils;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,6 +45,11 @@ namespace Practear.Partitions
         /// </summary>
         public int NotesCount { get { return m_Notes.Count; } }
 
+        /// <summary>
+        /// The title.
+        /// </summary>
+        public string Title { get { return m_Title; } }
+
         #endregion // Properties
 
         #region Methods
@@ -72,6 +78,15 @@ namespace Practear.Partitions
         public void Rewind()
         {
             m_CurrentNoteIndex = 0;
+        }
+
+        /// <summary>
+        /// Is the next note the last one ?
+        /// </summary>
+        /// <returns>true if the next node is the last one, false otherwise.</returns>
+        public bool IsLastNote()
+        {
+            return m_CurrentNoteIndex == NotesCount;
         }
 
         #endregion // Methods
@@ -118,6 +133,13 @@ namespace Practear.Partitions
             serializedObject.Update();
 
             EditorUtils.DrawPropertyFields(serializedObject, "m_Title");
+            EditorGUILayout.Space();
+
+            Rect currentRect = EditorGUILayout.GetControlRect();
+            EditorGUI.LabelField(new Rect(currentRect.x, currentRect.y, currentRect.width / 3f, EditorGUIUtility.singleLineHeight), "Note", EditorStyles.boldLabel);
+            EditorGUI.LabelField(new Rect(currentRect.x + currentRect.width / 3f, currentRect.y, currentRect.width / 3f, EditorGUIUtility.singleLineHeight), "Longueur", EditorStyles.boldLabel);
+            EditorGUI.LabelField(new Rect(currentRect.x + 2*currentRect.width / 3f, currentRect.y, currentRect.width / 3f, EditorGUIUtility.singleLineHeight), "Octave", EditorStyles.boldLabel);
+
             m_NoteList.DoLayoutList();
 
             serializedObject.ApplyModifiedProperties();
@@ -143,10 +165,21 @@ namespace Practear.Partitions
         {
             SerializedProperty element = m_NoteList.serializedProperty.GetArrayElementAtIndex(index);
             rect.y += 2;
-            EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width / 2f, EditorGUIUtility.singleLineHeight),
+            EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width / 3f, EditorGUIUtility.singleLineHeight),
                 element.FindPropertyRelative("m_Name"), GUIContent.none);
-            EditorGUI.PropertyField(new Rect(rect.x + rect.width / 2f, rect.y, rect.width / 2f, EditorGUIUtility.singleLineHeight),
+            EditorGUI.PropertyField(new Rect(rect.x + rect.width / 3f, rect.y, rect.width / 3f, EditorGUIUtility.singleLineHeight),
                 element.FindPropertyRelative("m_Length"), GUIContent.none);
+
+            SerializedProperty octave = element.FindPropertyRelative("m_Octave");
+            int[] values = MusicalNote.OctavesFr;
+            string[] options = values.Select(value => value.ToString()).ToArray();
+
+            // Consistency check.
+            if (!values.Contains(octave.intValue))
+                octave.intValue = values[0];
+
+            octave.intValue = EditorGUI.IntPopup(new Rect(rect.x + rect.width / 3f * 2, rect.y, rect.width / 3f, EditorGUIUtility.singleLineHeight),
+                octave.intValue, options, values);
         }
 
         #endregion // Methods

@@ -102,12 +102,12 @@ namespace Practear.Movement
 
                 if (m_ShakeDuration > 0f && m_Timer >= m_ShakeDuration)
                 {
-                    m_MustShake = false;
-                    EndShaking();
-                    m_Timer = 0f;
+                    StopShaking();
                 }
-
-                m_Timer += Time.deltaTime;
+                else
+                {
+                    m_Timer += Time.deltaTime;
+                }
             }
         }
 
@@ -149,10 +149,12 @@ namespace Practear.Movement
         /// <summary>
         /// End the shaking process by resetting the position to the original.
         /// </summary>
-        public void EndShaking()
+        public void StopShaking()
         {
+            m_MustShake = false;
             transform.position = m_InitialPosition;
             transform.rotation = m_InitialRotation;
+            m_Timer = 0f;
         }
 
         #endregion // Methods

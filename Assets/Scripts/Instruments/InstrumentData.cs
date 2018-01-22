@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using Practear.Partitions;
 
 namespace Practear.Instruments
 {
@@ -27,10 +28,10 @@ namespace Practear.Instruments
         public Sprite Sprite;
 
         /// <summary>
-        /// The name of the folder containing the audio notes for this instrument
+        /// The notes for this instrument.
         /// </summary>
-        [Tooltip("The name of the folder containing the audio notes for this instrument")]
-        public string NotesFolderName;
+        [Tooltip("The notes for this instrument.")]
+        public NotesList Notes;
 
         #endregion // Instance variables
 

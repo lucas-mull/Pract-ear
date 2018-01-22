@@ -76,7 +76,7 @@ namespace Practear.Utils
         #region Methods
 
         /// <summary>
-        /// Called on awake of the <see cref="MonoBehaviour"/>
+        /// Called on awake of the <see cref="MonoBehaviour"/>.
         /// Careful when overriding this method in derived classes.
         /// </summary>        
         virtual public void Awake()

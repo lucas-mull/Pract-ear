@@ -1,9 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Practear.Utils.Extensions
 {
     static public class IEnumerableExt
     {
+
+        #region Static variables
+
+        /// <summary>
+        /// Random number generator.
+        /// </summary>
+        static private Random s_Rng = new Random();
+
+        #endregion // Static variables
 
         #region Static methods
 
@@ -26,6 +37,29 @@ namespace Practear.Utils.Extensions
             }
 
             return -1;
+        }
+
+        /// <summary>
+        /// Randomly shuffle a collection of elements.
+        /// <seealso cref="https://stackoverflow.com/questions/273313/randomize-a-listt"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the collection</typeparam>
+        /// <param name="collection">The list of elements</param>
+        /// <returns>A shuffled list.</returns>
+        static public IEnumerable<T> Shuffle<T>(this IEnumerable<T> collection)
+        {
+            List<T> tempList = collection.ToList();
+            int n = tempList.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = s_Rng.Next(n + 1);
+                T value = tempList[k];
+                tempList[k] = tempList[n];
+                tempList[n] = value;
+            }
+
+            return tempList;
         }
 
         #endregion // Static methods

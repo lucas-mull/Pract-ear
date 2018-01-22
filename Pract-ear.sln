@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pract-ear", "Pract-ear.csproj", "{CC465C1F-D415-AC47-3659-FCC18C47B07C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pract-ear.Plugins", "Pract-ear.Plugins.csproj", "{8B5DEDE9-9B67-8E94-7D5E-1CC416D9DFD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pract-ear.Editor", "Pract-ear.Editor.csproj", "{97164AA5-D4B9-339B-FFDF-C830819C0830}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,10 @@ Global
 		{CC465C1F-D415-AC47-3659-FCC18C47B07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC465C1F-D415-AC47-3659-FCC18C47B07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC465C1F-D415-AC47-3659-FCC18C47B07C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B5DEDE9-9B67-8E94-7D5E-1CC416D9DFD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B5DEDE9-9B67-8E94-7D5E-1CC416D9DFD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B5DEDE9-9B67-8E94-7D5E-1CC416D9DFD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B5DEDE9-9B67-8E94-7D5E-1CC416D9DFD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97164AA5-D4B9-339B-FFDF-C830819C0830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97164AA5-D4B9-339B-FFDF-C830819C0830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97164AA5-D4B9-339B-FFDF-C830819C0830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97164AA5-D4B9-339B-FFDF-C830819C0830}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

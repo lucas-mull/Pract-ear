@@ -2,10 +2,8 @@
 using Practear.Utils.Extensions;
 using System;
 using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using Practear.Utils.PropertyAttributes;
+using System.Collections.Generic;
 
 namespace Practear.Lights
 {
@@ -30,6 +28,7 @@ namespace Practear.Lights
         /// </summary>
         [Tooltip("The neutral color")]
         [SerializeField]
+        [Button("SwitchAllNeutral", Label = "Test", Placement = ButtonAttribute.EButtonPlacement.Inline)]
         private Color m_NeutralColor;
 
         /// <summary>
@@ -37,6 +36,7 @@ namespace Practear.Lights
         /// </summary>
         [Tooltip("The positive color")]
         [SerializeField]
+        [Button("SwitchAllPositive", Label = "Test", Placement = ButtonAttribute.EButtonPlacement.Inline)]
         private Color m_PositiveColor;
 
         /// <summary>
@@ -44,6 +44,7 @@ namespace Practear.Lights
         /// </summary>
         [Tooltip("The negative color")]
         [SerializeField]
+        [Button("SwitchAllNegative", Label = "Test", Placement = ButtonAttribute.EButtonPlacement.Inline)]
         private Color m_NegativeColor;
 
         /// <summary>
@@ -56,6 +57,11 @@ namespace Practear.Lights
         #endregion // Instance variables
 
         #region Properties
+
+        /// <summary>
+        /// Acccess the list of lights.
+        /// </summary>
+        public IEnumerable<Light> Lights { get { return m_SpotLights; } }
 
         /// <summary>
         /// Access / set the neutral color
@@ -91,35 +97,36 @@ namespace Practear.Lights
         /// <summary>
         /// Enable or disable the spotlights
         /// </summary>
-        /// <param name="state"></param>
-        private void EnableAll(bool state)
+        /// <param name="state">The enable state</param>
+        /// <param name="playToggleSound">Whether or not to play the toggle sound. True by default.</param>
+        private void EnableAll(bool state, bool playToggleSound = true)
         {
             // Play the audioclip if any (from the manager's audio source).
-            if (m_SwitchAudioClip)
+            if (m_SwitchAudioClip && playToggleSound)
             {
-                gameObject.GetOrAddComponent<AudioSource>().PlayOneShot(m_SwitchAudioClip);
+                this.GetOrAddComponent<AudioSource>().PlayOneShot(m_SwitchAudioClip);
             }
 
             foreach(Light light in m_SpotLights)
             {
-                light.enabled = state;
+                EnableSpotlight(light, state, playToggleSound);
             }
         }
 
         /// <summary>
         /// Enable all the lights
         /// </summary>
-        public void EnableAll()
+        public void EnableAll(bool playToggleSound = true)
         {
-            EnableAll(true);
+            EnableAll(true, playToggleSound);
         }
 
         /// <summary>
         /// Disable all the lights.
         /// </summary>
-        public void DisableAll()
+        public void DisableAll(bool playToggleSound = true)
         {
-            EnableAll(false);
+            EnableAll(false, playToggleSound);
         }        
 
         /// <summary>
@@ -127,17 +134,19 @@ namespace Practear.Lights
         /// </summary>
         /// <param name="light">The target light</param>
         /// <param name="state">The state of the light (disabled or enabled).</param>
-        private void EnableSpotlight(Light light, bool state)
+        /// <param name="playToggleSound">Optional. Whether or not to play the toggle SFX.</param>
+        private void EnableSpotlight(Light light, bool state, bool playToggleSound = true)
         {
             if (light == null)
                 throw new ArgumentNullException("light", "Couldn't change light's state. The specified light is null.");
 
-            if (m_SwitchAudioClip)
+            if (playToggleSound && m_SwitchAudioClip)
             {
-                light.gameObject.GetOrAddComponent<AudioSource>().PlayOneShot(m_SwitchAudioClip);
+                light.GetOrAddComponent<AudioSource>().PlayOneShot(m_SwitchAudioClip);
             }
 
             light.enabled = state;
+            light.SendMessage("OnSwitchLight", state, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <summary>
@@ -175,8 +184,32 @@ namespace Practear.Lights
         {
             foreach(Light light in m_SpotLights)
             {
-                light.color = target;
+                SwitchLightColor(light, target);
             }
+        }
+
+        /// <summary>
+        /// Switch all the lights to the neutral color
+        /// </summary>
+        public void SwitchAllNeutral()
+        {
+            SwitchAllLightsColor(m_NeutralColor);
+        }
+
+        /// <summary>
+        /// Switch all the lights to the positive color
+        /// </summary>
+        public void SwitchAllPositive()
+        {
+            SwitchAllLightsColor(m_PositiveColor);
+        }
+
+        /// <summary>
+        /// Switch all the lights to the negative color
+        /// </summary>
+        public void SwitchAllNegative()
+        {
+            SwitchAllLightsColor(m_NegativeColor);
         }
 
         /// <summary>
@@ -192,77 +225,12 @@ namespace Practear.Lights
             }
 
             light.color = target;
+            light.SendMessage("OnSwitchLightColor", target, SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion // Methods
 
     }
-
-    #region Custom editor
-
-#if UNITY_EDITOR
-
-    /// <summary>
-    /// Custom editor for <see cref="SpotlightManager"/>
-    /// </summary>
-    [CustomEditor(typeof(SpotlightManager))]
-    public class SpotlightManagerEditor : Editor
-    {
-        
-        #region Properties
-
-        /// <summary>
-        /// Access the target script
-        /// </summary>
-        public SpotlightManager Target { get { return (SpotlightManager)target; } }
-
-        #endregion // Properties
-
-        #region Methods
-
-        /// <summary>
-        /// <see cref="Editor.OnInspectorGUI"/>
-        /// </summary>
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-
-            DrawDefaultInspector();
-            DrawTestButtons();
-
-            serializedObject.ApplyModifiedProperties();
-        }
-
-        /// <summary>
-        /// Draw all the test buttons.
-        /// </summary>
-        private void DrawTestButtons()
-        {
-            DrawTestingButton("Test neutral", Target.NeutralColor);
-            DrawTestingButton("Test positive", Target.PositiveColor);
-            DrawTestingButton("Test negative", Target.NegativeColor);
-        }
-
-        /// <summary>
-        /// Draw a GUI Button to test a given color for spotlights in the editor.
-        /// </summary>
-        /// <param name="label">The label of the button</param>
-        /// <param name="target">The target color</param>
-        private void DrawTestingButton(string label, Color target)
-        {
-            if (GUILayout.Button(label))
-            {
-                Target.SwitchAllLightsColor(target);
-            }
-        }
-
-        #endregion // Methods
-
-    }
-
-#endif
-
-#endregion // Custom editor
 }
 
 

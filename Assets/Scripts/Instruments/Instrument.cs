@@ -62,11 +62,18 @@ namespace Practear.Instruments
         private Light m_Spotlight;
 
         /// <summary>
+        /// The particle system attached to this game object.
+        /// </summary>
+        [Tooltip("The particle system attached to this game object.")]
+        [SerializeField]
+        private ParticleSystem m_ParticleSystem;
+
+        /// <summary>
         /// The name of the initial instrument
         /// </summary>
         [SerializeField]
         [HideInInspector]
-        private string m_InitialInstrumentName;
+        private string m_InitialInstrumentName;       
 
         /// <summary>
         /// The sprite renderer used to render this instrument.
@@ -86,7 +93,7 @@ namespace Practear.Instruments
         /// <summary>
         /// The collider attached to this gameObject.
         /// </summary>
-        private Collider2D m_Collider;
+        private Collider2D m_Collider;        
 
         /// <summary>
         /// The data regarding the current instrument.
@@ -129,6 +136,14 @@ namespace Practear.Instruments
             }
         }
 
+        /// <summary>
+        /// Is the current instrument emitting particles ?
+        /// </summary>
+        private bool IsEmitting
+        {
+            get { return m_ParticleSystem.emission.enabled; }
+        }
+
         #endregion // Properties
 
         #region Methods
@@ -145,6 +160,9 @@ namespace Practear.Instruments
 
             // Animator is optional.
             m_Animator = GetComponent<Animator>();
+
+            // Don't emit particles on start.
+            StopEmission();
 
             SetInstrument(m_InitialInstrumentName);
             m_Collider = GetComponent<Collider2D>();
@@ -180,7 +198,7 @@ namespace Practear.Instruments
         /// <param name="instrumentName">The name of the instrument.</param>
         public void SetInstrument(string instrumentName)
         {
-            InstrumentData foundData = InstrumentDatabaseManager.Instance.FindInstrumentData(instrumentName);
+            InstrumentData foundData = Configuration.Instance.FindInstrumentData(instrumentName);
             if (foundData != null)
                 Current = foundData;
         }
@@ -188,7 +206,7 @@ namespace Practear.Instruments
         /// <summary>
         /// Play an entire partition.
         /// </summary>
-        /// <param name="partition"></param>
+        /// <param name="partition">The partition to play.</param>
         public void Play(Partition partition)
         {
             StartCoroutine(PlayPartition(partition));
@@ -197,14 +215,18 @@ namespace Practear.Instruments
         /// <summary>
         /// Coroutine for playing throughout an entire partition.
         /// </summary>
-        /// <param name="partition"></param>
-        /// <returns></returns>
+        /// <param name="partition">The partition to play</param>
         public IEnumerator PlayPartition(Partition partition)
         {
+            if (m_Current == null)
+                yield break;
+
             MusicalNote current = partition.Next();
             while (current != null)
             {
-                yield return PlayNote(current);
+                bool fadeOut = partition.IsLastNote();
+
+                yield return PlayNote(current, fadeOut);
                 current = partition.Next();
             }
         }
@@ -212,21 +234,100 @@ namespace Practear.Instruments
         /// <summary>
         /// Play a given musical note for this instrument.
         /// </summary>
-        /// <param name="note"></param>
+        /// <param name="note">The note to play.</param>
         public void Play(MusicalNote note)
         {            
             StartCoroutine(PlayNote(note));
         }
 
         /// <summary>
+        /// Stop every sound that the instrument might be playing (partition or individual notes).
+        /// </summary>
+        public void StopAllSounds()
+        {
+            StopAllCoroutines();
+            m_AudioSource.Stop();
+        }
+
+        /// <summary>
         /// <see cref="Play(MusicalNote)"/>
         /// </summary>
-        public IEnumerator PlayNote(MusicalNote note)
+        public IEnumerator PlayNote(MusicalNote note, bool fadeOut = false)
         {
-            AudioClip clip = Configuration.Instance.GetNote(m_Current, note.Name);
-            float length = Configuration.Instance.GetNoteLengthInSeconds(note.Length);
+            if (m_Current == null)
+                yield break;
+            
+            if (!IsEmitting)
+                StartEmission(1f);
 
-            yield return new PlayForDuration(m_AudioSource, clip, length);
+            AudioClip clip = null;
+            if (!Configuration.Instance.UseInstrumentDefaultScale)
+            {
+                 clip = m_Current.Notes.GetAudioClip(note);
+            }
+
+            if (!clip)
+            {
+                MusicalNote defaultNote = new MusicalNote(note);
+                defaultNote.Octave = m_Current.Notes.DefaultScale;
+                clip = m_Current.Notes.GetAudioClip(defaultNote);
+            }
+
+            float length = Configuration.Instance.GetNoteLengthInSeconds(note.Length);
+            if (clip == null)
+            {
+                Debug.LogWarning(string.Format("The note {0} (octave {1} is missing for instrument {2}! " +
+                    "The default scale is also invalid.", note.Name, note.Octave, m_Current.Name));
+
+                yield return new WaitForSeconds(length);
+                yield break;
+            }            
+
+            yield return new PlayForDuration(m_AudioSource, clip, length, fadeOut);
+        }
+
+        /// <summary>
+        /// Emit quavers from the particle system.
+        /// </summary>
+        /// <param name="duration">The duration of the emission. Pass a negative value for continuous emission.</param>
+        public void StartEmission(float duration = -1f)
+        {
+            EmitParticles(true);
+            if (duration > 0)
+            {
+                StartCoroutine(StopEmissionDelay(duration));
+            }
+        }
+
+        /// <summary>
+        /// Emit or stop emitting particles.
+        /// </summary>
+        /// <param name="emit">true to start emission, false to stop emission.</param>
+        private void EmitParticles(bool emit)
+        {
+            if (m_ParticleSystem)
+            {
+                ParticleSystem.EmissionModule emissionModule = m_ParticleSystem.emission;
+                emissionModule.enabled = emit;
+            }
+        }
+
+        /// <summary>
+        /// Stop the emission after waiting a given delay.
+        /// </summary>
+        /// <param name="delay">The delay.</param>
+        private IEnumerator StopEmissionDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            StopEmission();
+        }
+
+        /// <summary>
+        /// Stop the emission of particules.
+        /// </summary>
+        public void StopEmission()
+        {
+            EmitParticles(false);
         }
 
         /// <summary>
@@ -245,7 +346,7 @@ namespace Practear.Instruments
         /// </summary>
         public void ToggleLightPositive()
         {
-            m_Spotlight.color = SpotlightManager.Instance.PositiveColor;
+            SpotlightManager.Instance.SwitchLightColor(m_Spotlight, SpotlightManager.Instance.PositiveColor);
         }
 
         /// <summary>
@@ -253,7 +354,7 @@ namespace Practear.Instruments
         /// </summary>
         public void ToggleLightNegative()
         {
-            m_Spotlight.color = SpotlightManager.Instance.NegativeColor;
+            SpotlightManager.Instance.SwitchLightColor(m_Spotlight, SpotlightManager.Instance.NegativeColor);
         }
 
         /// <summary>
@@ -261,7 +362,7 @@ namespace Practear.Instruments
         /// </summary>
         public void ToggleLightNeutral()
         {
-            m_Spotlight.color = SpotlightManager.Instance.NeutralColor;
+            SpotlightManager.Instance.SwitchLightColor(m_Spotlight, SpotlightManager.Instance.NeutralColor);
         }
 
         /// <summary>
@@ -278,6 +379,14 @@ namespace Practear.Instruments
         public void EnableInteractions()
         {
             m_Collider.enabled = true;
+        }
+
+        /// <summary>
+        /// Called when the scene is destroyed.
+        /// </summary>
+        private void OnDestroy()
+        {
+            Clicked.RemoveAllListeners();
         }
 
         #endregion // Methods
@@ -306,9 +415,9 @@ namespace Practear.Instruments
         #region Instance variables
 
         /// <summary>
-        /// The reference to <see cref="InstrumentDatabaseManager"/> that we use to access the database.
+        /// The reference to <see cref="Configuration"/> that we use to access the database.
         /// </summary>
-        private InstrumentDatabaseManager m_DatabaseManager;
+        private Configuration m_DatabaseManager;
         
         /// <summary>
         /// The current instrument data (instrument names).
@@ -330,14 +439,14 @@ namespace Practear.Instruments
         #region Properties       
 
         /// <summary>
-        /// Access the <see cref="InstrumentDatabaseManager"/> in the scene.
+        /// Access the <see cref="Configuration"/> in the scene.
         /// </summary>
-        private InstrumentDatabaseManager DatabaseManager
+        private Configuration DatabaseManager
         {
             get
             {
                 return m_DatabaseManager ?? 
-                    (m_DatabaseManager = FindObjectOfType<InstrumentDatabaseManager>());
+                    (m_DatabaseManager = FindObjectOfType<Configuration>());
             }
         }
 
@@ -413,8 +522,8 @@ namespace Practear.Instruments
             // If no database has been specified, display an error message and a button to assign it.
             if (DatabaseManager.InstrumentDatabase == null)
             {
-                EditorUtils.DrawErrorMessage("Please specify a database to use in the database manager");
-                if (GUILayout.Button("Go to Manager"))
+                EditorUtils.DrawErrorMessage("Please specify a database to use in the configuration");
+                if (GUILayout.Button("Go to Configuration"))
                 {
                     EditorGUIUtility.PingObject(DatabaseManager);
                 }

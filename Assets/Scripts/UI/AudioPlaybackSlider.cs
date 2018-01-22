@@ -251,7 +251,7 @@ namespace Practear.UI
         private void Awake()
         {
             m_Slider = GetComponent<Slider>();
-            m_AudioSource = gameObject.GetOrAddComponent<AudioSource>();
+            m_AudioSource = this.GetOrAddComponent<AudioSource>();
             
             if (m_InitialClip)
                 m_AudioSource.clip = m_InitialClip;

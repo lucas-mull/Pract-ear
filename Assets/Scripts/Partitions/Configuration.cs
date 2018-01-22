@@ -43,26 +43,16 @@ namespace Practear.Partitions
             public float LengthInSeconds;
         }
 
-        /// <summary>
-        /// Used to pair a <see cref="MusicalNote.EName"/> element with its prefix in an instrument folder.
-        /// </summary>
-        [Serializable]
-        private class Name
-        {
-            /// <summary>
-            /// The label of the note
-            /// </summary>
-            public MusicalNote.EName Label;
-            
-            /// <summary>
-            /// The prefix
-            /// </summary>
-            public string Prefix;
-        }
-
         #endregion // Internal classes
 
         #region Instance variables
+
+        /// <summary>
+        /// The instrument database to use for the game.
+        /// </summary>
+        [Tooltip("The instrument database to use for the game.")]
+        [SerializeField]
+        private InstrumentDatabase m_InstrumentDatabase;
 
         /// <summary>
         /// The list of lengths.
@@ -71,22 +61,17 @@ namespace Practear.Partitions
         private Length[] m_Lengths;
 
         /// <summary>
-        /// The list of prefixes.
-        /// </summary>
-        [SerializeField]
-        private Name[] m_Prefixes;
-
-        /// <summary>
-        /// The separator character between the note prefix and the instrument's name.
-        /// </summary>
-        [SerializeField]
-        private char m_Separator = '_';
-
-        /// <summary>
         /// The list of all the playable partitions in game.
         /// </summary>
         [SerializeField]
         private List<Partition> m_Partitions;
+
+        /// <summary>
+        /// Check this to force the instruments to use their default scales in partitions.
+        /// Otherwise, the right octave will be fetched whenever available.
+        /// </summary>
+        [Tooltip("Check this to force the instruments to use their default scales in partitions. Otherwise, the right octave will be fetched whenever available.")]
+        public bool UseInstrumentDefaultScale;
 
         #endregion // Instance variables
 
@@ -97,6 +82,11 @@ namespace Practear.Partitions
         /// TODO - Check for partitions located in asset bundles?
         /// </summary>
         public IEnumerable<Partition> AllPartitions { get { return m_Partitions; } }
+
+        /// <summary>
+        /// Access the database of instruments.
+        /// </summary>
+        public InstrumentDatabase InstrumentDatabase { get { return m_InstrumentDatabase; } }
 
         /// <summary>
         /// Get the total number of existing lengths for musical notes.
@@ -123,11 +113,6 @@ namespace Practear.Partitions
             {
                 m_Lengths = InitializeAllLengths();
             }
-
-            if (m_Prefixes == null || m_Prefixes.Length != TotalNames)
-            {
-                m_Prefixes = InitializeAllPrefixes();
-            }
         }
 
         /// <summary>
@@ -149,30 +134,6 @@ namespace Practear.Partitions
         }
 
         /// <summary>
-        /// Initialize all the prefixes with default values.
-        /// </summary>
-        /// <returns>A list of all the note names with their default prefix.</returns>
-        private Name[] InitializeAllPrefixes()
-        {
-            List<Name> prefixes = new List<Name>();
-            prefixes.Add(new Name { Label = MusicalNote.EName.Do, Prefix = "do" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.DoDiese, Prefix = "do#" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.DoPlus, Prefix = "do+" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.Fa, Prefix = "fa" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.FaDiese, Prefix = "fa#" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.La, Prefix = "la" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.Mi, Prefix = "mi" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.Re, Prefix = "re" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.ReDiese, Prefix = "re#" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.Si, Prefix = "si" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.Sol, Prefix = "sol" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.LaDiese, Prefix = "la#" });
-            prefixes.Add(new Name { Label = MusicalNote.EName.SolDiese, Prefix = "sol#" });
-
-            return prefixes.ToArray();
-        }
-
-        /// <summary>
         /// Get a length's value in seconds.
         /// </summary>
         /// <param name="target">The target length label</param>
@@ -180,38 +141,6 @@ namespace Practear.Partitions
         public float GetNoteLengthInSeconds(MusicalNote.ELength target)
         {
             return m_Lengths.Single(length => length.Label == target).LengthInSeconds;
-        }
-
-        /// <summary>
-        /// Get a note's prefix.
-        /// </summary>
-        /// <param name="target">The target note label</param>
-        /// <returns>The prefix for this note in the instrument folders.</returns>
-        private string GetNotePrefix(MusicalNote.EName target)
-        {
-            return m_Prefixes.Single(name => name.Label == target).Prefix;
-        }
-
-        /// <summary>
-        /// Get a note's audio clip for a given instrument.
-        /// </summary>
-        /// <param name="instrument">The target instrument</param>
-        /// <param name="note">The target note</param>
-        /// <returns>The audioclip for this note.</returns>
-        public AudioClip GetNote(InstrumentData instrument, MusicalNote.EName note)
-        {
-            string fileName = string.Format("{0}{1}{2}", GetNotePrefix(note), m_Separator, instrument.Name.ToLower());
-            string path = Path.Combine(instrument.NotesFolderName, fileName);
-
-            if (NotesCache.Contains(path))
-            {
-                return NotesCache.GetCachedValue(path);
-            }
-
-            AudioClip clip = Resources.Load<AudioClip>(path);
-            NotesCache.AddOrUpdate(path, clip);
-
-            return clip;
         }
 
         /// <summary>
@@ -228,13 +157,26 @@ namespace Practear.Partitions
             return m_Partitions[index];
         }
 
+        /// <summary>
+        /// Find instrument data within the database
+        /// </summary>
+        /// <param name="instrumentName">The name of the instrument to find.</param>
+        /// <returns>The instrument data if found, null otherwise.</returns>
+        public InstrumentData FindInstrumentData(string instrumentName)
+        {
+            if (m_InstrumentDatabase == null || m_InstrumentDatabase.Instruments == null)
+                return null;
+
+            return m_InstrumentDatabase.Instruments.FirstOrDefault(i => i.Name.Equals(instrumentName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
 #if UNITY_EDITOR
 
         /// <summary>
         /// Editor method. Find all the partitions in the assets of the project.
         /// </summary>
         /// <returns>A list of all partitions found.</returns>
-        private List<Partition> FindAllPartitions()
+        static public List<Partition> FindAllPartitions()
         {
             string[] guids = AssetDatabase.FindAssets(string.Format("t:{0}", typeof(Partition).Name));
             string[] paths = guids.Select(id => AssetDatabase.GUIDToAssetPath(id)).ToArray();
@@ -275,19 +217,9 @@ namespace Practear.Partitions
         private SerializedProperty m_LengthsProperty;
 
         /// <summary>
-        /// Serialized property for <see cref="Configuration.m_Prefixes"/>
-        /// </summary>
-        private SerializedProperty m_PrefixesProperty;
-
-        /// <summary>
         /// Are the lengths foldout ?
         /// </summary>
         private bool m_AreLengthsFoldout;
-
-        /// <summary>
-        /// Are the prefixes foldout ?
-        /// </summary>
-        private bool m_ArePrefixesFoldout;
 
         /// <summary>
         /// A reorderable list for the partitions.
@@ -304,7 +236,6 @@ namespace Practear.Partitions
         private void OnEnable()
         {
             m_LengthsProperty = serializedObject.FindProperty("m_Lengths");
-            m_PrefixesProperty = serializedObject.FindProperty("m_Prefixes");
 
             m_PartitionsList = new ReorderableList(serializedObject, serializedObject.FindProperty("m_Partitions"), 
                 true, true, true, true);
@@ -320,8 +251,8 @@ namespace Practear.Partitions
             serializedObject.Update();
 
             EditorUtils.DrawDefaultScriptField<Configuration>(target);
+            EditorUtils.DrawPropertyFields(serializedObject, "DontDestroyOnLoad", "m_InstrumentDatabase", "UseInstrumentDefaultScale");
             DrawLengths();
-            DrawPrefixes();
 
             EditorGUILayout.Space();
             m_PartitionsList.DoLayoutList();
@@ -358,36 +289,6 @@ namespace Practear.Partitions
                     lengthInSeconds.floatValue = EditorGUILayout.FloatField(enumValue, lengthInSeconds.floatValue);
                 }
                 EditorGUI.indentLevel--;                
-            }
-        }
-
-        /// <summary>
-        /// Draw the list of prefixes
-        /// </summary>
-        private void DrawPrefixes()
-        {
-            if (m_PrefixesProperty.arraySize == 0)
-                return;
-
-            m_ArePrefixesFoldout = EditorGUILayout.Foldout(m_ArePrefixesFoldout, "Prefixes", true);
-
-            if (m_ArePrefixesFoldout)
-            {
-                EditorGUI.indentLevel++;
-
-                EditorUtils.DrawPropertyFields(serializedObject, "m_Separator");
-                for (int i = 0; i < m_PrefixesProperty.arraySize; i++)
-                {
-                    SerializedProperty name = m_PrefixesProperty.GetArrayElementAtIndex(i);
-
-                    SerializedProperty nameEnum = name.FindPropertyRelative("Label");
-                    string enumValue = nameEnum.enumNames[nameEnum.enumValueIndex];
-
-                    SerializedProperty prefix = name.FindPropertyRelative("Prefix");
-
-                    prefix.stringValue = EditorGUILayout.TextField(enumValue, prefix.stringValue);
-                }
-                EditorGUI.indentLevel--;
             }
         }
 
