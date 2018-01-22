@@ -293,12 +293,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Pract-ear.Plugins.csproj">
-      <Project>{8B5DEDE9-9B67-8E94-7D5E-1CC416D9DFD3}</Project>
-      <Name>Pract-ear.Plugins</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Assets\ExternalAssets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\ExternalAssets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
     <Compile Include="Assets\ExternalAssets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
@@ -331,27 +325,40 @@
     <Compile Include="Assets\ExternalAssets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\ExternalAssets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\ExternalAssets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\ErrorManager.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\GameIntroduction.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\MiniGame.cs" />
     <Compile Include="Assets\Scripts\Instruments\Instrument.cs" />
     <Compile Include="Assets\Scripts\Instruments\InstrumentData.cs" />
     <Compile Include="Assets\Scripts\Instruments\InstrumentDatabase.cs" />
-    <Compile Include="Assets\Scripts\Instruments\InstrumentDatabaseManager.cs" />
+    <Compile Include="Assets\Scripts\Lights\SpotlightController.cs" />
     <Compile Include="Assets\Scripts\Lights\SpotlightManager.cs" />
     <Compile Include="Assets\Scripts\Movement\FreezeTransformComponent.cs" />
     <Compile Include="Assets\Scripts\Movement\Shake.cs" />
     <Compile Include="Assets\Scripts\Partitions\Configuration.cs" />
-    <Compile Include="Assets\Scripts\Partitions\MusicalNote.cs" />
-    <Compile Include="Assets\Scripts\Partitions\NotesCache.cs" />
+    <Compile Include="Assets\Scripts\Partitions\Notes\MusicalNote.cs" />
+    <Compile Include="Assets\Scripts\Partitions\Notes\NotesCache.cs" />
+    <Compile Include="Assets\Scripts\Partitions\Notes\NotesList.cs" />
+    <Compile Include="Assets\Scripts\Partitions\Notes\Scale.cs" />
     <Compile Include="Assets\Scripts\Partitions\Partition.cs" />
-    <Compile Include="Assets\Scripts\Partitions\PlayNote.cs" />
+    <Compile Include="Assets\Scripts\Partitions\PartitionDropDown.cs" />
+    <Compile Include="Assets\Scripts\Partitions\PlayForDuration.cs" />
+    <Compile Include="Assets\Scripts\Partitions\PlayTest.cs" />
     <Compile Include="Assets\Scripts\Simon\Simon.cs" />
+    <Compile Include="Assets\Scripts\TempoMaster\Metronome.cs" />
     <Compile Include="Assets\Scripts\UI\AudioPlaybackSlider.cs" />
+    <Compile Include="Assets\Scripts\UI\SlideInUIArea.cs" />
     <Compile Include="Assets\Scripts\Utils\AbstractSingleton.cs" />
     <Compile Include="Assets\Scripts\Utils\EditorUtils.cs" />
-    <Compile Include="Assets\Scripts\Utils\Extensions\GameObjectExt.cs" />
     <Compile Include="Assets\Scripts\Utils\Extensions\IEnumerableExt.cs" />
+    <Compile Include="Assets\Scripts\Utils\Extensions\MonoBehaviourExt.cs" />
+    <Compile Include="Assets\Scripts\Utils\MathUtils.cs" />
+    <Compile Include="Assets\Scripts\Utils\PropertyAttributes\AnimatorVariableAttribute.cs" />
+    <Compile Include="Assets\Scripts\Utils\PropertyAttributes\ButtonAttribute.cs" />
     <Compile Include="Assets\Scripts\Utils\PropertyAttributes\DisableIfAttribute.cs" />
     <Compile Include="Assets\Scripts\Utils\PropertyAttributes\EnableIfAttribute.cs" />
     <Compile Include="Assets\Scripts\Utils\PropertyAttributes\ReadOnlyAttribute.cs" />
+    <Compile Include="Assets\Scripts\Utils\PublicAudioUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ExternalAssets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />

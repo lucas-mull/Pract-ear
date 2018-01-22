@@ -3,11 +3,14 @@ using Practear.Lights;
 using Practear.Partitions;
 using Practear.Utils.Extensions;
 using Practear.Utils.PropertyAttributes;
+using Practear.Gameplay;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Practear.Movement;
+using TMPro;
 
 namespace Practear.Simon
 {
@@ -15,7 +18,7 @@ namespace Practear.Simon
     /// Used to load and manage the Simon mini-game.
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
-    public class Simon : MonoBehaviour
+    public class Simon : MiniGame
     {
 
         #region Internal enums
@@ -101,6 +104,13 @@ namespace Practear.Simon
         [SerializeField]
         [DisableIf("m_PlayRandomPartition")]
         private Partition m_Partition;
+
+        /// <summary>
+        /// The text component used to display the current partition's title.
+        /// </summary>
+        [Tooltip("The text component used to display the current partition's title.")]
+        [SerializeField]
+        private TMP_Text m_PartitionDisplayText;
 
         /// <summary>
         /// The total number of allowed errors before the game ends.
@@ -193,6 +203,9 @@ namespace Practear.Simon
                 m_Partition = Configuration.Instance.GetRandomPartition();
             }
 
+            if (m_PartitionDisplayText)
+                m_PartitionDisplayText.text = m_Partition.Title;
+
             m_InstrumentSequence = GenerateSequence();
             m_AudioSource = GetComponent<AudioSource>();
 
@@ -201,45 +214,9 @@ namespace Practear.Simon
             {
                 instrument.Clicked.AddListener(OnInstrumentClicked);
             }
-        }
 
-        /// <summary>
-        /// Called on start.
-        /// </summary>
-        private void Start()
-        {
-            m_CurrentState = EGameState.MustPlaySequence;
-        }
-
-        /// <summary>
-        /// Called each frame.
-        /// </summary>
-        private void Update()
-        {
-            switch(m_CurrentState)
-            {                
-                case EGameState.MustPlaySequence:
-                    m_CurrentState = EGameState.PlayingSequence;
-                    StartCoroutine(PlaySequence());
-                    break;
-                case EGameState.PlayerTurn:
-                    m_Partition.Rewind();
-                    m_CurrentState = EGameState.WaitingOnInput;
-                    EnableAllInteractions();
-                    break;
-                case EGameState.GameOver:
-                    // TODO Show game over screen.
-                    // Pass on every spotlight to negative state
-                    SpotlightManager.Instance.SwitchAllLightsColor(SpotlightManager.Instance.NegativeColor);
-                    m_CurrentState = EGameState.GameEnded;
-                    break;
-                case EGameState.Success:
-                    // TODO show success screen.
-                    m_CurrentState = EGameState.GameEnded;
-                    break;
-                default:
-                    break;
-            }
+            // Start all the lights as neutral.
+            SpotlightManager.Instance.SwitchAllNeutral();
         }
 
         /// <summary>
@@ -293,9 +270,23 @@ namespace Practear.Simon
         {
             m_Partition.Rewind();
 
+            foreach (Instrument instrument in m_Instruments)
+            {
+                instrument.GetComponent<Shake>().StartShaking();
+                instrument.StartEmission();
+            }
+
             for (int i = 0; i < m_CurrentLimit; i++)
             {
+                // Wait while in pause.
+                while (IsPaused) yield return null;
                 yield return m_Instruments[m_InstrumentSequence[i]].PlayNote(m_Partition.Next());
+            }
+
+            foreach (Instrument instrument in m_Instruments)
+            {
+                instrument.GetComponent<Shake>().StopShaking();
+                instrument.StopEmission();
             }
 
             m_CurrentState = EGameState.PlayerTurn;
@@ -411,6 +402,70 @@ namespace Practear.Simon
             // Remove all the listeners.
             foreach (Instrument instrument in m_Instruments)
                 instrument.Clicked.RemoveAllListeners();
+        }
+
+        /// <summary>
+        /// <see cref="MiniGame.Begin"/>
+        /// </summary>
+        public override void Begin()
+        {
+            m_CurrentState = EGameState.MustPlaySequence;
+        }
+
+        /// <summary>
+        /// <see cref="MiniGame.OnUpdate"/>
+        /// </summary>
+        protected override void OnUpdate()
+        {
+            switch (m_CurrentState)
+            {
+                case EGameState.MustPlaySequence:
+                    m_CurrentState = EGameState.PlayingSequence;
+                    StartCoroutine(PlaySequence());
+                    break;
+                case EGameState.PlayerTurn:
+                    m_Partition.Rewind();
+                    m_CurrentState = EGameState.WaitingOnInput;
+                    EnableAllInteractions();
+                    break;
+                case EGameState.GameOver:
+                    // TODO Show game over screen.
+                    // Pass on every spotlight to negative state
+                    SpotlightManager.Instance.SwitchAllNegative();
+                    m_CurrentState = EGameState.GameEnded;
+                    break;
+                case EGameState.Success:
+                    // TODO show success screen.
+                    SpotlightManager.Instance.SwitchAllPositive();
+                    m_CurrentState = EGameState.GameEnded;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// <see cref="MiniGame.OnPause"/>
+        /// </summary>
+        protected override void OnPause()
+        {
+            Time.timeScale = 0;
+        }
+
+        /// <summary>
+        /// <see cref="MiniGame.OnResume"/>
+        /// </summary>
+        protected override void OnResume()
+        {
+            Time.timeScale = 1;
+        }
+
+        /// <summary>
+        /// <see cref="MiniGame.Restart"/>
+        /// </summary>
+        protected override void Restart()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion // Methods
